@@ -9,20 +9,76 @@
   <link rel="apple-touch-icon" href="icon-192.png" />
   <style>
     :root{
-      --card:#ffffff; --line:#dbe7f6; --primary:#8fb8e8; --primary2:#dfeeff;
-      --text:#1e2a3a; --muted:#6e7a8a; --shadow:0 8px 24px rgba(32,62,100,.10); --radius:18px;
+      --card:#ffffff;
+      --line:#dbe7f6;
+      --primary:#8fb8e8;
+      --primary2:#dfeeff;
+      --text:#1e2a3a;
+      --muted:#6e7a8a;
+      --shadow:0 8px 24px rgba(32,62,100,.10);
+      --radius:18px;
+      --field-h:48px;
+      --page-pad:14px;
     }
     *{box-sizing:border-box}
-    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:linear-gradient(180deg,#edf5ff 0%,#f7fbff 45%,#ffffff 100%);color:var(--text)}
-    .wrap{max-width:760px;margin:0 auto;padding:14px 14px 42px}
-    .hero{display:grid;grid-template-columns:84px 1fr;gap:14px;align-items:center;background:rgba(255,255,255,.72);backdrop-filter:blur(8px);border:1px solid #e9f1fb;border-radius:24px;padding:14px;box-shadow:var(--shadow);position:sticky;top:0;z-index:5;margin-bottom:14px}
-    .hero img{width:84px;height:84px;object-fit:cover;border-radius:22px;border:3px solid white;box-shadow:var(--shadow);background:#eef5ff}
-    h1{font-size:28px;margin:0 0 6px}
-    .sub{color:var(--muted);font-size:14px}
+    html,body{overflow-x:hidden}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+      background:linear-gradient(180deg,#edf5ff 0%,#f7fbff 45%,#ffffff 100%);
+      color:var(--text);
+      -webkit-text-size-adjust:100%;
+    }
+    .wrap{
+      max-width:760px;
+      margin:0 auto;
+      padding:var(--page-pad) var(--page-pad) 42px;
+    }
+    .hero{
+      display:grid;
+      grid-template-columns:84px 1fr;
+      gap:14px;
+      align-items:center;
+      background:rgba(255,255,255,.72);
+      backdrop-filter:blur(8px);
+      border:1px solid #e9f1fb;
+      border-radius:24px;
+      padding:14px;
+      box-shadow:var(--shadow);
+      position:sticky;
+      top:0;
+      z-index:5;
+      margin-bottom:14px;
+      overflow:hidden;
+    }
+    .hero img{
+      width:84px;height:84px;object-fit:cover;border-radius:22px;border:3px solid white;box-shadow:var(--shadow);background:#eef5ff
+    }
+    h1{font-size:28px;line-height:1.1;margin:0 0 6px}
+    .sub{color:var(--muted);font-size:14px;line-height:1.35}
     .grid{display:grid;gap:14px}
-    .card{background:var(--card);border:1px solid #ecf2fa;border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;overflow:hidden}
-    .section-title{font-size:18px;font-weight:700;margin:0 0 10px}
-    label{display:block;font-size:13px;color:var(--muted);margin:0 0 6px}
+    .card{
+      background:var(--card);
+      border:1px solid #ecf2fa;
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:14px;
+      overflow:hidden;
+      min-width:0;
+    }
+    .section-title{
+      font-size:18px;
+      font-weight:700;
+      margin:0 0 10px;
+      line-height:1.2;
+    }
+    label{
+      display:block;
+      font-size:13px;
+      color:var(--muted);
+      margin:0 0 6px;
+      line-height:1.25;
+    }
     input, textarea, button{font:inherit}
     input[type="date"], input[type="time"], input[type="number"], textarea{
       width:100%;
@@ -36,42 +92,174 @@
       outline:none;
       box-sizing:border-box;
       font-size:16px;
+      line-height:1.2;
+      appearance:none;
+      -webkit-appearance:none;
+      display:block;
+    }
+    input[type="date"], input[type="time"], input[type="number"]{
+      height:var(--field-h);
     }
     input[type="date"]{
       inline-size:100%;
       max-inline-size:100%;
-      width:calc(100% - 2px);
-      margin:0;
-      display:block;
+      width:100%;
+      padding-inline:12px;
     }
-    textarea{min-height:84px;resize:vertical}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
+    textarea{
+      min-height:96px;
+      resize:vertical;
+    }
+    .row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      width:100%;
+      align-items:end;
+    }
     .row > *{min-width:0}
+    .field{min-width:0}
     .chips{display:flex;flex-wrap:wrap;gap:8px}
-    .chip{border:1px solid var(--line);background:#f7fbff;border-radius:999px;padding:10px 14px;cursor:pointer;user-select:none}
+    .chip{
+      border:1px solid var(--line);
+      background:#f7fbff;
+      border-radius:999px;
+      padding:10px 14px;
+      cursor:pointer;
+      user-select:none;
+      line-height:1.15;
+      font-size:15px;
+    }
     .chip.active{background:var(--primary2);border-color:#b8d2f3}
-    .btn{border:0;border-radius:16px;padding:13px 16px;background:var(--primary);color:#0d2540;font-weight:700;cursor:pointer;box-shadow:var(--shadow)}
+    .btn{
+      border:0;
+      border-radius:16px;
+      min-height:48px;
+      padding:13px 16px;
+      background:var(--primary);
+      color:#0d2540;
+      font-weight:700;
+      cursor:pointer;
+      box-shadow:var(--shadow);
+      line-height:1.2;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      width:auto;
+      max-width:100%;
+      white-space:normal;
+    }
     .btn.secondary{background:#eef5ff}
     .btn.danger{background:#ffe8e8;color:#8f2424}
     .btn.full{width:100%}
-    .quick{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .quick .btn{padding:16px 14px}
-    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-    .stat{background:#f8fbff;border:1px solid var(--line);padding:12px;border-radius:16px;text-align:center}
-    .stat b{display:block;font-size:22px;margin-bottom:4px}
+    .quick{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      width:100%;
+    }
+    .quick .btn{
+      min-width:0;
+      padding:14px 12px;
+    }
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+    }
+    .stat{
+      background:#f8fbff;
+      border:1px solid var(--line);
+      padding:12px 8px;
+      border-radius:16px;
+      text-align:center;
+      min-width:0;
+    }
+    .stat b{
+      display:block;
+      font-size:22px;
+      margin-bottom:4px;
+      line-height:1;
+    }
+    .stat span{
+      display:block;
+      font-size:13px;
+      line-height:1.25;
+      word-break:break-word;
+    }
     .list{display:grid;gap:10px}
-    .item{border:1px solid var(--line);border-radius:16px;padding:12px;background:#fcfeff}
-    .item-top{display:flex;justify-content:space-between;gap:8px;align-items:center}
-    .badge{background:#eef5ff;border:1px solid #d8e7fb;padding:6px 10px;border-radius:999px;font-size:12px}
-    .muted{color:var(--muted);font-size:13px}
-    .actions{display:flex;gap:8px;flex-wrap:wrap}
-    .footer-note{padding:8px 4px 0;color:var(--muted);font-size:12px;text-align:center}
+    .item{
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:12px;
+      background:#fcfeff;
+      min-width:0;
+    }
+    .item-top{
+      display:flex;
+      justify-content:space-between;
+      gap:8px;
+      align-items:center;
+      min-width:0;
+    }
+    .badge{
+      background:#eef5ff;
+      border:1px solid #d8e7fb;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      display:inline-block;
+      max-width:100%;
+    }
+    .muted{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.35;
+      word-break:break-word;
+    }
+    .actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      min-width:0;
+    }
+    .actions .btn{
+      flex:0 1 auto;
+    }
+    .footer-note{
+      padding:8px 4px 0;
+      color:var(--muted);
+      font-size:12px;
+      text-align:center;
+      line-height:1.35;
+    }
     .install{display:none}
+
     @media (max-width:640px){
-      .row,.stats,.quick{grid-template-columns:1fr}
-      .hero{grid-template-columns:72px 1fr}
+      :root{
+        --field-h:46px;
+        --page-pad:12px;
+      }
+      .hero{
+        grid-template-columns:72px 1fr;
+        gap:12px;
+        padding:12px;
+      }
       .hero img{width:72px;height:72px}
       h1{font-size:24px}
+      .row,.stats,.quick{grid-template-columns:1fr}
+      .card{padding:12px}
+      .section-title{font-size:17px}
+      .chip{width:100%;text-align:center}
+      .actions .btn{
+        width:100%;
+        flex:1 1 100%;
+      }
+      .item-top{
+        align-items:flex-start;
+        flex-direction:column;
+      }
     }
   </style>
 </head>
@@ -89,11 +277,11 @@
       <div class="card">
         <div class="section-title">תאריך</div>
         <div class="row">
-          <div>
+          <div class="field">
             <label for="logDate">יום מעקב</label>
             <input id="logDate" type="date" />
           </div>
-          <div>
+          <div class="field">
             <label>&nbsp;</label>
             <button id="installBtn" class="btn secondary full install">התקן למסך הבית</button>
           </div>
@@ -120,11 +308,11 @@
           <div class="chip" data-type="הערה">📝 הערה</div>
         </div>
         <div class="row" style="margin-top:12px">
-          <div>
+          <div class="field">
             <label for="time">שעה</label>
             <input id="time" type="time" />
           </div>
-          <div>
+          <div class="field">
             <label for="amount">כמות (מ״ל)</label>
             <input id="amount" type="number" placeholder="למשל 90" />
           </div>
@@ -166,7 +354,7 @@
   </div>
 
 <script>
-const STORAGE_KEY = "baby-tracker-v4";
+const STORAGE_KEY = "baby-tracker-v5";
 let deferredPrompt = null;
 let currentType = "האכלה";
 
