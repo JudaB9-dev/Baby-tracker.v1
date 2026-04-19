@@ -1,0 +1,55 @@
+Baby Tracker - Full package v7
+
+FILES IN THIS PACKAGE
+- index.html
+- manifest.json
+- sw.js
+- Code.gs
+
+IMPORTANT
+1. Your Google Sheet tab name must be: SheetsTracker
+2. Your header row must be exactly:
+   id | createdAt | updatedAt | date | time | type | amount | note | device | deleted
+
+CURRENT WEB APP URL
+https://script.google.com/macros/s/AKfycbxp6xgS455CjGOvNtBhk3Ml5dkYGL5yEgk199N9Q8PRJ7oe9mOVnORXnIcm7U1i1lUPvA/exec
+
+CURRENT SHARED TOKEN
+bt_X9f82KqLmP47sZ1aYvT0rNcW8G2uH5
+
+WHAT TO UPLOAD
+GITHUB:
+- index.html
+- manifest.json
+- sw.js
+- icon-192.png
+- icon-512.png
+
+APPS SCRIPT:
+- Replace the full content of Code.gs
+- Save
+- Deploy > Manage deployments > Edit deployment
+- Select Web app
+- Execute as: Me
+- Who has access: Anyone
+- Deploy
+
+AFTER GITHUB UPLOAD
+- Commit changes
+- Open the site
+- Refresh hard once
+- If installed as PWA and update is stuck:
+  remove from home screen and install again
+
+HOW TO TEST
+1. Open app on phone A
+2. Add entry
+3. Wait a few seconds
+4. Open app on phone B
+5. Tap "סנכרן עכשיו"
+6. Entry should appear
+
+NOTES
+- This is a family prototype
+- Do not put personal secrets in notes
+- The token lives in the frontend, so treat it as light protection only

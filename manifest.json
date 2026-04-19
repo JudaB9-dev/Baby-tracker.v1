@@ -1,22 +1,36 @@
 {
   "name": "מעקב תינוק",
   "short_name": "מעקב",
-  "start_url": "./index.html",
+  "description": "מעקב תינוק מסונכרן בין מכשירים עם תמיכה באופליין",
+  "start_url": "./index.html?v=7",
+  "scope": "./",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
   "background_color": "#f6f9ff",
   "theme_color": "#8fb8e8",
   "lang": "he",
   "dir": "rtl",
+  "orientation": "portrait",
   "icons": [
     {
       "src": "icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "האכלה 90 מ״ל",
+      "short_name": "האכלה",
+      "url": "./index.html?v=7",
+      "description": "פתיחת האפליקציה לרישום האכלה"
     }
   ]
 }
