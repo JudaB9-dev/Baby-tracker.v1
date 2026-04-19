@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#8fb8e8" />
+  <title>מעקב תינוק</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <style>
+    :root{
+      --card:#ffffff; --line:#dbe7f6; --primary:#8fb8e8; --primary2:#dfeeff;
+      --text:#1e2a3a; --muted:#6e7a8a; --shadow:0 8px 24px rgba(32,62,100,.10); --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:linear-gradient(180deg,#edf5ff 0%,#f7fbff 45%,#ffffff 100%);color:var(--text)}
+    .wrap{max-width:760px;margin:0 auto;padding:14px 14px 42px}
+    .hero{display:grid;grid-template-columns:84px 1fr;gap:14px;align-items:center;background:rgba(255,255,255,.72);backdrop-filter:blur(8px);border:1px solid #e9f1fb;border-radius:24px;padding:14px;box-shadow:var(--shadow);position:sticky;top:0;z-index:5;margin-bottom:14px}
+    .hero img{width:84px;height:84px;object-fit:cover;border-radius:22px;border:3px solid white;box-shadow:var(--shadow);background:#eef5ff}
+    h1{font-size:28px;margin:0 0 6px}
+    .sub{color:var(--muted);font-size:14px}
+    .grid{display:grid;gap:14px}
+    .card{background:var(--card);border:1px solid #ecf2fa;border-radius:var(--radius);box-shadow:var(--shadow);padding:14px}
+    .section-title{font-size:18px;font-weight:700;margin:0 0 10px}
+    label{display:block;font-size:13px;color:var(--muted);margin:0 0 6px}
+    input, textarea, button{font:inherit}
+    input[type="date"], input[type="time"], input[type="number"], input[type="text"], textarea{
+      width:100%;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:#fbfdff;color:var(--text);outline:none
+    }
+    input[type="file"]{width:100%;padding:10px;border-radius:14px;border:1px dashed var(--line);background:#fbfdff}
+    textarea{min-height:84px;resize:vertical}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .chips{display:flex;flex-wrap:wrap;gap:8px}
+    .chip{border:1px solid var(--line);background:#f7fbff;border-radius:999px;padding:10px 14px;cursor:pointer;user-select:none}
+    .chip.active{background:var(--primary2);border-color:#b8d2f3}
+    .btn{border:0;border-radius:16px;padding:13px 16px;background:var(--primary);color:#0d2540;font-weight:700;cursor:pointer;box-shadow:var(--shadow)}
+    .btn.secondary{background:#eef5ff}
+    .btn.danger{background:#ffe8e8;color:#8f2424}
+    .btn.full{width:100%}
+    .quick{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .quick .btn{padding:16px 14px}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .stat{background:#f8fbff;border:1px solid var(--line);padding:12px;border-radius:16px;text-align:center}
+    .stat b{display:block;font-size:22px;margin-bottom:4px}
+    .list{display:grid;gap:10px}
+    .item{border:1px solid var(--line);border-radius:16px;padding:12px;background:#fcfeff}
+    .item-top{display:flex;justify-content:space-between;gap:8px;align-items:center}
+    .badge{background:#eef5ff;border:1px solid #d8e7fb;padding:6px 10px;border-radius:999px;font-size:12px}
+    .muted{color:var(--muted);font-size:13px}
+    .actions{display:flex;gap:8px;flex-wrap:wrap}
+    .footer-note{padding:8px 4px 0;color:var(--muted);font-size:12px;text-align:center}
+    .install{display:none}
+    .small{font-size:12px;color:var(--muted)}
+    @media (max-width:640px){
+      .row,.stats,.quick{grid-template-columns:1fr}
+      .hero{grid-template-columns:72px 1fr}
+      .hero img{width:72px;height:72px}
+      h1{font-size:24px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <img id="heroImage" src="icon-192.png" alt="תינוק" />
+      <div>
+        <h1 id="heroTitle">מעקב תינוק 👶</h1>
+        <div class="sub">אפליקציית מעקב יומית פשוטה בעברית. השם והתמונה שתבחרו נשמרים רק על המכשיר שלכם.</div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="section-title">התאמה אישית</div>
+        <div class="row">
+          <div>
+            <label for="babyName">שם התינוק</label>
+            <input id="babyName" type="text" placeholder="למשל: אדם" />
+          </div>
+          <div>
+            <label for="babyPhoto">תמונה מהטלפון</label>
+            <input id="babyPhoto" type="file" accept="image/*" />
+          </div>
+        </div>
+        <div class="actions" style="margin-top:12px">
+          <button class="btn" onclick="saveProfile()">שמור פרופיל</button>
+          <button class="btn secondary" onclick="resetProfile()">אפס שם ותמונה</button>
+        </div>
+        <div class="small" style="margin-top:8px">השם והתמונה אינם בקבצי האתר. הם נשמרים מקומית רק אחרי שתזינו אותם מהטלפון.</div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">תאריך</div>
+        <div class="row">
+          <div>
+            <label for="logDate">יום מעקב</label>
+            <input id="logDate" type="date" />
+          </div>
+          <div>
+            <label>&nbsp;</label>
+            <button id="installBtn" class="btn secondary full install">התקן למסך הבית</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">פעולות מהירות</div>
+        <div class="quick">
+          <button class="btn" onclick="quickAdd('האכלה', 90)">🍼 האכלה 90 מ״ל</button>
+          <button class="btn" onclick="quickAdd('פיפי', '')">💧 פיפי</button>
+          <button class="btn" onclick="quickAdd('קקי', '')">💩 קקי</button>
+          <button class="btn" onclick="quickAdd('ויטמינים', '')">💊 ויטמינים</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">רישום חדש</div>
+        <div class="chips" id="typeChips">
+          <div class="chip active" data-type="האכלה">🍼 האכלה</div>
+          <div class="chip" data-type="פיפי">💧 פיפי</div>
+          <div class="chip" data-type="קקי">💩 קקי</div>
+          <div class="chip" data-type="ויטמינים">💊 ויטמינים</div>
+          <div class="chip" data-type="הערה">📝 הערה</div>
+        </div>
+        <div class="row" style="margin-top:12px">
+          <div>
+            <label for="time">שעה</label>
+            <input id="time" type="time" />
+          </div>
+          <div>
+            <label for="amount">כמות (מ״ל)</label>
+            <input id="amount" type="number" placeholder="למשל 90" />
+          </div>
+        </div>
+        <div style="margin-top:10px">
+          <label for="note">הערות</label>
+          <textarea id="note" placeholder="למשל: גרפס חלש / פליטה קטנה / ישן מיד אחרי"></textarea>
+        </div>
+        <div class="actions" style="margin-top:12px">
+          <button class="btn" onclick="addEntry()">שמור רישום</button>
+          <button class="btn secondary" onclick="fillNow()">שעה עכשיו</button>
+          <button class="btn secondary" onclick="clearForm()">נקה</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">סיכום יומי</div>
+        <div class="stats">
+          <div class="stat"><b id="feedCount">0</b><span>האכלות</span></div>
+          <div class="stat"><b id="feedMl">0</b><span>מ״ל סה״כ</span></div>
+          <div class="stat"><b id="peeCount">0</b><span>פיפי</span></div>
+          <div class="stat"><b id="poopCount">0</b><span>קקי</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">רישומים של היום</div>
+        <div class="actions" style="margin-bottom:10px">
+          <button class="btn secondary" onclick="exportJson()">ייצוא גיבוי</button>
+          <button class="btn secondary" onclick="document.getElementById('importFile').click()">ייבוא גיבוי</button>
+          <input id="importFile" type="file" accept=".json" style="display:none" onchange="importJson(event)" />
+          <button class="btn danger" onclick="clearDay()">נקה יום זה</button>
+        </div>
+        <div id="entries" class="list"></div>
+      </div>
+    </div>
+
+    <div class="footer-note">אחרי שמעדכנים קבצים בשרת, לפעמים צריך לרענן פעמיים או להסיר ולהוסיף מחדש למסך הבית.</div>
+  </div>
+
+<script>
+const STORAGE_KEY = "baby-tracker-v2";
+const PROFILE_KEY = "baby-tracker-profile-v2";
+let deferredPrompt = null;
+let currentType = "האכלה";
+
+function getTodayStr(){
+  const d = new Date();
+  const off = d.getTimezoneOffset();
+  const local = new Date(d.getTime() - off * 60000);
+  return local.toISOString().slice(0,10);
+}
+function nowTime(){
+  return new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit', hour12:false});
+}
+function loadDB(){
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e){ return {}; }
+}
+function saveDB(db){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+}
+function getDayEntries(date){
+  const db = loadDB();
+  return db[date] || [];
+}
+function setDayEntries(date, entries){
+  const db = loadDB();
+  db[date] = entries;
+  saveDB(db);
+}
+function loadProfile(){
+  try { return JSON.parse(localStorage.getItem(PROFILE_KEY)) || {}; } catch(e){ return {}; }
+}
+function saveProfileData(profile){
+  localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+}
+function applyProfile(){
+  const profile = loadProfile();
+  const name = profile.name && profile.name.trim() ? profile.name.trim() : "";
+  document.getElementById("heroTitle").textContent = name ? `מעקב ${name} 👶` : "מעקב תינוק 👶";
+  document.getElementById("babyName").value = name;
+  document.getElementById("heroImage").src = profile.photo || "icon-192.png";
+}
+function saveProfile(){
+  const name = document.getElementById("babyName").value.trim();
+  const file = document.getElementById("babyPhoto").files[0];
+  if(file){
+    const reader = new FileReader();
+    reader.onload = function(){
+      saveProfileData({name, photo: reader.result});
+      document.getElementById("babyPhoto").value = "";
+      applyProfile();
+      alert("הפרופיל נשמר");
+    };
+    reader.readAsDataURL(file);
+  } else {
+    const current = loadProfile();
+    saveProfileData({name, photo: current.photo || ""});
+    applyProfile();
+    alert("הפרופיל נשמר");
+  }
+}
+function resetProfile(){
+  localStorage.removeItem(PROFILE_KEY);
+  document.getElementById("babyPhoto").value = "";
+  applyProfile();
+}
+function esc(s){
+  return String(s || "").replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+}
+function typeEmoji(type){
+  return {"האכלה":"🍼","פיפי":"💧","קקי":"💩","ויטמינים":"💊","הערה":"📝"}[type] || "•";
+}
+function sortEntries(arr){
+  return arr.sort((a,b)=> (a.time||"").localeCompare(b.time||""));
+}
+function render(){
+  const date = document.getElementById("logDate").value;
+  const entries = sortEntries(getDayEntries(date));
+  const entriesBox = document.getElementById("entries");
+  if(!entries.length){
+    entriesBox.innerHTML = '<div class="muted">עדיין אין רישומים ליום הזה.</div>';
+  } else {
+    entriesBox.innerHTML = entries.map((e, i) => `
+      <div class="item">
+        <div class="item-top">
+          <div><span class="badge">${typeEmoji(e.type)} ${esc(e.type)}</span></div>
+          <div><b>${esc(e.time || "")}</b></div>
+        </div>
+        <div class="muted" style="margin-top:8px">
+          ${e.amount ? `כמות: <b>${esc(e.amount)}</b> מ״ל` : 'ללא כמות'}${e.note ? ' · ' + esc(e.note) : ''}
+        </div>
+        <div class="actions" style="margin-top:10px">
+          <button class="btn secondary" onclick="editEntry(${i})">עריכה</button>
+          <button class="btn danger" onclick="deleteEntry(${i})">מחיקה</button>
+        </div>
+      </div>
+    `).join("");
+  }
+  const feedEntries = entries.filter(e=>e.type==="האכלה");
+  document.getElementById("feedCount").textContent = feedEntries.length;
+  document.getElementById("feedMl").textContent = feedEntries.reduce((s,e)=>s + Number(e.amount || 0), 0);
+  document.getElementById("peeCount").textContent = entries.filter(e=>e.type==="פיפי").length;
+  document.getElementById("poopCount").textContent = entries.filter(e=>e.type==="קקי").length;
+}
+function fillNow(){
+  document.getElementById("time").value = nowTime();
+}
+function clearForm(){
+  document.getElementById("amount").value = "";
+  document.getElementById("note").value = "";
+  document.getElementById("time").value = nowTime();
+}
+document.querySelectorAll("#typeChips .chip").forEach(chip=>{
+  chip.addEventListener("click", ()=>{
+    document.querySelectorAll("#typeChips .chip").forEach(c=>c.classList.remove("active"));
+    chip.classList.add("active");
+    currentType = chip.dataset.type;
+    const amount = document.getElementById("amount");
+    amount.disabled = currentType !== "האכלה";
+    if(currentType !== "האכלה") amount.value = "";
+  });
+});
+function addEntry(){
+  const date = document.getElementById("logDate").value;
+  const time = document.getElementById("time").value || nowTime();
+  const amount = document.getElementById("amount").value;
+  const note = document.getElementById("note").value.trim();
+  const entries = getDayEntries(date);
+  entries.push({type: currentType, time, amount: currentType==="האכלה" ? amount : "", note});
+  setDayEntries(date, entries);
+  clearForm();
+  render();
+}
+function quickAdd(type, amount){
+  const date = document.getElementById("logDate").value;
+  const entries = getDayEntries(date);
+  entries.push({type, time: nowTime(), amount, note:""});
+  setDayEntries(date, entries);
+  render();
+}
+function deleteEntry(index){
+  const date = document.getElementById("logDate").value;
+  const entries = getDayEntries(date);
+  entries.splice(index,1);
+  setDayEntries(date, entries);
+  render();
+}
+function editEntry(index){
+  const date = document.getElementById("logDate").value;
+  const entries = getDayEntries(date);
+  const e = entries[index];
+  currentType = e.type;
+  document.querySelectorAll("#typeChips .chip").forEach(c=>c.classList.toggle("active", c.dataset.type===e.type));
+  document.getElementById("time").value = e.time || "";
+  document.getElementById("amount").value = e.amount || "";
+  document.getElementById("note").value = e.note || "";
+  entries.splice(index,1);
+  setDayEntries(date, entries);
+  render();
+}
+function clearDay(){
+  const date = document.getElementById("logDate").value;
+  if(confirm("למחוק את כל הרישומים של היום הזה?")){
+    const db = loadDB();
+    delete db[date];
+    saveDB(db);
+    render();
+  }
+}
+function exportJson(){
+  const payload = { profile: loadProfile(), logs: loadDB() };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "baby-tracker-backup.json";
+  a.click();
+}
+function importJson(event){
+  const file = event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try {
+      const incoming = JSON.parse(reader.result);
+      if(incoming.logs) saveDB(incoming.logs);
+      if(incoming.profile) saveProfileData(incoming.profile);
+      applyProfile();
+      render();
+      alert("הגיבוי יובא בהצלחה");
+    } catch(e){
+      alert("הקובץ לא תקין");
+    }
+  };
+  reader.readAsText(file);
+}
+
+document.getElementById("logDate").value = getTodayStr();
+document.getElementById("logDate").addEventListener("change", render);
+fillNow();
+applyProfile();
+render();
+
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installBtn').style.display = 'block';
+});
+document.getElementById('installBtn').addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice;
+  deferredPrompt = null;
+});
+</script>
+</body>
+</html>
