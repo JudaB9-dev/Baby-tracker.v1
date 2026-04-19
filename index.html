@@ -20,15 +20,33 @@
     h1{font-size:28px;margin:0 0 6px}
     .sub{color:var(--muted);font-size:14px}
     .grid{display:grid;gap:14px}
-    .card{background:var(--card);border:1px solid #ecf2fa;border-radius:var(--radius);box-shadow:var(--shadow);padding:14px}
+    .card{background:var(--card);border:1px solid #ecf2fa;border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;overflow:hidden}
     .section-title{font-size:18px;font-weight:700;margin:0 0 10px}
     label{display:block;font-size:13px;color:var(--muted);margin:0 0 6px}
     input, textarea, button{font:inherit}
     input[type="date"], input[type="time"], input[type="number"], textarea{
-      width:100%;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:#fbfdff;color:var(--text);outline:none
+      width:100%;
+      max-width:100%;
+      min-width:0;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:#fbfdff;
+      color:var(--text);
+      outline:none;
+      box-sizing:border-box;
+      font-size:16px;
+    }
+    input[type="date"]{
+      inline-size:100%;
+      max-inline-size:100%;
+      width:calc(100% - 2px);
+      margin:0;
+      display:block;
     }
     textarea{min-height:84px;resize:vertical}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
+    .row > *{min-width:0}
     .chips{display:flex;flex-wrap:wrap;gap:8px}
     .chip{border:1px solid var(--line);background:#f7fbff;border-radius:999px;padding:10px 14px;cursor:pointer;user-select:none}
     .chip.active{background:var(--primary2);border-color:#b8d2f3}
@@ -148,7 +166,7 @@
   </div>
 
 <script>
-const STORAGE_KEY = "baby-tracker-v3";
+const STORAGE_KEY = "baby-tracker-v4";
 let deferredPrompt = null;
 let currentType = "האכלה";
 
