@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#8fb8e8" />
   <title>מעקב תינוק</title>
-  <link rel="manifest" href="manifest.json?v=7" />
+  <link rel="manifest" href="manifest.json?v=9" />
   <link rel="apple-touch-icon" href="icon-192.png" />
   <style>
     :root{--card:#ffffff;--line:#dbe7f6;--primary:#8fb8e8;--primary2:#dfeeff;--text:#1e2a3a;--muted:#6e7a8a;--shadow:0 8px 24px rgba(32,62,100,.10);--radius:18px;--field-h:48px;--page-pad:14px;--ok:#e8f7ec;--ok-text:#1f6b36;--warn:#fff4df;--warn-text:#8a5a00;--err:#ffe8e8;--err-text:#8f2424}
@@ -136,16 +136,17 @@
     </div>
   </div>
 
-  <div class="footer-note">אם עדכון לא מופיע מיד, סגור ופתח שוב או לחץ "רענון מהשרת".</div>
+  <div class="footer-note">אם עדכון לא מופיע מיד, לחץ "רענון מהשרת".</div>
 </div>
 
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycby5HlpD17IG1p217ot4kwuErP4BtVZPa92H9uNQWD3JnkYCBlHyRX0FR7c0eMA1mdVGfw/exec';
 const API_TOKEN = 'bt_7Fh29KqP4mX9Za81JrT6UvN2LsQ0';
-const STORAGE_KEY = 'baby-tracker-v7-state';
-const QUEUE_KEY = 'baby-tracker-v7-queue';
-const DEVICE_KEY = 'baby-tracker-v7-device';
-const SYNC_KEY = 'baby-tracker-v7-sync-meta';
+const STORAGE_KEY = 'baby-tracker-v9-state';
+const QUEUE_KEY = 'baby-tracker-v9-queue';
+const DEVICE_KEY = 'baby-tracker-v9-device';
+const SYNC_KEY = 'baby-tracker-v9-sync-meta';
+
 let deferredPrompt = null;
 let currentType = 'האכלה';
 let syncInProgress = false;
@@ -155,39 +156,148 @@ function nowTime(){return new Date().toLocaleTimeString('en-GB',{hour:'2-digit',
 function nowIso(){return new Date().toISOString()}
 function esc(s){return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 function typeEmoji(type){return {"האכלה":"🍼","פיפי":"💧","קקי":"💩","ויטמינים":"💊","הערה":"📝"}[type]||"•"}
-function getDeviceId(){let id=localStorage.getItem(DEVICE_KEY);if(!id){id='dev_'+Math.random().toString(36).slice(2)+Date.now().toString(36);localStorage.setItem(DEVICE_KEY,id)}return id}
-function loadState(){try{const data=JSON.parse(localStorage.getItem(STORAGE_KEY));return data&&Array.isArray(data.entries)?data:{entries:[]}}catch{return{entries:[]}}}
+
+function getDeviceId(){
+  let id=localStorage.getItem(DEVICE_KEY);
+  if(!id){
+    id='dev_'+Math.random().toString(36).slice(2)+Date.now().toString(36);
+    localStorage.setItem(DEVICE_KEY,id);
+  }
+  return id;
+}
+
+function loadState(){
+  try{
+    const data=JSON.parse(localStorage.getItem(STORAGE_KEY));
+    return data&&Array.isArray(data.entries)?data:{entries:[]};
+  }catch{
+    return{entries:[]};
+  }
+}
+
 function saveState(state){localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}
 function loadQueue(){try{const q=JSON.parse(localStorage.getItem(QUEUE_KEY));return Array.isArray(q)?q:[]}catch{return[]}}
 function saveQueue(queue){localStorage.setItem(QUEUE_KEY,JSON.stringify(queue))}
 function loadSyncMeta(){try{return JSON.parse(localStorage.getItem(SYNC_KEY))||{}}catch{return{}}}
 function saveSyncMeta(meta){localStorage.setItem(SYNC_KEY,JSON.stringify(meta))}
+
 function normalizeDateStr(value){
   if(!value) return '';
+
   if(typeof value==='string'){
     if(/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
-    if(/^\d{1,2}\.\d{1,2}\.\d{4}$/.test(value)){const [d,m,y]=value.split('.');return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;}
+
+    if(/^\d{1,2}\.\d{1,2}\.\d{4}$/.test(value)){
+      const [d,m,y]=value.split('.');
+      return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    }
+
     const parsed=new Date(value);
-    if(!isNaN(parsed)){const off=parsed.getTimezoneOffset();return new Date(parsed.getTime()-off*60000).toISOString().slice(0,10);}
+    if(!isNaN(parsed)){
+      const off=parsed.getTimezoneOffset();
+      return new Date(parsed.getTime()-off*60000).toISOString().slice(0,10);
+    }
   }
-  if(Object.prototype.toString.call(value)==='[object Date]'&&!isNaN(value)){const off=value.getTimezoneOffset();return new Date(value.getTime()-off*60000).toISOString().slice(0,10);}
+
+  if(Object.prototype.toString.call(value)==='[object Date]'&&!isNaN(value)){
+    const off=value.getTimezoneOffset();
+    return new Date(value.getTime()-off*60000).toISOString().slice(0,10);
+  }
+
   return '';
 }
-function normalizeEntry(raw){
-  return {id:String(raw.id||''),createdAt:String(raw.createdAt||raw.updatedAt||nowIso()),updatedAt:String(raw.updatedAt||raw.createdAt||nowIso()),date:normalizeDateStr(raw.date),time:String(raw.time||''),type:String(raw.type||''),amount:raw.amount===null||raw.amount===undefined?'':String(raw.amount),note:String(raw.note||''),device:String(raw.device||''),deleted:raw.deleted===true||raw.deleted==='true'||raw.deleted==='TRUE'};
+
+function normalizeTimeStr(value){
+  if(value===null||value===undefined||value==='') return '';
+
+  if(Object.prototype.toString.call(value)==='[object Date]'&&!isNaN(value)){
+    return value.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false});
+  }
+
+  if(typeof value==='number'&&isFinite(value)){
+    const totalMinutes=Math.round((value%1)*24*60);
+    const hh=String(Math.floor(totalMinutes/60)%24).padStart(2,'0');
+    const mm=String(totalMinutes%60).padStart(2,'0');
+    return `${hh}:${mm}`;
+  }
+
+  const s=String(value).trim();
+  if(!s) return '';
+  if(/^\d{2}:\d{2}$/.test(s)) return s;
+  if(/^\d{2}:\d{2}:\d{2}$/.test(s)) return s.slice(0,5);
+
+  const parsed=new Date(s);
+  if(!isNaN(parsed)){
+    return parsed.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false});
+  }
+
+  const match=s.match(/(\d{1,2}):(\d{2})/);
+  if(match){
+    return `${String(match[1]).padStart(2,'0')}:${match[2]}`;
+  }
+
+  return '';
 }
+
+function isDeletedValue(value){
+  return value===true || String(value).toLowerCase()==='true';
+}
+
+function normalizeEntry(raw){
+  return {
+    id:String(raw.id||''),
+    createdAt:String(raw.createdAt||raw.updatedAt||nowIso()),
+    updatedAt:String(raw.updatedAt||raw.createdAt||nowIso()),
+    date:normalizeDateStr(raw.date),
+    time:normalizeTimeStr(raw.time),
+    type:String(raw.type||''),
+    amount:raw.amount===null||raw.amount===undefined?'':String(raw.amount),
+    note:String(raw.note||''),
+    device:String(raw.device||''),
+    deleted:isDeletedValue(raw.deleted)
+  };
+}
+
 function mergeEntries(localEntries,incomingEntries){
   const map=new Map();
-  [...localEntries,...incomingEntries].forEach(item=>{const entry=normalizeEntry(item);if(!entry.id)return;const existing=map.get(entry.id);if(!existing){map.set(entry.id,entry);return;}const existingTs=new Date(existing.updatedAt||existing.createdAt||0).getTime();const newTs=new Date(entry.updatedAt||entry.createdAt||0).getTime();if(newTs>=existingTs)map.set(entry.id,entry);});
+
+  [...localEntries,...incomingEntries].forEach(item=>{
+    const entry=normalizeEntry(item);
+    if(!entry.id) return;
+
+    const existing=map.get(entry.id);
+    if(!existing){
+      map.set(entry.id,entry);
+      return;
+    }
+
+    const existingTs=new Date(existing.updatedAt||existing.createdAt||0).getTime();
+    const newTs=new Date(entry.updatedAt||entry.createdAt||0).getTime();
+
+    if(newTs>=existingTs){
+      map.set(entry.id,entry);
+    }
+  });
+
   return Array.from(map.values());
 }
-function getEntriesForDay(date){const state=loadState();return state.entries.map(normalizeEntry).filter(e=>!e.deleted&&normalizeDateStr(e.date)===normalizeDateStr(date)).sort((a,b)=>(a.time||'').localeCompare(b.time||''))}
+
+function getEntriesForDay(date){
+  const state=loadState();
+  return state.entries
+    .map(normalizeEntry)
+    .filter(e=>!e.deleted && normalizeDateStr(e.date)===normalizeDateStr(date))
+    .sort((a,b)=>(a.time||'').localeCompare(b.time||''));
+}
+
 function render(){
   const date=document.getElementById('logDate').value;
   const entries=getEntriesForDay(date);
   const box=document.getElementById('entries');
-  if(!entries.length){box.innerHTML='<div class="muted">עדיין אין רישומים ליום הזה.</div>';}
-  else{
+
+  if(!entries.length){
+    box.innerHTML='<div class="muted">עדיין אין רישומים ליום הזה.</div>';
+  } else {
     box.innerHTML=entries.map(e=>`
       <div class="item">
         <div class="item-top">
@@ -201,6 +311,7 @@ function render(){
         </div>
       </div>`).join('');
   }
+
   const feedEntries=entries.filter(e=>e.type==='האכלה');
   document.getElementById('feedCount').textContent=feedEntries.length;
   document.getElementById('feedMl').textContent=feedEntries.reduce((s,e)=>s+Number(e.amount||0),0);
@@ -208,40 +319,317 @@ function render(){
   document.getElementById('poopCount').textContent=entries.filter(e=>e.type==='קקי').length;
   updateSyncStatus();
 }
-function upsertLocalEntry(entry){const state=loadState();state.entries=mergeEntries(state.entries,[entry]);saveState(state)}
-function enqueue(action,payload){const q=loadQueue();q.push({action,payload,queuedAt:nowIso()});saveQueue(q);updateSyncStatus()}
-function setStatus(text,kind,metaText){const el=document.getElementById('syncStatus');const meta=document.getElementById('syncMeta');el.textContent=text;el.className=`status-pill ${kind}`;meta.textContent=metaText||''}
-function updateSyncStatus(){const q=loadQueue();const meta=loadSyncMeta();if(!navigator.onLine){setStatus('אופליין','status-warn',`יש ${q.length} פעולות שממתינות לחיבור`);return;}if(syncInProgress){setStatus('מסנכרן','status-warn','שולח ומושך נתונים מהשרת');return;}if(meta.lastError){setStatus('שגיאת סנכרון','status-err',meta.lastError);return;}const last=meta.lastSuccessAt?new Date(meta.lastSuccessAt).toLocaleString('he-IL'):'עדיין לא בוצע';setStatus('מסונכרן','status-ok',`ממתינות ${q.length} פעולות · סנכרון אחרון: ${last}`)}
-function makeEntry({date,time,type,amount,note}){const ts=nowIso();return{id:'entry_'+Math.random().toString(36).slice(2)+Date.now().toString(36),createdAt:ts,updatedAt:ts,date:normalizeDateStr(date),time:time||nowTime(),type:type||'',amount:type==='האכלה'?String(amount||''):'',note:note||'',device:getDeviceId(),deleted:false}}
+
+function upsertLocalEntry(entry){
+  const state=loadState();
+  state.entries=mergeEntries(state.entries,[entry]);
+  state.entries=state.entries.filter(e=>!normalizeEntry(e).deleted);
+  saveState(state);
+}
+
+function enqueue(action,payload){
+  const q=loadQueue();
+  q.push({action,payload,queuedAt:nowIso()});
+  saveQueue(q);
+  updateSyncStatus();
+}
+
+function setStatus(text,kind,metaText){
+  const el=document.getElementById('syncStatus');
+  const meta=document.getElementById('syncMeta');
+  el.textContent=text;
+  el.className=`status-pill ${kind}`;
+  meta.textContent=metaText||'';
+}
+
+function updateSyncStatus(){
+  const q=loadQueue();
+  const meta=loadSyncMeta();
+
+  if(!navigator.onLine){
+    setStatus('אופליין','status-warn',`יש ${q.length} פעולות שממתינות לחיבור`);
+    return;
+  }
+
+  if(syncInProgress){
+    setStatus('מסנכרן','status-warn','שולח ומושך נתונים מהשרת');
+    return;
+  }
+
+  if(meta.lastError){
+    setStatus('שגיאת סנכרון','status-err',meta.lastError);
+    return;
+  }
+
+  const last=meta.lastSuccessAt?new Date(meta.lastSuccessAt).toLocaleString('he-IL'):'עדיין לא בוצע';
+  setStatus('מסונכרן','status-ok',`ממתינות ${q.length} פעולות · סנכרון אחרון: ${last}`);
+}
+
+function makeEntry({date,time,type,amount,note}){
+  const ts=nowIso();
+  return {
+    id:'entry_'+Math.random().toString(36).slice(2)+Date.now().toString(36),
+    createdAt:ts,
+    updatedAt:ts,
+    date:normalizeDateStr(date),
+    time:normalizeTimeStr(time||nowTime()),
+    type:type||'',
+    amount:type==='האכלה'?String(amount||''):'',
+    note:note||'',
+    device:getDeviceId(),
+    deleted:false
+  };
+}
+
 function fillNow(){document.getElementById('time').value=nowTime()}
 function clearForm(){document.getElementById('amount').value='';document.getElementById('note').value='';document.getElementById('time').value=nowTime()}
-document.querySelectorAll('#typeChips .chip').forEach(chip=>{chip.addEventListener('click',()=>{document.querySelectorAll('#typeChips .chip').forEach(c=>c.classList.remove('active'));chip.classList.add('active');currentType=chip.dataset.type;const amount=document.getElementById('amount');amount.disabled=currentType!=='האכלה';if(currentType!=='האכלה')amount.value='';});});
-function addEntry(){const entry=makeEntry({date:document.getElementById('logDate').value,time:document.getElementById('time').value,type:currentType,amount:document.getElementById('amount').value,note:document.getElementById('note').value.trim()});upsertLocalEntry(entry);enqueue('save',entry);clearForm();render();syncAll()}
-function quickAdd(type,amount){const entry=makeEntry({date:document.getElementById('logDate').value,time:nowTime(),type,amount,note:''});upsertLocalEntry(entry);enqueue('save',entry);render();syncAll()}
-function findEntryById(id){return loadState().entries.map(normalizeEntry).find(e=>e.id===id)}
-function editEntry(id){const e=findEntryById(id);if(!e)return;currentType=e.type;document.querySelectorAll('#typeChips .chip').forEach(c=>c.classList.toggle('active',c.dataset.type===e.type));document.getElementById('time').value=e.time||'';document.getElementById('amount').value=e.amount||'';document.getElementById('note').value=e.note||'';const amount=document.getElementById('amount');amount.disabled=currentType!=='האכלה';deleteEntry(id,true)}
-function deleteEntry(id,silent){const e=findEntryById(id);if(!e)return;const updated={...e,deleted:true,updatedAt:nowIso()};upsertLocalEntry(updated);enqueue('delete',{id});render();if(!silent)syncAll()}
-function clearDay(){const date=document.getElementById('logDate').value;if(!confirm('למחוק את כל הרישומים של היום הזה?'))return;getEntriesForDay(date).forEach(e=>deleteEntry(e.id,true));render();syncAll()}
-function exportJson(){const blob=new Blob([JSON.stringify(loadState(),null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='baby-tracker-backup.json';a.click()}
-function importJson(event){const file=event.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const data=JSON.parse(reader.result);const incoming=Array.isArray(data.entries)?data.entries:[];const state=loadState();state.entries=mergeEntries(state.entries,incoming);saveState(state);render();alert('הגיבוי יובא בהצלחה');syncAll();}catch{alert('הקובץ לא תקין');}};reader.readAsText(file)}
-async function apiGetAll(){const url=`${API_URL}?token=${encodeURIComponent(API_TOKEN)}&_=${Date.now()}`;const res=await fetch(url,{method:'GET',cache:'no-store'});return res.json()}
-async function apiSave(entry){const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:API_TOKEN,action:'save',entry})});return res.json()}
-async function apiDelete(id){const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:API_TOKEN,action:'delete',id})});return res.json()}
-async function flushQueue(){const queue=loadQueue();if(!queue.length)return;const remaining=[];for(const item of queue){try{let result;if(item.action==='save')result=await apiSave(item.payload);else if(item.action==='delete')result=await apiDelete(item.payload.id);else result={ok:true};if(!result.ok)remaining.push(item);}catch{remaining.push(item);}}saveQueue(remaining)}
-async function pullFromServer(){const result=await apiGetAll();if(!result.ok)throw new Error(result.error||'Failed to fetch');const serverEntries=(result.data||[]).map(normalizeEntry);const state=loadState();state.entries=mergeEntries(state.entries,serverEntries);saveState(state)}
-async function syncAll(){if(syncInProgress)return;if(!navigator.onLine){updateSyncStatus();return;}syncInProgress=true;updateSyncStatus();try{await flushQueue();await pullFromServer();saveSyncMeta({lastSuccessAt:nowIso(),lastError:''});}catch(err){saveSyncMeta({...loadSyncMeta(),lastError:String(err.message||err)});}finally{syncInProgress=false;render();}}
+
+document.querySelectorAll('#typeChips .chip').forEach(chip=>{
+  chip.addEventListener('click',()=>{
+    document.querySelectorAll('#typeChips .chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    currentType=chip.dataset.type;
+    const amount=document.getElementById('amount');
+    amount.disabled=currentType!=='האכלה';
+    if(currentType!=='האכלה') amount.value='';
+  });
+});
+
+function addEntry(){
+  const entry=makeEntry({
+    date:document.getElementById('logDate').value,
+    time:document.getElementById('time').value,
+    type:currentType,
+    amount:document.getElementById('amount').value,
+    note:document.getElementById('note').value.trim()
+  });
+
+  upsertLocalEntry(entry);
+  enqueue('save',entry);
+  clearForm();
+  render();
+  syncAll();
+}
+
+function quickAdd(type,amount){
+  const entry=makeEntry({
+    date:document.getElementById('logDate').value,
+    time:nowTime(),
+    type,
+    amount,
+    note:''
+  });
+
+  upsertLocalEntry(entry);
+  enqueue('save',entry);
+  render();
+  syncAll();
+}
+
+function findEntryById(id){
+  return loadState().entries.map(normalizeEntry).find(e=>e.id===id);
+}
+
+function editEntry(id){
+  const e=findEntryById(id);
+  if(!e) return;
+
+  currentType=e.type;
+  document.querySelectorAll('#typeChips .chip').forEach(c=>c.classList.toggle('active',c.dataset.type===e.type));
+  document.getElementById('time').value=e.time||'';
+  document.getElementById('amount').value=e.amount||'';
+  document.getElementById('note').value=e.note||'';
+
+  const amount=document.getElementById('amount');
+  amount.disabled=currentType!=='האכלה';
+
+  deleteEntry(id,true);
+}
+
+function deleteEntry(id,silent){
+  const e=findEntryById(id);
+  if(!e) return;
+
+  const updated={...e,deleted:true,updatedAt:nowIso()};
+  upsertLocalEntry(updated);
+  enqueue('delete',{id});
+  render();
+
+  if(!silent) syncAll();
+}
+
+function clearDay(){
+  const date=document.getElementById('logDate').value;
+  if(!confirm('למחוק את כל הרישומים של היום הזה?')) return;
+
+  getEntriesForDay(date).forEach(e=>deleteEntry(e.id,true));
+  render();
+  syncAll();
+}
+
+function exportJson(){
+  const blob=new Blob([JSON.stringify(loadState(),null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='baby-tracker-backup.json';
+  a.click();
+}
+
+function importJson(event){
+  const file=event.target.files[0];
+  if(!file) return;
+
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const data=JSON.parse(reader.result);
+      const incoming=Array.isArray(data.entries)?data.entries:[];
+      const state=loadState();
+      state.entries=mergeEntries(state.entries,incoming).filter(e=>!normalizeEntry(e).deleted);
+      saveState(state);
+      render();
+      alert('הגיבוי יובא בהצלחה');
+      syncAll();
+    }catch{
+      alert('הקובץ לא תקין');
+    }
+  };
+  reader.readAsText(file);
+}
+
+async function apiGetAll(){
+  const url=`${API_URL}?token=${encodeURIComponent(API_TOKEN)}&_=${Date.now()}`;
+  const res=await fetch(url,{method:'GET',cache:'no-store'});
+  return res.json();
+}
+
+async function apiSave(entry){
+  const res=await fetch(API_URL,{
+    method:'POST',
+    cache:'no-store',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({token:API_TOKEN,action:'save',entry})
+  });
+  return res.json();
+}
+
+async function apiDelete(id){
+  const res=await fetch(API_URL,{
+    method:'POST',
+    cache:'no-store',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({token:API_TOKEN,action:'delete',id})
+  });
+  return res.json();
+}
+
+async function flushQueue(){
+  const queue=loadQueue();
+  if(!queue.length) return;
+
+  const remaining=[];
+
+  for(const item of queue){
+    try{
+      let result;
+
+      if(item.action==='save') result=await apiSave(item.payload);
+      else if(item.action==='delete') result=await apiDelete(item.payload.id);
+      else result={ok:true};
+
+      if(!result.ok) remaining.push(item);
+    }catch{
+      remaining.push(item);
+    }
+  }
+
+  saveQueue(remaining);
+}
+
+async function pullFromServer(){
+  const result=await apiGetAll();
+  if(!result.ok) throw new Error(result.error||'Failed to fetch');
+
+  const serverEntries=(result.data||[]).map(normalizeEntry);
+  const state=loadState();
+  const merged=mergeEntries(state.entries,serverEntries);
+
+  state.entries=merged.filter(entry=>!entry.deleted);
+  saveState(state);
+}
+
+async function syncAll(){
+  if(syncInProgress) return;
+  if(!navigator.onLine){
+    updateSyncStatus();
+    return;
+  }
+
+  syncInProgress=true;
+  updateSyncStatus();
+
+  try{
+    await flushQueue();
+    await pullFromServer();
+    saveSyncMeta({lastSuccessAt:nowIso(),lastError:''});
+  }catch(err){
+    saveSyncMeta({...loadSyncMeta(),lastError:String(err.message||err)});
+  }finally{
+    syncInProgress=false;
+    render();
+  }
+}
+
 function manualSync(){syncAll()}
-async function forceReloadFromServer(){if(!navigator.onLine)return updateSyncStatus();syncInProgress=true;updateSyncStatus();try{await pullFromServer();saveSyncMeta({lastSuccessAt:nowIso(),lastError:''});}catch(err){saveSyncMeta({...loadSyncMeta(),lastError:String(err.message||err)});}finally{syncInProgress=false;render();}}
+
+async function forceReloadFromServer(){
+  if(!navigator.onLine){
+    updateSyncStatus();
+    return;
+  }
+
+  syncInProgress=true;
+  updateSyncStatus();
+
+  try{
+    localStorage.removeItem(STORAGE_KEY);
+    await pullFromServer();
+    saveSyncMeta({lastSuccessAt:nowIso(),lastError:''});
+  }catch(err){
+    saveSyncMeta({...loadSyncMeta(),lastError:String(err.message||err)});
+  }finally{
+    syncInProgress=false;
+    render();
+  }
+}
 
 document.getElementById('logDate').value=getTodayStr();
 document.getElementById('logDate').addEventListener('change',render);
-fillNow(); render(); syncAll();
+
+fillNow();
+render();
+syncAll();
+
 setInterval(syncAll,15000);
 window.addEventListener('online',syncAll);
 window.addEventListener('focus',syncAll);
-if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js?v=7').catch(()=>{});}
-window.addEventListener('beforeinstallprompt',(e)=>{e.preventDefault();deferredPrompt=e;document.getElementById('installBtn').style.display='block';});
-document.getElementById('installBtn').addEventListener('click',async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;});
+
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('./sw.js?v=9').catch(()=>{});
+}
+
+window.addEventListener('beforeinstallprompt',(e)=>{
+  e.preventDefault();
+  deferredPrompt=e;
+  document.getElementById('installBtn').style.display='block';
+});
+
+document.getElementById('installBtn').addEventListener('click',async()=>{
+  if(!deferredPrompt) return;
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice;
+  deferredPrompt=null;
+});
 </script>
 </body>
 </html>
