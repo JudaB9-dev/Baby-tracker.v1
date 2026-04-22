@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#8fb8e8" />
   <title>מעקב תינוק</title>
-  <link rel="manifest" href="manifest.json?v=9" />
+  <link rel="manifest" href="manifest.json?v=10" />
   <link rel="apple-touch-icon" href="icon-192.png" />
   <style>
     :root{--card:#ffffff;--line:#dbe7f6;--primary:#8fb8e8;--primary2:#dfeeff;--text:#1e2a3a;--muted:#6e7a8a;--shadow:0 8px 24px rgba(32,62,100,.10);--radius:18px;--field-h:48px;--page-pad:14px;--ok:#e8f7ec;--ok-text:#1f6b36;--warn:#fff4df;--warn-text:#8a5a00;--err:#ffe8e8;--err-text:#8f2424}
@@ -24,7 +24,7 @@
     .row{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;align-items:end}.field{min-width:0}
     .chips{display:flex;flex-wrap:wrap;gap:8px}.chip{border:1px solid var(--line);background:#f7fbff;border-radius:999px;padding:10px 14px;cursor:pointer;user-select:none;line-height:1.15;font-size:15px}.chip.active{background:var(--primary2);border-color:#b8d2f3}
     .btn{border:0;border-radius:16px;min-height:48px;padding:13px 16px;background:var(--primary);color:#0d2540;font-weight:700;cursor:pointer;box-shadow:var(--shadow);line-height:1.2;display:inline-flex;align-items:center;justify-content:center;text-align:center}
-    .btn.secondary{background:#eef5ff}.btn.danger{background:#ffe8e8;color:#8f2424}.btn.full{width:100%}
+    .btn.secondary{background:#eef5ff}.btn.danger{background:#ffe8e8;color:#8f2424}.btn.full{width:100%}.btn:disabled{opacity:.6;cursor:not-allowed}
     .quick,.stats{display:grid;gap:10px;width:100%}.quick{grid-template-columns:1fr 1fr}.stats{grid-template-columns:repeat(4,1fr)}
     .stat{background:#f8fbff;border:1px solid var(--line);padding:12px 8px;border-radius:16px;text-align:center}.stat b{display:block;font-size:22px;margin-bottom:4px;line-height:1}.stat span{display:block;font-size:13px;line-height:1.25;word-break:break-word}
     .list{display:grid;gap:10px}.item{border:1px solid var(--line);border-radius:16px;padding:12px;background:#fcfeff}
@@ -43,7 +43,7 @@
     <img src="icon-192.png" alt="תינוק" />
     <div>
       <h1>מעקב תינוק 👶</h1>
-      <div class="sub">מעקב יומי מסונכרן בין מכשירים, עם תמיכה באופליין.</div>
+      <div class="sub">מעקב יומי מסונכרן בין מכשירים.</div>
     </div>
   </div>
 
@@ -54,8 +54,7 @@
         <div id="syncStatus" class="status-pill status-warn">טוען...</div>
         <div class="muted" id="syncMeta">מכין נתונים</div>
         <div class="small-actions">
-          <button class="small-btn" type="button" onclick="manualSync()">סנכרן עכשיו</button>
-          <button class="small-btn" type="button" onclick="forceReloadFromServer()">רענון מהשרת</button>
+          <button class="small-btn" type="button" onclick="manualRefresh()">רענון מהשרת</button>
         </div>
       </div>
     </div>
@@ -108,7 +107,7 @@
         <textarea id="note" placeholder="למשל: גרפס חלש / פליטה קטנה / ישן מיד אחרי"></textarea>
       </div>
       <div class="actions" style="margin-top:12px">
-        <button class="btn" type="button" onclick="addEntry()">שמור רישום</button>
+        <button id="saveBtn" class="btn" type="button" onclick="addEntry()">שמור רישום</button>
         <button class="btn secondary" type="button" onclick="fillNow()">שעה עכשיו</button>
         <button class="btn secondary" type="button" onclick="clearForm()">נקה</button>
       </div>
@@ -136,20 +135,19 @@
     </div>
   </div>
 
-  <div class="footer-note">אם עדכון לא מופיע מיד, לחץ "רענון מהשרת".</div>
+  <div class="footer-note">האפליקציה מושכת מחדש מהשרת אחרי כל שמירה או מחיקה.</div>
 </div>
 
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycby5HlpD17IG1p217ot4kwuErP4BtVZPa92H9uNQWD3JnkYCBlHyRX0FR7c0eMA1mdVGfw/exec';
 const API_TOKEN = 'bt_7Fh29KqP4mX9Za81JrT6UvN2LsQ0';
-const STORAGE_KEY = 'baby-tracker-v9-state';
-const QUEUE_KEY = 'baby-tracker-v9-queue';
-const DEVICE_KEY = 'baby-tracker-v9-device';
-const SYNC_KEY = 'baby-tracker-v9-sync-meta';
+const STORAGE_KEY = 'baby-tracker-v10-state';
+const DEVICE_KEY = 'baby-tracker-v10-device';
+const SYNC_KEY = 'baby-tracker-v10-sync-meta';
 
 let deferredPrompt = null;
 let currentType = 'האכלה';
-let syncInProgress = false;
+let busy = false;
 
 function getTodayStr(){const d=new Date();const off=d.getTimezoneOffset();return new Date(d.getTime()-off*60000).toISOString().slice(0,10)}
 function nowTime(){return new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false})}
@@ -171,15 +169,21 @@ function loadState(){
     const data=JSON.parse(localStorage.getItem(STORAGE_KEY));
     return data&&Array.isArray(data.entries)?data:{entries:[]};
   }catch{
-    return{entries:[]};
+    return {entries:[]};
   }
 }
 
-function saveState(state){localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}
-function loadQueue(){try{const q=JSON.parse(localStorage.getItem(QUEUE_KEY));return Array.isArray(q)?q:[]}catch{return[]}}
-function saveQueue(queue){localStorage.setItem(QUEUE_KEY,JSON.stringify(queue))}
-function loadSyncMeta(){try{return JSON.parse(localStorage.getItem(SYNC_KEY))||{}}catch{return{}}}
-function saveSyncMeta(meta){localStorage.setItem(SYNC_KEY,JSON.stringify(meta))}
+function saveState(state){
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
+}
+
+function loadSyncMeta(){
+  try{return JSON.parse(localStorage.getItem(SYNC_KEY))||{};}catch{return {};}
+}
+
+function saveSyncMeta(meta){
+  localStorage.setItem(SYNC_KEY,JSON.stringify(meta));
+}
 
 function normalizeDateStr(value){
   if(!value) return '';
@@ -199,7 +203,7 @@ function normalizeDateStr(value){
     }
   }
 
-  if(Object.prototype.toString.call(value)==='[object Date]'&&!isNaN(value)){
+  if(Object.prototype.toString.call(value)==='[object Date]' && !isNaN(value)){
     const off=value.getTimezoneOffset();
     return new Date(value.getTime()-off*60000).toISOString().slice(0,10);
   }
@@ -210,11 +214,11 @@ function normalizeDateStr(value){
 function normalizeTimeStr(value){
   if(value===null||value===undefined||value==='') return '';
 
-  if(Object.prototype.toString.call(value)==='[object Date]'&&!isNaN(value)){
+  if(Object.prototype.toString.call(value)==='[object Date]' && !isNaN(value)){
     return value.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false});
   }
 
-  if(typeof value==='number'&&isFinite(value)){
+  if(typeof value==='number' && isFinite(value)){
     const totalMinutes=Math.round((value%1)*24*60);
     const hh=String(Math.floor(totalMinutes/60)%24).padStart(2,'0');
     const mm=String(totalMinutes%60).padStart(2,'0');
@@ -258,36 +262,48 @@ function normalizeEntry(raw){
   };
 }
 
-function mergeEntries(localEntries,incomingEntries){
-  const map=new Map();
-
-  [...localEntries,...incomingEntries].forEach(item=>{
-    const entry=normalizeEntry(item);
-    if(!entry.id) return;
-
-    const existing=map.get(entry.id);
-    if(!existing){
-      map.set(entry.id,entry);
-      return;
-    }
-
-    const existingTs=new Date(existing.updatedAt||existing.createdAt||0).getTime();
-    const newTs=new Date(entry.updatedAt||entry.createdAt||0).getTime();
-
-    if(newTs>=existingTs){
-      map.set(entry.id,entry);
-    }
-  });
-
-  return Array.from(map.values());
-}
-
 function getEntriesForDay(date){
   const state=loadState();
   return state.entries
     .map(normalizeEntry)
-    .filter(e=>!e.deleted && normalizeDateStr(e.date)===normalizeDateStr(date))
+    .filter(e => !e.deleted && normalizeDateStr(e.date)===normalizeDateStr(date))
     .sort((a,b)=>(a.time||'').localeCompare(b.time||''));
+}
+
+function setBusy(flag){
+  busy=flag;
+  const saveBtn=document.getElementById('saveBtn');
+  if(saveBtn) saveBtn.disabled=flag;
+}
+
+function setStatus(text,kind,metaText){
+  const el=document.getElementById('syncStatus');
+  const meta=document.getElementById('syncMeta');
+  el.textContent=text;
+  el.className=`status-pill ${kind}`;
+  meta.textContent=metaText||'';
+}
+
+function updateSyncStatus(){
+  const meta=loadSyncMeta();
+
+  if(!navigator.onLine){
+    setStatus('אופליין','status-warn','אין חיבור כרגע');
+    return;
+  }
+
+  if(busy){
+    setStatus('מעדכן','status-warn','שומר או טוען נתונים מהשרת');
+    return;
+  }
+
+  if(meta.lastError){
+    setStatus('שגיאה','status-err',meta.lastError);
+    return;
+  }
+
+  const last=meta.lastSuccessAt?new Date(meta.lastSuccessAt).toLocaleString('he-IL'):'עדיין לא בוצע';
+  setStatus('מסונכרן','status-ok',`עדכון אחרון: ${last}`);
 }
 
 function render(){
@@ -297,7 +313,7 @@ function render(){
 
   if(!entries.length){
     box.innerHTML='<div class="muted">עדיין אין רישומים ליום הזה.</div>';
-  } else {
+  }else{
     box.innerHTML=entries.map(e=>`
       <div class="item">
         <div class="item-top">
@@ -320,49 +336,8 @@ function render(){
   updateSyncStatus();
 }
 
-function upsertLocalEntry(entry){
-  const state=loadState();
-  state.entries=mergeEntries(state.entries,[entry]);
-  state.entries=state.entries.filter(e=>!normalizeEntry(e).deleted);
-  saveState(state);
-}
-
-function enqueue(action,payload){
-  const q=loadQueue();
-  q.push({action,payload,queuedAt:nowIso()});
-  saveQueue(q);
-  updateSyncStatus();
-}
-
-function setStatus(text,kind,metaText){
-  const el=document.getElementById('syncStatus');
-  const meta=document.getElementById('syncMeta');
-  el.textContent=text;
-  el.className=`status-pill ${kind}`;
-  meta.textContent=metaText||'';
-}
-
-function updateSyncStatus(){
-  const q=loadQueue();
-  const meta=loadSyncMeta();
-
-  if(!navigator.onLine){
-    setStatus('אופליין','status-warn',`יש ${q.length} פעולות שממתינות לחיבור`);
-    return;
-  }
-
-  if(syncInProgress){
-    setStatus('מסנכרן','status-warn','שולח ומושך נתונים מהשרת');
-    return;
-  }
-
-  if(meta.lastError){
-    setStatus('שגיאת סנכרון','status-err',meta.lastError);
-    return;
-  }
-
-  const last=meta.lastSuccessAt?new Date(meta.lastSuccessAt).toLocaleString('he-IL'):'עדיין לא בוצע';
-  setStatus('מסונכרן','status-ok',`ממתינות ${q.length} פעולות · סנכרון אחרון: ${last}`);
+function replaceAllEntries(entries){
+  saveState({entries:entries.map(normalizeEntry).filter(e=>!e.deleted)});
 }
 
 function makeEntry({date,time,type,amount,note}){
@@ -381,121 +356,27 @@ function makeEntry({date,time,type,amount,note}){
   };
 }
 
-function fillNow(){document.getElementById('time').value=nowTime()}
-function clearForm(){document.getElementById('amount').value='';document.getElementById('note').value='';document.getElementById('time').value=nowTime()}
+function fillNow(){
+  document.getElementById('time').value=nowTime();
+}
+
+function clearForm(){
+  document.getElementById('amount').value='';
+  document.getElementById('note').value='';
+  document.getElementById('time').value=nowTime();
+}
 
 document.querySelectorAll('#typeChips .chip').forEach(chip=>{
   chip.addEventListener('click',()=>{
     document.querySelectorAll('#typeChips .chip').forEach(c=>c.classList.remove('active'));
     chip.classList.add('active');
     currentType=chip.dataset.type;
+
     const amount=document.getElementById('amount');
     amount.disabled=currentType!=='האכלה';
     if(currentType!=='האכלה') amount.value='';
   });
 });
-
-function addEntry(){
-  const entry=makeEntry({
-    date:document.getElementById('logDate').value,
-    time:document.getElementById('time').value,
-    type:currentType,
-    amount:document.getElementById('amount').value,
-    note:document.getElementById('note').value.trim()
-  });
-
-  upsertLocalEntry(entry);
-  enqueue('save',entry);
-  clearForm();
-  render();
-  syncAll();
-}
-
-function quickAdd(type,amount){
-  const entry=makeEntry({
-    date:document.getElementById('logDate').value,
-    time:nowTime(),
-    type,
-    amount,
-    note:''
-  });
-
-  upsertLocalEntry(entry);
-  enqueue('save',entry);
-  render();
-  syncAll();
-}
-
-function findEntryById(id){
-  return loadState().entries.map(normalizeEntry).find(e=>e.id===id);
-}
-
-function editEntry(id){
-  const e=findEntryById(id);
-  if(!e) return;
-
-  currentType=e.type;
-  document.querySelectorAll('#typeChips .chip').forEach(c=>c.classList.toggle('active',c.dataset.type===e.type));
-  document.getElementById('time').value=e.time||'';
-  document.getElementById('amount').value=e.amount||'';
-  document.getElementById('note').value=e.note||'';
-
-  const amount=document.getElementById('amount');
-  amount.disabled=currentType!=='האכלה';
-
-  deleteEntry(id,true);
-}
-
-function deleteEntry(id,silent){
-  const e=findEntryById(id);
-  if(!e) return;
-
-  const updated={...e,deleted:true,updatedAt:nowIso()};
-  upsertLocalEntry(updated);
-  enqueue('delete',{id});
-  render();
-
-  if(!silent) syncAll();
-}
-
-function clearDay(){
-  const date=document.getElementById('logDate').value;
-  if(!confirm('למחוק את כל הרישומים של היום הזה?')) return;
-
-  getEntriesForDay(date).forEach(e=>deleteEntry(e.id,true));
-  render();
-  syncAll();
-}
-
-function exportJson(){
-  const blob=new Blob([JSON.stringify(loadState(),null,2)],{type:'application/json'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download='baby-tracker-backup.json';
-  a.click();
-}
-
-function importJson(event){
-  const file=event.target.files[0];
-  if(!file) return;
-
-  const reader=new FileReader();
-  reader.onload=()=>{
-    try{
-      const data=JSON.parse(reader.result);
-      const incoming=Array.isArray(data.entries)?data.entries:[];
-      const state=loadState();
-      state.entries=mergeEntries(state.entries,incoming).filter(e=>!normalizeEntry(e).deleted);
-      saveState(state);
-      render();
-      alert('הגיבוי יובא בהצלחה');
-      syncAll();
-    }catch{
-      alert('הקובץ לא תקין');
-    }
-  };
-  reader.readAsText(file);
-}
 
 async function apiGetAll(){
   const url=`${API_URL}?token=${encodeURIComponent(API_TOKEN)}&_=${Date.now()}`;
@@ -523,82 +404,196 @@ async function apiDelete(id){
   return res.json();
 }
 
-async function flushQueue(){
-  const queue=loadQueue();
-  if(!queue.length) return;
-
-  const remaining=[];
-
-  for(const item of queue){
-    try{
-      let result;
-
-      if(item.action==='save') result=await apiSave(item.payload);
-      else if(item.action==='delete') result=await apiDelete(item.payload.id);
-      else result={ok:true};
-
-      if(!result.ok) remaining.push(item);
-    }catch{
-      remaining.push(item);
-    }
-  }
-
-  saveQueue(remaining);
-}
-
-async function pullFromServer(){
+async function loadFromServer(){
   const result=await apiGetAll();
   if(!result.ok) throw new Error(result.error||'Failed to fetch');
 
-  const serverEntries=(result.data||[]).map(normalizeEntry);
-  const state=loadState();
-  const merged=mergeEntries(state.entries,serverEntries);
-
-  state.entries=merged.filter(entry=>!entry.deleted);
-  saveState(state);
+  const entries=(result.data||[]).map(normalizeEntry).filter(e=>!e.deleted);
+  replaceAllEntries(entries);
+  saveSyncMeta({lastSuccessAt:nowIso(),lastError:''});
 }
 
-async function syncAll(){
-  if(syncInProgress) return;
+async function addEntry(){
+  if(busy) return;
   if(!navigator.onLine){
-    updateSyncStatus();
+    alert('אין חיבור כרגע. נסה שוב כשהאינטרנט חוזר.');
     return;
   }
 
-  syncInProgress=true;
-  updateSyncStatus();
+  const entry=makeEntry({
+    date:document.getElementById('logDate').value,
+    time:document.getElementById('time').value,
+    type:currentType,
+    amount:document.getElementById('amount').value,
+    note:document.getElementById('note').value.trim()
+  });
 
   try{
-    await flushQueue();
-    await pullFromServer();
-    saveSyncMeta({lastSuccessAt:nowIso(),lastError:''});
+    setBusy(true);
+    updateSyncStatus();
+
+    const result=await apiSave(entry);
+    if(!result.ok) throw new Error(result.error||'Save failed');
+
+    clearForm();
+    await loadFromServer();
   }catch(err){
     saveSyncMeta({...loadSyncMeta(),lastError:String(err.message||err)});
+    alert('שמירה נכשלה');
   }finally{
-    syncInProgress=false;
+    setBusy(false);
     render();
   }
 }
 
-function manualSync(){syncAll()}
+async function quickAdd(type,amount){
+  if(busy) return;
+  if(!navigator.onLine){
+    alert('אין חיבור כרגע. נסה שוב כשהאינטרנט חוזר.');
+    return;
+  }
 
-async function forceReloadFromServer(){
+  const entry=makeEntry({
+    date:document.getElementById('logDate').value,
+    time:nowTime(),
+    type,
+    amount,
+    note:''
+  });
+
+  try{
+    setBusy(true);
+    updateSyncStatus();
+
+    const result=await apiSave(entry);
+    if(!result.ok) throw new Error(result.error||'Save failed');
+
+    await loadFromServer();
+  }catch(err){
+    saveSyncMeta({...loadSyncMeta(),lastError:String(err.message||err)});
+    alert('שמירה נכשלה');
+  }finally{
+    setBusy(false);
+    render();
+  }
+}
+
+function findEntryById(id){
+  return loadState().entries.map(normalizeEntry).find(e=>e.id===id);
+}
+
+async function deleteEntry(id){
+  if(busy) return;
+  if(!navigator.onLine){
+    alert('אין חיבור כרגע. נסה שוב כשהאינטרנט חוזר.');
+    return;
+  }
+
+  try{
+    setBusy(true);
+    updateSyncStatus();
+
+    const result=await apiDelete(id);
+    if(!result.ok) throw new Error(result.error||'Delete failed');
+
+    await loadFromServer();
+  }catch(err){
+    saveSyncMeta({...loadSyncMeta(),lastError:String(err.message||err)});
+    alert('מחיקה נכשלה');
+  }finally{
+    setBusy(false);
+    render();
+  }
+}
+
+function editEntry(id){
+  const e=findEntryById(id);
+  if(!e) return;
+
+  currentType=e.type;
+  document.querySelectorAll('#typeChips .chip').forEach(c=>c.classList.toggle('active',c.dataset.type===e.type));
+  document.getElementById('time').value=e.time||'';
+  document.getElementById('amount').value=e.amount||'';
+  document.getElementById('note').value=e.note||'';
+
+  const amount=document.getElementById('amount');
+  amount.disabled=currentType!=='האכלה';
+
+  deleteEntry(id);
+}
+
+async function clearDay(){
+  const date=document.getElementById('logDate').value;
+  const entries=getEntriesForDay(date);
+
+  if(!entries.length) return;
+  if(!confirm('למחוק את כל הרישומים של היום הזה?')) return;
+  if(!navigator.onLine){
+    alert('אין חיבור כרגע. נסה שוב כשהאינטרנט חוזר.');
+    return;
+  }
+
+  try{
+    setBusy(true);
+    updateSyncStatus();
+
+    for(const entry of entries){
+      const result=await apiDelete(entry.id);
+      if(!result.ok) throw new Error(result.error||'Delete failed');
+    }
+
+    await loadFromServer();
+  }catch(err){
+    saveSyncMeta({...loadSyncMeta(),lastError:String(err.message||err)});
+    alert('מחיקה נכשלה');
+  }finally{
+    setBusy(false);
+    render();
+  }
+}
+
+function exportJson(){
+  const blob=new Blob([JSON.stringify(loadState(),null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='baby-tracker-backup.json';
+  a.click();
+}
+
+function importJson(event){
+  const file=event.target.files[0];
+  if(!file) return;
+
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const data=JSON.parse(reader.result);
+      const incoming=Array.isArray(data.entries)?data.entries:[];
+      replaceAllEntries(incoming);
+      render();
+      alert('הגיבוי יובא מקומית');
+    }catch{
+      alert('הקובץ לא תקין');
+    }
+  };
+  reader.readAsText(file);
+}
+
+async function manualRefresh(){
+  if(busy) return;
   if(!navigator.onLine){
     updateSyncStatus();
     return;
   }
 
-  syncInProgress=true;
-  updateSyncStatus();
-
   try{
-    localStorage.removeItem(STORAGE_KEY);
-    await pullFromServer();
-    saveSyncMeta({lastSuccessAt:nowIso(),lastError:''});
+    setBusy(true);
+    updateSyncStatus();
+    await loadFromServer();
   }catch(err){
     saveSyncMeta({...loadSyncMeta(),lastError:String(err.message||err)});
   }finally{
-    syncInProgress=false;
+    setBusy(false);
     render();
   }
 }
@@ -608,14 +603,14 @@ document.getElementById('logDate').addEventListener('change',render);
 
 fillNow();
 render();
-syncAll();
+manualRefresh();
 
-setInterval(syncAll,15000);
-window.addEventListener('online',syncAll);
-window.addEventListener('focus',syncAll);
+setInterval(manualRefresh,10000);
+window.addEventListener('online',manualRefresh);
+window.addEventListener('focus',manualRefresh);
 
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('./sw.js?v=9').catch(()=>{});
+  navigator.serviceWorker.register('./sw.js?v=10').catch(()=>{});
 }
 
 window.addEventListener('beforeinstallprompt',(e)=>{
