@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#8fb8e8" />
   <title>מעקב תינוק</title>
-  <link rel="manifest" href="manifest.json?v=10" />
+  <link rel="manifest" href="manifest.json?v=11" />
   <link rel="apple-touch-icon" href="icon-192.png" />
   <style>
     :root{--card:#ffffff;--line:#dbe7f6;--primary:#8fb8e8;--primary2:#dfeeff;--text:#1e2a3a;--muted:#6e7a8a;--shadow:0 8px 24px rgba(32,62,100,.10);--radius:18px;--field-h:48px;--page-pad:14px;--ok:#e8f7ec;--ok-text:#1f6b36;--warn:#fff4df;--warn-text:#8a5a00;--err:#ffe8e8;--err-text:#8f2424}
@@ -24,7 +24,7 @@
     .row{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;align-items:end}.field{min-width:0}
     .chips{display:flex;flex-wrap:wrap;gap:8px}.chip{border:1px solid var(--line);background:#f7fbff;border-radius:999px;padding:10px 14px;cursor:pointer;user-select:none;line-height:1.15;font-size:15px}.chip.active{background:var(--primary2);border-color:#b8d2f3}
     .btn{border:0;border-radius:16px;min-height:48px;padding:13px 16px;background:var(--primary);color:#0d2540;font-weight:700;cursor:pointer;box-shadow:var(--shadow);line-height:1.2;display:inline-flex;align-items:center;justify-content:center;text-align:center}
-    .btn.secondary{background:#eef5ff}.btn.danger{background:#ffe8e8;color:#8f2424}.btn.full{width:100%}.btn:disabled{opacity:.6;cursor:not-allowed}
+    .btn.secondary{background:#eef5ff}.btn.danger{background:#ffe8e8;color:#8f2424}.btn.full{width:100%}.btn:disabled,.small-btn:disabled{opacity:.6;cursor:not-allowed}
     .quick,.stats{display:grid;gap:10px;width:100%}.quick{grid-template-columns:1fr 1fr}.stats{grid-template-columns:repeat(4,1fr)}
     .stat{background:#f8fbff;border:1px solid var(--line);padding:12px 8px;border-radius:16px;text-align:center}.stat b{display:block;font-size:22px;margin-bottom:4px;line-height:1}.stat span{display:block;font-size:13px;line-height:1.25;word-break:break-word}
     .list{display:grid;gap:10px}.item{border:1px solid var(--line);border-radius:16px;padding:12px;background:#fcfeff}
@@ -135,15 +135,15 @@
     </div>
   </div>
 
-  <div class="footer-note">האפליקציה מושכת מחדש מהשרת אחרי כל שמירה או מחיקה.</div>
+  <div class="footer-note">האפליקציה מעדכנת את המסך מיד, ואז מבצעת רענון מהשרת ברקע.</div>
 </div>
 
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycby5HlpD17IG1p217ot4kwuErP4BtVZPa92H9uNQWD3JnkYCBlHyRX0FR7c0eMA1mdVGfw/exec';
 const API_TOKEN = 'bt_7Fh29KqP4mX9Za81JrT6UvN2LsQ0';
-const STORAGE_KEY = 'baby-tracker-v10-state';
-const DEVICE_KEY = 'baby-tracker-v10-device';
-const SYNC_KEY = 'baby-tracker-v10-sync-meta';
+const STORAGE_KEY = 'baby-tracker-v11-state';
+const DEVICE_KEY = 'baby-tracker-v11-device';
+const SYNC_KEY = 'baby-tracker-v11-sync-meta';
 
 let deferredPrompt = null;
 let currentType = 'האכלה';
@@ -298,7 +298,7 @@ function updateSyncStatus(){
   }
 
   if(meta.lastError){
-    setStatus('שגיאה','status-err',meta.lastError);
+    setStatus('שים לב','status-warn',meta.lastError);
     return;
   }
 
@@ -338,6 +338,23 @@ function render(){
 
 function replaceAllEntries(entries){
   saveState({entries:entries.map(normalizeEntry).filter(e=>!e.deleted)});
+}
+
+function addOrReplaceLocalEntry(entry){
+  const state = loadState();
+  const normalized = normalizeEntry(entry);
+  const map = new Map(state.entries.map(e => [normalizeEntry(e).id, normalizeEntry(e)]));
+  map.set(normalized.id, normalized);
+  saveState({ entries: Array.from(map.values()).filter(e => !e.deleted) });
+}
+
+function removeLocalEntry(id){
+  const state = loadState();
+  saveState({
+    entries: state.entries
+      .map(normalizeEntry)
+      .filter(e => e.id !== id)
+  });
 }
 
 function makeEntry({date,time,type,amount,note}){
@@ -413,68 +430,112 @@ async function loadFromServer(){
   saveSyncMeta({lastSuccessAt:nowIso(),lastError:''});
 }
 
+async function loadFromServerWithRetry(retries = 3, delayMs = 1200){
+  let lastError = null;
+
+  for(let i = 0; i < retries; i++){
+    try{
+      await loadFromServer();
+      return true;
+    }catch(err){
+      lastError = err;
+      if(i < retries - 1){
+        await new Promise(resolve => setTimeout(resolve, delayMs));
+      }
+    }
+  }
+
+  throw lastError;
+}
+
+function refreshInBackground(){
+  setTimeout(async () => {
+    try{
+      await loadFromServerWithRetry(3, 1200);
+      saveSyncMeta({ lastSuccessAt: nowIso(), lastError: '' });
+      render();
+    }catch(err){
+      saveSyncMeta({
+        ...loadSyncMeta(),
+        lastError: 'הרענון מהשרת התעכב, אבל הפעולה נשמרה'
+      });
+      render();
+    }
+  }, 400);
+}
+
 async function addEntry(){
   if(busy) return;
+
   if(!navigator.onLine){
     alert('אין חיבור כרגע. נסה שוב כשהאינטרנט חוזר.');
     return;
   }
 
-  const entry=makeEntry({
-    date:document.getElementById('logDate').value,
-    time:document.getElementById('time').value,
-    type:currentType,
-    amount:document.getElementById('amount').value,
-    note:document.getElementById('note').value.trim()
+  const entry = makeEntry({
+    date: document.getElementById('logDate').value,
+    time: document.getElementById('time').value,
+    type: currentType,
+    amount: document.getElementById('amount').value,
+    note: document.getElementById('note').value.trim()
   });
 
   try{
     setBusy(true);
     updateSyncStatus();
 
-    const result=await apiSave(entry);
-    if(!result.ok) throw new Error(result.error||'Save failed');
+    const result = await apiSave(entry);
+    if(!result.ok) throw new Error(result.error || 'Save failed');
 
+    addOrReplaceLocalEntry(entry);
     clearForm();
-    await loadFromServer();
+    saveSyncMeta({ lastSuccessAt: nowIso(), lastError: '' });
+    render();
+
+    refreshInBackground();
   }catch(err){
-    saveSyncMeta({...loadSyncMeta(),lastError:String(err.message||err)});
-    alert('שמירה נכשלה');
+    saveSyncMeta({ ...loadSyncMeta(), lastError: String(err.message || err) });
+    alert('השמירה נכשלה באמת');
   }finally{
     setBusy(false);
-    render();
+    updateSyncStatus();
   }
 }
 
 async function quickAdd(type,amount){
   if(busy) return;
+
   if(!navigator.onLine){
     alert('אין חיבור כרגע. נסה שוב כשהאינטרנט חוזר.');
     return;
   }
 
-  const entry=makeEntry({
-    date:document.getElementById('logDate').value,
-    time:nowTime(),
+  const entry = makeEntry({
+    date: document.getElementById('logDate').value,
+    time: nowTime(),
     type,
     amount,
-    note:''
+    note: ''
   });
 
   try{
     setBusy(true);
     updateSyncStatus();
 
-    const result=await apiSave(entry);
-    if(!result.ok) throw new Error(result.error||'Save failed');
+    const result = await apiSave(entry);
+    if(!result.ok) throw new Error(result.error || 'Save failed');
 
-    await loadFromServer();
+    addOrReplaceLocalEntry(entry);
+    saveSyncMeta({ lastSuccessAt: nowIso(), lastError: '' });
+    render();
+
+    refreshInBackground();
   }catch(err){
-    saveSyncMeta({...loadSyncMeta(),lastError:String(err.message||err)});
-    alert('שמירה נכשלה');
+    saveSyncMeta({ ...loadSyncMeta(), lastError: String(err.message || err) });
+    alert('השמירה נכשלה באמת');
   }finally{
     setBusy(false);
-    render();
+    updateSyncStatus();
   }
 }
 
@@ -484,6 +545,7 @@ function findEntryById(id){
 
 async function deleteEntry(id){
   if(busy) return;
+
   if(!navigator.onLine){
     alert('אין חיבור כרגע. נסה שוב כשהאינטרנט חוזר.');
     return;
@@ -493,16 +555,20 @@ async function deleteEntry(id){
     setBusy(true);
     updateSyncStatus();
 
-    const result=await apiDelete(id);
-    if(!result.ok) throw new Error(result.error||'Delete failed');
+    const result = await apiDelete(id);
+    if(!result.ok) throw new Error(result.error || 'Delete failed');
 
-    await loadFromServer();
+    removeLocalEntry(id);
+    saveSyncMeta({ lastSuccessAt: nowIso(), lastError: '' });
+    render();
+
+    refreshInBackground();
   }catch(err){
-    saveSyncMeta({...loadSyncMeta(),lastError:String(err.message||err)});
-    alert('מחיקה נכשלה');
+    saveSyncMeta({ ...loadSyncMeta(), lastError: String(err.message || err) });
+    alert('המחיקה נכשלה באמת');
   }finally{
     setBusy(false);
-    render();
+    updateSyncStatus();
   }
 }
 
@@ -523,11 +589,12 @@ function editEntry(id){
 }
 
 async function clearDay(){
-  const date=document.getElementById('logDate').value;
-  const entries=getEntriesForDay(date);
+  const date = document.getElementById('logDate').value;
+  const entries = getEntriesForDay(date);
 
   if(!entries.length) return;
   if(!confirm('למחוק את כל הרישומים של היום הזה?')) return;
+
   if(!navigator.onLine){
     alert('אין חיבור כרגע. נסה שוב כשהאינטרנט חוזר.');
     return;
@@ -538,17 +605,21 @@ async function clearDay(){
     updateSyncStatus();
 
     for(const entry of entries){
-      const result=await apiDelete(entry.id);
-      if(!result.ok) throw new Error(result.error||'Delete failed');
+      const result = await apiDelete(entry.id);
+      if(!result.ok) throw new Error(result.error || 'Delete failed');
+      removeLocalEntry(entry.id);
     }
 
-    await loadFromServer();
+    saveSyncMeta({ lastSuccessAt: nowIso(), lastError: '' });
+    render();
+
+    refreshInBackground();
   }catch(err){
-    saveSyncMeta({...loadSyncMeta(),lastError:String(err.message||err)});
-    alert('מחיקה נכשלה');
+    saveSyncMeta({ ...loadSyncMeta(), lastError: String(err.message || err) });
+    alert('מחיקת היום נכשלה באמת');
   }finally{
     setBusy(false);
-    render();
+    updateSyncStatus();
   }
 }
 
@@ -581,6 +652,7 @@ function importJson(event){
 
 async function manualRefresh(){
   if(busy) return;
+
   if(!navigator.onLine){
     updateSyncStatus();
     return;
@@ -589,9 +661,10 @@ async function manualRefresh(){
   try{
     setBusy(true);
     updateSyncStatus();
-    await loadFromServer();
+    await loadFromServerWithRetry(3, 1200);
+    saveSyncMeta({ lastSuccessAt: nowIso(), lastError: '' });
   }catch(err){
-    saveSyncMeta({...loadSyncMeta(),lastError:String(err.message||err)});
+    saveSyncMeta({ ...loadSyncMeta(), lastError: 'הרענון מהשרת נכשל זמנית' });
   }finally{
     setBusy(false);
     render();
@@ -610,7 +683,7 @@ window.addEventListener('online',manualRefresh);
 window.addEventListener('focus',manualRefresh);
 
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('./sw.js?v=10').catch(()=>{});
+  navigator.serviceWorker.register('./sw.js?v=11').catch(()=>{});
 }
 
 window.addEventListener('beforeinstallprompt',(e)=>{
