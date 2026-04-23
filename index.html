@@ -5,116 +5,429 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#8fb8e8" />
   <title>מעקב תינוק</title>
-  <link rel="manifest" href="manifest.json?v=14" />
+  <link rel="manifest" href="manifest.json?v=15" />
   <link rel="apple-touch-icon" href="icon-192.png" />
   <style>
-    :root{--card:#ffffff;--line:#dbe7f6;--primary:#8fb8e8;--primary2:#dfeeff;--text:#1e2a3a;--muted:#6e7a8a;--shadow:0 8px 24px rgba(32,62,100,.10);--radius:18px;--field-h:48px;--page-pad:14px;--ok:#e8f7ec;--ok-text:#1f6b36;--warn:#fff4df;--warn-text:#8a5a00;--err:#ffe8e8;--err-text:#8f2424}
-    *{box-sizing:border-box} html,body{overflow-x:hidden}
-    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:linear-gradient(180deg,#edf5ff 0%,#f7fbff 45%,#ffffff 100%);color:var(--text);-webkit-text-size-adjust:100%}
-    .wrap{max-width:760px;margin:0 auto;padding:var(--page-pad) var(--page-pad) 42px}
-    .hero{display:grid;grid-template-columns:84px 1fr;gap:14px;align-items:center;background:rgba(255,255,255,.72);backdrop-filter:blur(8px);border:1px solid #e9f1fb;border-radius:24px;padding:14px;box-shadow:var(--shadow);position:sticky;top:0;z-index:5;margin-bottom:14px;overflow:hidden}
-    .hero img{width:84px;height:84px;object-fit:cover;border-radius:22px;border:3px solid #fff;box-shadow:var(--shadow);background:#eef5ff}
-    h1{font-size:28px;line-height:1.1;margin:0 0 6px}.sub{color:var(--muted);font-size:14px;line-height:1.35}.grid{display:grid;gap:14px}
-    .card{background:var(--card);border:1px solid #ecf2fa;border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;overflow:hidden;min-width:0}
-    .section-title{font-size:18px;font-weight:700;margin:0 0 10px;line-height:1.2}
-    label{display:block;font-size:13px;color:var(--muted);margin:0 0 6px;line-height:1.25}
-    input,button{font:inherit}
-    input[type="date"],input[type="time"],input[type="number"]{width:100%;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:#fbfdff;color:var(--text);outline:none;font-size:16px;line-height:1.2;appearance:none;-webkit-appearance:none;display:block;height:var(--field-h)}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;align-items:end}.field{min-width:0}
-    .chips{
-      display:flex;
-      flex-wrap:nowrap;
-      gap:8px;
-      overflow-x:auto;
-      -webkit-overflow-scrolling:touch;
-      padding-bottom:2px;
-      scrollbar-width:none;
+    :root{
+      --card:#ffffff;
+      --line:#dbe7f6;
+      --primary:#8fb8e8;
+      --primary2:#dfeeff;
+      --text:#1e2a3a;
+      --muted:#6e7a8a;
+      --shadow:0 8px 24px rgba(32,62,100,.10);
+      --radius:18px;
+      --field-h:48px;
+      --page-pad:14px;
+      --ok:#e8f7ec;
+      --ok-text:#1f6b36;
+      --warn:#fff4df;
+      --warn-text:#8a5a00;
+      --err:#ffe8e8;
+      --err-text:#8f2424;
     }
-    .chips::-webkit-scrollbar{display:none}
+
+    *{box-sizing:border-box}
+    html,body{overflow-x:hidden}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+      background:linear-gradient(180deg,#edf5ff 0%,#f7fbff 45%,#ffffff 100%);
+      color:var(--text);
+      -webkit-text-size-adjust:100%;
+    }
+
+    .wrap{
+      max-width:760px;
+      margin:0 auto;
+      padding:var(--page-pad) var(--page-pad) 42px;
+    }
+
+    .grid{display:grid;gap:14px}
+
+    .hero{
+      display:grid;
+      grid-template-columns:1fr 250px;
+      gap:14px;
+      align-items:stretch;
+      background:rgba(255,255,255,.72);
+      backdrop-filter:blur(8px);
+      border:1px solid #e9f1fb;
+      border-radius:24px;
+      padding:14px;
+      box-shadow:var(--shadow);
+      position:sticky;
+      top:0;
+      z-index:5;
+      margin-bottom:14px;
+      overflow:hidden;
+    }
+
+    .hero-main{
+      display:grid;
+      grid-template-columns:84px 1fr;
+      gap:14px;
+      align-items:center;
+      min-width:0;
+    }
+
+    .hero-main img{
+      width:84px;
+      height:84px;
+      object-fit:cover;
+      border-radius:22px;
+      border:3px solid #fff;
+      box-shadow:var(--shadow);
+      background:#eef5ff;
+    }
+
+    .hero-side{
+      display:grid;
+      gap:10px;
+      align-content:start;
+    }
+
+    .top-mini-card{
+      background:#f8fbff;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:10px 12px;
+    }
+
+    .top-mini-title{
+      font-size:12px;
+      color:var(--muted);
+      margin-bottom:6px;
+    }
+
+    .top-mini-value{
+      font-size:14px;
+      font-weight:700;
+      line-height:1.3;
+    }
+
+    h1{
+      font-size:28px;
+      line-height:1.1;
+      margin:0 0 6px;
+    }
+
+    .sub{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.35;
+    }
+
+    .card{
+      background:var(--card);
+      border:1px solid #ecf2fa;
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:14px;
+      overflow:hidden;
+      min-width:0;
+    }
+
+    .section-title{
+      font-size:18px;
+      font-weight:700;
+      margin:0 0 10px;
+      line-height:1.2;
+    }
+
+    label{
+      display:block;
+      font-size:13px;
+      color:var(--muted);
+      margin:0 0 6px;
+      line-height:1.25;
+    }
+
+    input,button{font:inherit}
+
+    input[type="date"],input[type="time"],input[type="number"]{
+      width:100%;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:#fbfdff;
+      color:var(--text);
+      outline:none;
+      font-size:16px;
+      line-height:1.2;
+      appearance:none;
+      -webkit-appearance:none;
+      display:block;
+      height:var(--field-h);
+    }
+
+    .row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      width:100%;
+      align-items:end;
+    }
+
+    .field{min-width:0}
+
+    .chips{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:8px;
+      width:100%;
+    }
+
     .chip{
-      flex:0 0 auto;
-      min-width:110px;
+      min-width:0;
       text-align:center;
       border:1px solid var(--line);
       background:#f7fbff;
       border-radius:999px;
-      padding:10px 14px;
+      padding:10px 8px;
       cursor:pointer;
       user-select:none;
       line-height:1.15;
       font-size:15px;
       white-space:nowrap;
     }
-    .chip.active{background:var(--primary2);border-color:#b8d2f3}
-    .btn{border:0;border-radius:16px;min-height:48px;padding:13px 16px;background:var(--primary);color:#0d2540;font-weight:700;cursor:pointer;box-shadow:var(--shadow);line-height:1.2;display:inline-flex;align-items:center;justify-content:center;text-align:center}
-    .btn.secondary{background:#eef5ff}.btn.danger{background:#ffe8e8;color:#8f2424}.btn.full{width:100%}.btn:disabled,.small-btn:disabled{opacity:.6;cursor:not-allowed}
-    .stats{display:grid;gap:10px;width:100%;grid-template-columns:repeat(4,1fr)}
-    .stat{background:#f8fbff;border:1px solid var(--line);padding:12px 8px;border-radius:16px;text-align:center}.stat b{display:block;font-size:22px;margin-bottom:4px;line-height:1}.stat span{display:block;font-size:13px;line-height:1.25;word-break:break-word}
-    .list{display:grid;gap:10px}.item{border:1px solid var(--line);border-radius:16px;padding:12px;background:#fcfeff}
-    .item-top{display:flex;justify-content:space-between;gap:8px;align-items:center}.badge{background:#eef5ff;border:1px solid #d8e7fb;padding:6px 10px;border-radius:999px;font-size:12px;display:inline-block}
-    .muted{color:var(--muted);font-size:13px;line-height:1.35;word-break:break-word}.actions,.small-actions{display:flex;gap:8px;flex-wrap:wrap}
-    .footer-note{padding:8px 4px 0;color:var(--muted);font-size:12px;text-align:center;line-height:1.35}.install{display:none}
-    .status-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:10px;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:#f8fbff}
-    .status-pill{padding:7px 10px;border-radius:999px;font-size:13px;font-weight:700}.status-ok{background:var(--ok);color:var(--ok-text)}.status-warn{background:var(--warn);color:var(--warn-text)}.status-err{background:var(--err);color:var(--err-text)}
-    .small-btn{border:1px solid var(--line);background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;font-size:13px}
+
+    .chip.active{
+      background:var(--primary2);
+      border-color:#b8d2f3;
+    }
+
+    .btn{
+      border:0;
+      border-radius:16px;
+      min-height:48px;
+      padding:13px 16px;
+      background:var(--primary);
+      color:#0d2540;
+      font-weight:700;
+      cursor:pointer;
+      box-shadow:var(--shadow);
+      line-height:1.2;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+    }
+
+    .btn.secondary{background:#eef5ff}
+    .btn.danger{background:#ffe8e8;color:#8f2424}
+    .btn.full{width:100%}
+    .btn:disabled,.small-btn:disabled{opacity:.6;cursor:not-allowed}
+
+    .stats{
+      display:grid;
+      gap:10px;
+      width:100%;
+      grid-template-columns:repeat(4,1fr);
+    }
+
+    .stat{
+      background:#f8fbff;
+      border:1px solid var(--line);
+      padding:12px 8px;
+      border-radius:16px;
+      text-align:center;
+    }
+
+    .stat b{
+      display:block;
+      font-size:22px;
+      margin-bottom:4px;
+      line-height:1;
+    }
+
+    .stat span{
+      display:block;
+      font-size:13px;
+      line-height:1.25;
+      word-break:break-word;
+    }
+
+    .list{display:grid;gap:10px}
+
+    .item{
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:12px;
+      background:#fcfeff;
+    }
+
+    .item-top{
+      display:flex;
+      justify-content:space-between;
+      gap:8px;
+      align-items:center;
+    }
+
+    .badge{
+      background:#eef5ff;
+      border:1px solid #d8e7fb;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      display:inline-block;
+    }
+
+    .muted{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.35;
+      word-break:break-word;
+    }
+
+    .actions,.small-actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .footer-note{
+      padding:8px 4px 0;
+      color:var(--muted);
+      font-size:12px;
+      text-align:center;
+      line-height:1.35;
+    }
+
+    .install{display:none}
+
+    .status-pill{
+      padding:7px 10px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:700;
+      display:inline-block;
+    }
+
+    .status-ok{background:var(--ok);color:var(--ok-text)}
+    .status-warn{background:var(--warn);color:var(--warn-text)}
+    .status-err{background:var(--err);color:var(--err-text)}
+
+    .small-btn{
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:12px;
+      padding:8px 10px;
+      cursor:pointer;
+      font-size:13px;
+      width:100%;
+    }
+
     @media (max-width:640px){
       :root{--field-h:46px;--page-pad:12px}
-      .hero{grid-template-columns:72px 1fr;gap:12px;padding:12px}
-      .hero img{width:72px;height:72px}
+
+      .hero{
+        grid-template-columns:1fr;
+        gap:12px;
+        padding:12px;
+      }
+
+      .hero-main{
+        grid-template-columns:72px 1fr;
+        gap:12px;
+      }
+
+      .hero-main img{
+        width:72px;
+        height:72px;
+      }
+
       h1{font-size:24px}
-      .row,.stats{grid-template-columns:1fr}
+
+      .row{
+        grid-template-columns:1fr;
+      }
+
       .card{padding:12px}
       .section-title{font-size:17px}
+
       .actions .btn{width:100%}
-      .item-top,.status-bar{align-items:flex-start;flex-direction:column}
-      .chip{min-width:92px}
+      .item-top{align-items:flex-start;flex-direction:column}
+
+      .chips{
+        grid-template-columns:repeat(4,1fr);
+        gap:6px;
+      }
+
+      .chip{
+        font-size:13px;
+        padding:10px 4px;
+      }
+
+      .stats{
+        grid-template-columns:repeat(4,1fr);
+        gap:8px;
+      }
+
+      .stat{
+        padding:10px 6px;
+      }
+
+      .stat b{
+        font-size:18px;
+      }
+
+      .stat span{
+        font-size:11px;
+      }
     }
   </style>
 </head>
 <body>
 <div class="wrap">
   <div class="hero">
-    <img src="icon-192.png" alt="תינוק" />
-    <div>
-      <h1>מעקב תינוק 👶</h1>
-      <div class="sub">מעקב יומי מסונכרן בין מכשירים.</div>
+    <div class="hero-main">
+      <img src="icon-192.png" alt="תינוק" />
+      <div>
+        <h1>מעקב תינוק 👶</h1>
+        <div class="sub">מעקב יומי מסונכרן בין מכשירים.</div>
+      </div>
+    </div>
+
+    <div class="hero-side">
+      <div class="top-mini-card">
+        <div class="top-mini-title">מצב סנכרון</div>
+        <div id="syncStatus" class="status-pill status-warn">טוען...</div>
+        <div class="muted" id="syncMeta" style="margin-top:6px">מכין נתונים</div>
+        <div style="margin-top:8px">
+          <button class="small-btn" type="button" onclick="manualRefresh()">רענון מהשרת</button>
+        </div>
+      </div>
+
+      <div class="top-mini-card">
+        <div class="top-mini-title">תאריך</div>
+        <div class="top-mini-value" id="topDateText">—</div>
+      </div>
     </div>
   </div>
 
   <div class="grid">
     <div class="card">
-      <div class="section-title">מצב סנכרון</div>
-      <div class="status-bar">
-        <div id="syncStatus" class="status-pill status-warn">טוען...</div>
-        <div class="muted" id="syncMeta">מכין נתונים</div>
-        <div class="small-actions">
-          <button class="small-btn" type="button" onclick="manualRefresh()">רענון מהשרת</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="section-title">תאריך</div>
-      <div class="row">
-        <div class="field">
-          <label for="logDate">יום מעקב</label>
-          <input id="logDate" type="date" />
-        </div>
-        <div class="field">
-          <label>&nbsp;</label>
-          <button id="installBtn" class="btn secondary full install" type="button">התקן למסך הבית</button>
-        </div>
+      <div class="section-title">סיכום יומי</div>
+      <div class="stats">
+        <div class="stat"><b id="feedCount">0</b><span>האכלות</span></div>
+        <div class="stat"><b id="feedMl">0</b><span>מ״ל סה״כ</span></div>
+        <div class="stat"><b id="peeCount">0</b><span>פיפי</span></div>
+        <div class="stat"><b id="poopCount">0</b><span>קקי</span></div>
       </div>
     </div>
 
     <div class="card">
       <div class="section-title">רישום חדש</div>
+      <input id="logDate" type="date" style="display:none" />
+
       <div class="chips" id="typeChips">
         <div class="chip active" data-type="האכלה">🍼 האכלה</div>
         <div class="chip" data-type="פיפי">💧 פיפי</div>
         <div class="chip" data-type="קקי">💩 קקי</div>
         <div class="chip" data-type="ויטמינים">💊 ויטמינים</div>
       </div>
+
       <div class="row" style="margin-top:12px">
         <div class="field">
           <label for="time">שעה</label>
@@ -125,20 +438,11 @@
           <input id="amount" type="number" placeholder="למשל 90" />
         </div>
       </div>
+
       <div class="actions" style="margin-top:12px">
         <button id="saveBtn" class="btn" type="button" onclick="addEntry()">שמור רישום</button>
         <button class="btn secondary" type="button" onclick="fillNow()">שעה עכשיו</button>
         <button class="btn secondary" type="button" onclick="clearForm()">נקה</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="section-title">סיכום יומי</div>
-      <div class="stats">
-        <div class="stat"><b id="feedCount">0</b><span>האכלות</span></div>
-        <div class="stat"><b id="feedMl">0</b><span>מ״ל סה״כ</span></div>
-        <div class="stat"><b id="peeCount">0</b><span>פיפי</span></div>
-        <div class="stat"><b id="poopCount">0</b><span>קקי</span></div>
       </div>
     </div>
 
@@ -158,19 +462,47 @@
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycby5HlpD17IG1p217ot4kwuErP4BtVZPa92H9uNQWD3JnkYCBlHyRX0FR7c0eMA1mdVGfw/exec';
 const API_TOKEN = 'bt_7Fh29KqP4mX9Za81JrT6UvN2LsQ0';
-const STORAGE_KEY = 'baby-tracker-v14-state';
-const DEVICE_KEY = 'baby-tracker-v14-device';
-const SYNC_KEY = 'baby-tracker-v14-sync-meta';
+const STORAGE_KEY = 'baby-tracker-v15-state';
+const DEVICE_KEY = 'baby-tracker-v15-device';
+const SYNC_KEY = 'baby-tracker-v15-sync-meta';
 
 let deferredPrompt = null;
 let currentType = 'האכלה';
 let busy = false;
 
-function getTodayStr(){const d=new Date();const off=d.getTimezoneOffset();return new Date(d.getTime()-off*60000).toISOString().slice(0,10)}
-function nowTime(){return new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false})}
-function nowIso(){return new Date().toISOString()}
-function esc(s){return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
-function typeEmoji(type){return {"האכלה":"🍼","פיפי":"💧","קקי":"💩","ויטמינים":"💊"}[type]||"•"}
+function getTodayStr(){
+  const d=new Date();
+  const off=d.getTimezoneOffset();
+  return new Date(d.getTime()-off*60000).toISOString().slice(0,10);
+}
+
+function nowTime(){
+  return new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false});
+}
+
+function nowIso(){
+  return new Date().toISOString();
+}
+
+function esc(s){
+  return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+}
+
+function typeEmoji(type){
+  return {"האכלה":"🍼","פיפי":"💧","קקי":"💩","ויטמינים":"💊"}[type]||"•";
+}
+
+function formatTopDate(value){
+  const normalized = normalizeDateStr(value);
+  if(!normalized) return '—';
+  const [y,m,d] = normalized.split('-');
+  return `${d}/${m}/${y}`;
+}
+
+function updateTopDate(){
+  const value = document.getElementById('logDate').value;
+  document.getElementById('topDateText').textContent = formatTopDate(value);
+}
 
 function getDeviceId(){
   let id=localStorage.getItem(DEVICE_KEY);
@@ -206,6 +538,10 @@ function normalizeDateStr(value){
   if(!value) return '';
   if(typeof value==='string'){
     if(/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+    if(/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(value)){
+      const [d,m,y]=value.split('/');
+      return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    }
     if(/^\d{1,2}\.\d{1,2}\.\d{4}$/.test(value)){
       const [d,m,y]=value.split('.');
       return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
@@ -321,6 +657,8 @@ function updateSyncStatus(){
 }
 
 function render(){
+  updateTopDate();
+
   const date=document.getElementById('logDate').value;
   const entries=getEntriesForDay(date);
   const box=document.getElementById('entries');
@@ -634,7 +972,7 @@ async function manualRefresh(){
 }
 
 document.getElementById('logDate').value=getTodayStr();
-document.getElementById('logDate').addEventListener('change',render);
+updateTopDate();
 
 fillNow();
 render();
@@ -645,7 +983,7 @@ window.addEventListener('online',manualRefresh);
 window.addEventListener('focus',manualRefresh);
 
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('./sw.js?v=14').catch(()=>{});
+  navigator.serviceWorker.register('./sw.js?v=15').catch(()=>{});
 }
 
 window.addEventListener('beforeinstallprompt',(e)=>{
