@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#8fb8e8" />
   <title>מעקב תינוק</title>
-  <link rel="manifest" href="manifest.json?v=11" />
+  <link rel="manifest" href="manifest.json?v=13" />
   <link rel="apple-touch-icon" href="icon-192.png" />
   <style>
     :root{--card:#ffffff;--line:#dbe7f6;--primary:#8fb8e8;--primary2:#dfeeff;--text:#1e2a3a;--muted:#6e7a8a;--shadow:0 8px 24px rgba(32,62,100,.10);--radius:18px;--field-h:48px;--page-pad:14px;--ok:#e8f7ec;--ok-text:#1f6b36;--warn:#fff4df;--warn-text:#8a5a00;--err:#ffe8e8;--err-text:#8f2424}
@@ -25,7 +25,7 @@
     .chips{display:flex;flex-wrap:wrap;gap:8px}.chip{border:1px solid var(--line);background:#f7fbff;border-radius:999px;padding:10px 14px;cursor:pointer;user-select:none;line-height:1.15;font-size:15px}.chip.active{background:var(--primary2);border-color:#b8d2f3}
     .btn{border:0;border-radius:16px;min-height:48px;padding:13px 16px;background:var(--primary);color:#0d2540;font-weight:700;cursor:pointer;box-shadow:var(--shadow);line-height:1.2;display:inline-flex;align-items:center;justify-content:center;text-align:center}
     .btn.secondary{background:#eef5ff}.btn.danger{background:#ffe8e8;color:#8f2424}.btn.full{width:100%}.btn:disabled,.small-btn:disabled{opacity:.6;cursor:not-allowed}
-    .quick,.stats{display:grid;gap:10px;width:100%}.quick{grid-template-columns:1fr 1fr}.stats{grid-template-columns:repeat(4,1fr)}
+    .stats{display:grid;gap:10px;width:100%;grid-template-columns:repeat(4,1fr)}
     .stat{background:#f8fbff;border:1px solid var(--line);padding:12px 8px;border-radius:16px;text-align:center}.stat b{display:block;font-size:22px;margin-bottom:4px;line-height:1}.stat span{display:block;font-size:13px;line-height:1.25;word-break:break-word}
     .list{display:grid;gap:10px}.item{border:1px solid var(--line);border-radius:16px;padding:12px;background:#fcfeff}
     .item-top{display:flex;justify-content:space-between;gap:8px;align-items:center}.badge{background:#eef5ff;border:1px solid #d8e7fb;padding:6px 10px;border-radius:999px;font-size:12px;display:inline-block}
@@ -34,7 +34,7 @@
     .status-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:10px;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:#f8fbff}
     .status-pill{padding:7px 10px;border-radius:999px;font-size:13px;font-weight:700}.status-ok{background:var(--ok);color:var(--ok-text)}.status-warn{background:var(--warn);color:var(--warn-text)}.status-err{background:var(--err);color:var(--err-text)}
     .small-btn{border:1px solid var(--line);background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;font-size:13px}
-    @media (max-width:640px){:root{--field-h:46px;--page-pad:12px}.hero{grid-template-columns:72px 1fr;gap:12px;padding:12px}.hero img{width:72px;height:72px}h1{font-size:24px}.row,.stats,.quick{grid-template-columns:1fr}.card{padding:12px}.section-title{font-size:17px}.chip,.actions .btn{width:100%}.item-top,.status-bar{align-items:flex-start;flex-direction:column}}
+    @media (max-width:640px){:root{--field-h:46px;--page-pad:12px}.hero{grid-template-columns:72px 1fr;gap:12px;padding:12px}.hero img{width:72px;height:72px}h1{font-size:24px}.row,.stats{grid-template-columns:1fr}.card{padding:12px}.section-title{font-size:17px}.chip,.actions .btn{width:100%}.item-top,.status-bar{align-items:flex-start;flex-direction:column}}
   </style>
 </head>
 <body>
@@ -70,16 +70,6 @@
           <label>&nbsp;</label>
           <button id="installBtn" class="btn secondary full install" type="button">התקן למסך הבית</button>
         </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="section-title">פעולות מהירות</div>
-      <div class="quick">
-        <button class="btn" type="button" onclick="quickAdd('האכלה', 90)">🍼 האכלה 90 מ״ל</button>
-        <button class="btn" type="button" onclick="quickAdd('פיפי', '')">💧 פיפי</button>
-        <button class="btn" type="button" onclick="quickAdd('קקי', '')">💩 קקי</button>
-        <button class="btn" type="button" onclick="quickAdd('ויטמינים', '')">💊 ויטמינים</button>
       </div>
     </div>
 
@@ -135,15 +125,15 @@
     </div>
   </div>
 
-  <div class="footer-note">האפליקציה מעדכנת את המסך מיד, ואז מבצעת רענון מהשרת ברקע.</div>
+  <div class="footer-note">האפליקציה מעדכנת את המסך מיד, ואז בודקת את השרת ברקע.</div>
 </div>
 
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycby5HlpD17IG1p217ot4kwuErP4BtVZPa92H9uNQWD3JnkYCBlHyRX0FR7c0eMA1mdVGfw/exec';
 const API_TOKEN = 'bt_7Fh29KqP4mX9Za81JrT6UvN2LsQ0';
-const STORAGE_KEY = 'baby-tracker-v11-state';
-const DEVICE_KEY = 'baby-tracker-v11-device';
-const SYNC_KEY = 'baby-tracker-v11-sync-meta';
+const STORAGE_KEY = 'baby-tracker-v13-state';
+const DEVICE_KEY = 'baby-tracker-v13-device';
+const SYNC_KEY = 'baby-tracker-v13-sync-meta';
 
 let deferredPrompt = null;
 let currentType = 'האכלה';
@@ -187,59 +177,48 @@ function saveSyncMeta(meta){
 
 function normalizeDateStr(value){
   if(!value) return '';
-
   if(typeof value==='string'){
     if(/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
-
     if(/^\d{1,2}\.\d{1,2}\.\d{4}$/.test(value)){
       const [d,m,y]=value.split('.');
       return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
     }
-
     const parsed=new Date(value);
     if(!isNaN(parsed)){
       const off=parsed.getTimezoneOffset();
       return new Date(parsed.getTime()-off*60000).toISOString().slice(0,10);
     }
   }
-
   if(Object.prototype.toString.call(value)==='[object Date]' && !isNaN(value)){
     const off=value.getTimezoneOffset();
     return new Date(value.getTime()-off*60000).toISOString().slice(0,10);
   }
-
   return '';
 }
 
 function normalizeTimeStr(value){
   if(value===null||value===undefined||value==='') return '';
-
   if(Object.prototype.toString.call(value)==='[object Date]' && !isNaN(value)){
     return value.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false});
   }
-
   if(typeof value==='number' && isFinite(value)){
     const totalMinutes=Math.round((value%1)*24*60);
     const hh=String(Math.floor(totalMinutes/60)%24).padStart(2,'0');
     const mm=String(totalMinutes%60).padStart(2,'0');
     return `${hh}:${mm}`;
   }
-
   const s=String(value).trim();
   if(!s) return '';
   if(/^\d{2}:\d{2}$/.test(s)) return s;
   if(/^\d{2}:\d{2}:\d{2}$/.test(s)) return s.slice(0,5);
-
   const parsed=new Date(s);
   if(!isNaN(parsed)){
     return parsed.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false});
   }
-
   const match=s.match(/(\d{1,2}):(\d{2})/);
   if(match){
     return `${String(match[1]).padStart(2,'0')}:${match[2]}`;
   }
-
   return '';
 }
 
@@ -282,6 +261,14 @@ function setStatus(text,kind,metaText){
   el.textContent=text;
   el.className=`status-pill ${kind}`;
   meta.textContent=metaText||'';
+}
+
+function setSoftMessage(message){
+  saveSyncMeta({
+    ...loadSyncMeta(),
+    lastError: message || ''
+  });
+  updateSyncStatus();
 }
 
 function updateSyncStatus(){
@@ -388,7 +375,6 @@ document.querySelectorAll('#typeChips .chip').forEach(chip=>{
     document.querySelectorAll('#typeChips .chip').forEach(c=>c.classList.remove('active'));
     chip.classList.add('active');
     currentType=chip.dataset.type;
-
     const amount=document.getElementById('amount');
     amount.disabled=currentType!=='האכלה';
     if(currentType!=='האכלה') amount.value='';
@@ -424,7 +410,6 @@ async function apiDelete(id){
 async function loadFromServer(){
   const result=await apiGetAll();
   if(!result.ok) throw new Error(result.error||'Failed to fetch');
-
   const entries=(result.data||[]).map(normalizeEntry).filter(e=>!e.deleted);
   replaceAllEntries(entries);
   saveSyncMeta({lastSuccessAt:nowIso(),lastError:''});
@@ -480,59 +465,27 @@ async function addEntry(){
     note: document.getElementById('note').value.trim()
   });
 
-  try{
-    setBusy(true);
-    updateSyncStatus();
-
-    const result = await apiSave(entry);
-    if(!result.ok) throw new Error(result.error || 'Save failed');
-
-    addOrReplaceLocalEntry(entry);
-    clearForm();
-    saveSyncMeta({ lastSuccessAt: nowIso(), lastError: '' });
-    render();
-
-    refreshInBackground();
-  }catch(err){
-    saveSyncMeta({ ...loadSyncMeta(), lastError: String(err.message || err) });
-    alert('השמירה נכשלה באמת');
-  }finally{
-    setBusy(false);
-    updateSyncStatus();
-  }
-}
-
-async function quickAdd(type,amount){
-  if(busy) return;
-
-  if(!navigator.onLine){
-    alert('אין חיבור כרגע. נסה שוב כשהאינטרנט חוזר.');
-    return;
-  }
-
-  const entry = makeEntry({
-    date: document.getElementById('logDate').value,
-    time: nowTime(),
-    type,
-    amount,
-    note: ''
-  });
+  addOrReplaceLocalEntry(entry);
+  clearForm();
+  render();
 
   try{
     setBusy(true);
     updateSyncStatus();
 
     const result = await apiSave(entry);
-    if(!result.ok) throw new Error(result.error || 'Save failed');
 
-    addOrReplaceLocalEntry(entry);
-    saveSyncMeta({ lastSuccessAt: nowIso(), lastError: '' });
-    render();
+    if(result && result.ok){
+      saveSyncMeta({ lastSuccessAt: nowIso(), lastError: '' });
+      refreshInBackground();
+      return;
+    }
 
+    setSoftMessage('הפעולה נשלחה, בודק מול השרת...');
     refreshInBackground();
   }catch(err){
-    saveSyncMeta({ ...loadSyncMeta(), lastError: String(err.message || err) });
-    alert('השמירה נכשלה באמת');
+    setSoftMessage('הפעולה נשלחה, בודק מול השרת...');
+    refreshInBackground();
   }finally{
     setBusy(false);
     updateSyncStatus();
@@ -551,21 +504,26 @@ async function deleteEntry(id){
     return;
   }
 
+  removeLocalEntry(id);
+  render();
+
   try{
     setBusy(true);
     updateSyncStatus();
 
     const result = await apiDelete(id);
-    if(!result.ok) throw new Error(result.error || 'Delete failed');
 
-    removeLocalEntry(id);
-    saveSyncMeta({ lastSuccessAt: nowIso(), lastError: '' });
-    render();
+    if(result && result.ok){
+      saveSyncMeta({ lastSuccessAt: nowIso(), lastError: '' });
+      refreshInBackground();
+      return;
+    }
 
+    setSoftMessage('המחיקה נשלחה, בודק מול השרת...');
     refreshInBackground();
   }catch(err){
-    saveSyncMeta({ ...loadSyncMeta(), lastError: String(err.message || err) });
-    alert('המחיקה נכשלה באמת');
+    setSoftMessage('המחיקה נשלחה, בודק מול השרת...');
+    refreshInBackground();
   }finally{
     setBusy(false);
     updateSyncStatus();
@@ -600,23 +558,22 @@ async function clearDay(){
     return;
   }
 
+  entries.forEach(entry => removeLocalEntry(entry.id));
+  render();
+
   try{
     setBusy(true);
     updateSyncStatus();
 
     for(const entry of entries){
-      const result = await apiDelete(entry.id);
-      if(!result.ok) throw new Error(result.error || 'Delete failed');
-      removeLocalEntry(entry.id);
+      await apiDelete(entry.id);
     }
 
     saveSyncMeta({ lastSuccessAt: nowIso(), lastError: '' });
-    render();
-
     refreshInBackground();
   }catch(err){
-    saveSyncMeta({ ...loadSyncMeta(), lastError: String(err.message || err) });
-    alert('מחיקת היום נכשלה באמת');
+    setSoftMessage('מחיקת היום נשלחה, בודק מול השרת...');
+    refreshInBackground();
   }finally{
     setBusy(false);
     updateSyncStatus();
@@ -683,7 +640,7 @@ window.addEventListener('online',manualRefresh);
 window.addEventListener('focus',manualRefresh);
 
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('./sw.js?v=11').catch(()=>{});
+  navigator.serviceWorker.register('./sw.js?v=13').catch(()=>{});
 }
 
 window.addEventListener('beforeinstallprompt',(e)=>{
