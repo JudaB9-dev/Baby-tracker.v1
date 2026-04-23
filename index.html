@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#8fb8e8" />
   <title>מעקב תינוק</title>
-  <link rel="manifest" href="manifest.json?v=13" />
+  <link rel="manifest" href="manifest.json?v=14" />
   <link rel="apple-touch-icon" href="icon-192.png" />
   <style>
     :root{--card:#ffffff;--line:#dbe7f6;--primary:#8fb8e8;--primary2:#dfeeff;--text:#1e2a3a;--muted:#6e7a8a;--shadow:0 8px 24px rgba(32,62,100,.10);--radius:18px;--field-h:48px;--page-pad:14px;--ok:#e8f7ec;--ok-text:#1f6b36;--warn:#fff4df;--warn-text:#8a5a00;--err:#ffe8e8;--err-text:#8f2424}
@@ -18,11 +18,34 @@
     .card{background:var(--card);border:1px solid #ecf2fa;border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;overflow:hidden;min-width:0}
     .section-title{font-size:18px;font-weight:700;margin:0 0 10px;line-height:1.2}
     label{display:block;font-size:13px;color:var(--muted);margin:0 0 6px;line-height:1.25}
-    input,textarea,button{font:inherit}
-    input[type="date"],input[type="time"],input[type="number"],textarea{width:100%;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:#fbfdff;color:var(--text);outline:none;font-size:16px;line-height:1.2;appearance:none;-webkit-appearance:none;display:block}
-    input[type="date"],input[type="time"],input[type="number"]{height:var(--field-h)} textarea{min-height:96px;resize:vertical}
+    input,button{font:inherit}
+    input[type="date"],input[type="time"],input[type="number"]{width:100%;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:#fbfdff;color:var(--text);outline:none;font-size:16px;line-height:1.2;appearance:none;-webkit-appearance:none;display:block;height:var(--field-h)}
     .row{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;align-items:end}.field{min-width:0}
-    .chips{display:flex;flex-wrap:wrap;gap:8px}.chip{border:1px solid var(--line);background:#f7fbff;border-radius:999px;padding:10px 14px;cursor:pointer;user-select:none;line-height:1.15;font-size:15px}.chip.active{background:var(--primary2);border-color:#b8d2f3}
+    .chips{
+      display:flex;
+      flex-wrap:nowrap;
+      gap:8px;
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+      padding-bottom:2px;
+      scrollbar-width:none;
+    }
+    .chips::-webkit-scrollbar{display:none}
+    .chip{
+      flex:0 0 auto;
+      min-width:110px;
+      text-align:center;
+      border:1px solid var(--line);
+      background:#f7fbff;
+      border-radius:999px;
+      padding:10px 14px;
+      cursor:pointer;
+      user-select:none;
+      line-height:1.15;
+      font-size:15px;
+      white-space:nowrap;
+    }
+    .chip.active{background:var(--primary2);border-color:#b8d2f3}
     .btn{border:0;border-radius:16px;min-height:48px;padding:13px 16px;background:var(--primary);color:#0d2540;font-weight:700;cursor:pointer;box-shadow:var(--shadow);line-height:1.2;display:inline-flex;align-items:center;justify-content:center;text-align:center}
     .btn.secondary{background:#eef5ff}.btn.danger{background:#ffe8e8;color:#8f2424}.btn.full{width:100%}.btn:disabled,.small-btn:disabled{opacity:.6;cursor:not-allowed}
     .stats{display:grid;gap:10px;width:100%;grid-template-columns:repeat(4,1fr)}
@@ -34,7 +57,18 @@
     .status-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:10px;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:#f8fbff}
     .status-pill{padding:7px 10px;border-radius:999px;font-size:13px;font-weight:700}.status-ok{background:var(--ok);color:var(--ok-text)}.status-warn{background:var(--warn);color:var(--warn-text)}.status-err{background:var(--err);color:var(--err-text)}
     .small-btn{border:1px solid var(--line);background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;font-size:13px}
-    @media (max-width:640px){:root{--field-h:46px;--page-pad:12px}.hero{grid-template-columns:72px 1fr;gap:12px;padding:12px}.hero img{width:72px;height:72px}h1{font-size:24px}.row,.stats{grid-template-columns:1fr}.card{padding:12px}.section-title{font-size:17px}.chip,.actions .btn{width:100%}.item-top,.status-bar{align-items:flex-start;flex-direction:column}}
+    @media (max-width:640px){
+      :root{--field-h:46px;--page-pad:12px}
+      .hero{grid-template-columns:72px 1fr;gap:12px;padding:12px}
+      .hero img{width:72px;height:72px}
+      h1{font-size:24px}
+      .row,.stats{grid-template-columns:1fr}
+      .card{padding:12px}
+      .section-title{font-size:17px}
+      .actions .btn{width:100%}
+      .item-top,.status-bar{align-items:flex-start;flex-direction:column}
+      .chip{min-width:92px}
+    }
   </style>
 </head>
 <body>
@@ -80,7 +114,6 @@
         <div class="chip" data-type="פיפי">💧 פיפי</div>
         <div class="chip" data-type="קקי">💩 קקי</div>
         <div class="chip" data-type="ויטמינים">💊 ויטמינים</div>
-        <div class="chip" data-type="הערה">📝 הערה</div>
       </div>
       <div class="row" style="margin-top:12px">
         <div class="field">
@@ -91,10 +124,6 @@
           <label for="amount">כמות (מ״ל)</label>
           <input id="amount" type="number" placeholder="למשל 90" />
         </div>
-      </div>
-      <div style="margin-top:10px">
-        <label for="note">הערות</label>
-        <textarea id="note" placeholder="למשל: גרפס חלש / פליטה קטנה / ישן מיד אחרי"></textarea>
       </div>
       <div class="actions" style="margin-top:12px">
         <button id="saveBtn" class="btn" type="button" onclick="addEntry()">שמור רישום</button>
@@ -117,8 +146,6 @@
       <div class="section-title">רישומים של היום</div>
       <div class="actions" style="margin-bottom:10px">
         <button class="btn secondary" type="button" onclick="exportJson()">ייצוא גיבוי</button>
-        <button class="btn secondary" type="button" onclick="document.getElementById('importFile').click()">ייבוא גיבוי</button>
-        <input id="importFile" type="file" accept=".json" style="display:none" onchange="importJson(event)" />
         <button class="btn danger" type="button" onclick="clearDay()">נקה יום זה</button>
       </div>
       <div id="entries" class="list"></div>
@@ -131,9 +158,9 @@
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycby5HlpD17IG1p217ot4kwuErP4BtVZPa92H9uNQWD3JnkYCBlHyRX0FR7c0eMA1mdVGfw/exec';
 const API_TOKEN = 'bt_7Fh29KqP4mX9Za81JrT6UvN2LsQ0';
-const STORAGE_KEY = 'baby-tracker-v13-state';
-const DEVICE_KEY = 'baby-tracker-v13-device';
-const SYNC_KEY = 'baby-tracker-v13-sync-meta';
+const STORAGE_KEY = 'baby-tracker-v14-state';
+const DEVICE_KEY = 'baby-tracker-v14-device';
+const SYNC_KEY = 'baby-tracker-v14-sync-meta';
 
 let deferredPrompt = null;
 let currentType = 'האכלה';
@@ -143,7 +170,7 @@ function getTodayStr(){const d=new Date();const off=d.getTimezoneOffset();return
 function nowTime(){return new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false})}
 function nowIso(){return new Date().toISOString()}
 function esc(s){return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
-function typeEmoji(type){return {"האכלה":"🍼","פיפי":"💧","קקי":"💩","ויטמינים":"💊","הערה":"📝"}[type]||"•"}
+function typeEmoji(type){return {"האכלה":"🍼","פיפי":"💧","קקי":"💩","ויטמינים":"💊"}[type]||"•"}
 
 function getDeviceId(){
   let id=localStorage.getItem(DEVICE_KEY);
@@ -235,7 +262,7 @@ function normalizeEntry(raw){
     time:normalizeTimeStr(raw.time),
     type:String(raw.type||''),
     amount:raw.amount===null||raw.amount===undefined?'':String(raw.amount),
-    note:String(raw.note||''),
+    note:'',
     device:String(raw.device||''),
     deleted:isDeletedValue(raw.deleted)
   };
@@ -307,7 +334,7 @@ function render(){
           <div><span class="badge">${typeEmoji(e.type)} ${esc(e.type)}</span></div>
           <div><b>${esc(e.time||'')}</b></div>
         </div>
-        <div class="muted" style="margin-top:8px">${e.amount?`כמות: <b>${esc(e.amount)}</b> מ״ל`:'ללא כמות'}${e.note?' · '+esc(e.note):''}</div>
+        <div class="muted" style="margin-top:8px">${e.amount?`כמות: <b>${esc(e.amount)}</b> מ״ל`:'ללא כמות'}</div>
         <div class="actions" style="margin-top:10px">
           <button class="btn secondary" type="button" onclick="editEntry('${e.id}')">עריכה</button>
           <button class="btn danger" type="button" onclick="deleteEntry('${e.id}')">מחיקה</button>
@@ -344,7 +371,7 @@ function removeLocalEntry(id){
   });
 }
 
-function makeEntry({date,time,type,amount,note}){
+function makeEntry({date,time,type,amount}){
   const ts=nowIso();
   return {
     id:'entry_'+Math.random().toString(36).slice(2)+Date.now().toString(36),
@@ -354,7 +381,7 @@ function makeEntry({date,time,type,amount,note}){
     time:normalizeTimeStr(time||nowTime()),
     type:type||'',
     amount:type==='האכלה'?String(amount||''):'',
-    note:note||'',
+    note:'',
     device:getDeviceId(),
     deleted:false
   };
@@ -366,7 +393,6 @@ function fillNow(){
 
 function clearForm(){
   document.getElementById('amount').value='';
-  document.getElementById('note').value='';
   document.getElementById('time').value=nowTime();
 }
 
@@ -461,8 +487,7 @@ async function addEntry(){
     date: document.getElementById('logDate').value,
     time: document.getElementById('time').value,
     type: currentType,
-    amount: document.getElementById('amount').value,
-    note: document.getElementById('note').value.trim()
+    amount: document.getElementById('amount').value
   });
 
   addOrReplaceLocalEntry(entry);
@@ -538,7 +563,6 @@ function editEntry(id){
   document.querySelectorAll('#typeChips .chip').forEach(c=>c.classList.toggle('active',c.dataset.type===e.type));
   document.getElementById('time').value=e.time||'';
   document.getElementById('amount').value=e.amount||'';
-  document.getElementById('note').value=e.note||'';
 
   const amount=document.getElementById('amount');
   amount.disabled=currentType!=='האכלה';
@@ -588,25 +612,6 @@ function exportJson(){
   a.click();
 }
 
-function importJson(event){
-  const file=event.target.files[0];
-  if(!file) return;
-
-  const reader=new FileReader();
-  reader.onload=()=>{
-    try{
-      const data=JSON.parse(reader.result);
-      const incoming=Array.isArray(data.entries)?data.entries:[];
-      replaceAllEntries(incoming);
-      render();
-      alert('הגיבוי יובא מקומית');
-    }catch{
-      alert('הקובץ לא תקין');
-    }
-  };
-  reader.readAsText(file);
-}
-
 async function manualRefresh(){
   if(busy) return;
 
@@ -640,7 +645,7 @@ window.addEventListener('online',manualRefresh);
 window.addEventListener('focus',manualRefresh);
 
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('./sw.js?v=13').catch(()=>{});
+  navigator.serviceWorker.register('./sw.js?v=14').catch(()=>{});
 }
 
 window.addEventListener('beforeinstallprompt',(e)=>{
