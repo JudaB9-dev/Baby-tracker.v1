@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#8fb8e8" />
   <title>מעקב תינוק</title>
-  <link rel="manifest" href="manifest.json?v=15" />
+  <link rel="manifest" href="manifest.json?v=16" />
   <link rel="apple-touch-icon" href="icon-192.png" />
   <style>
     :root{
@@ -23,8 +23,6 @@
       --ok-text:#1f6b36;
       --warn:#fff4df;
       --warn-text:#8a5a00;
-      --err:#ffe8e8;
-      --err-text:#8f2424;
     }
 
     *{box-sizing:border-box}
@@ -38,7 +36,7 @@
     }
 
     .wrap{
-      max-width:760px;
+      max-width:820px;
       margin:0 auto;
       padding:var(--page-pad) var(--page-pad) 42px;
     }
@@ -47,10 +45,10 @@
 
     .hero{
       display:grid;
-      grid-template-columns:1fr 250px;
+      grid-template-columns:1fr 280px;
       gap:14px;
       align-items:stretch;
-      background:rgba(255,255,255,.72);
+      background:rgba(255,255,255,.78);
       backdrop-filter:blur(8px);
       border:1px solid #e9f1fb;
       border-radius:24px;
@@ -145,7 +143,7 @@
 
     input,button{font:inherit}
 
-    input[type="date"],input[type="time"],input[type="number"]{
+    input[type="time"],input[type="number"]{
       width:100%;
       padding:12px 14px;
       border-radius:14px;
@@ -248,31 +246,6 @@
       word-break:break-word;
     }
 
-    .list{display:grid;gap:10px}
-
-    .item{
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:12px;
-      background:#fcfeff;
-    }
-
-    .item-top{
-      display:flex;
-      justify-content:space-between;
-      gap:8px;
-      align-items:center;
-    }
-
-    .badge{
-      background:#eef5ff;
-      border:1px solid #d8e7fb;
-      padding:6px 10px;
-      border-radius:999px;
-      font-size:12px;
-      display:inline-block;
-    }
-
     .muted{
       color:var(--muted);
       font-size:13px;
@@ -306,7 +279,6 @@
 
     .status-ok{background:var(--ok);color:var(--ok-text)}
     .status-warn{background:var(--warn);color:var(--warn-text)}
-    .status-err{background:var(--err);color:var(--err-text)}
 
     .small-btn{
       border:1px solid var(--line);
@@ -316,6 +288,109 @@
       cursor:pointer;
       font-size:13px;
       width:100%;
+    }
+
+    .day-nav{
+      display:grid;
+      grid-template-columns:110px 1fr 110px;
+      gap:8px;
+      align-items:center;
+      margin-bottom:10px;
+    }
+
+    .day-box{
+      background:#f8fbff;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:10px 12px;
+      text-align:center;
+    }
+
+    .day-main{
+      font-size:18px;
+      font-weight:800;
+      line-height:1.2;
+    }
+
+    .day-sub{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:4px;
+    }
+
+    .entries-table{
+      display:grid;
+      gap:8px;
+    }
+
+    .entry-row{
+      display:grid;
+      grid-template-columns:84px 1fr auto;
+      gap:10px;
+      align-items:center;
+      border:1px solid var(--line);
+      background:#fcfeff;
+      border-radius:16px;
+      padding:10px 12px;
+    }
+
+    .entry-time{
+      font-size:24px;
+      font-weight:800;
+      line-height:1;
+      text-align:center;
+      color:#1b2940;
+    }
+
+    .entry-main{
+      min-width:0;
+    }
+
+    .entry-topline{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-bottom:4px;
+    }
+
+    .entry-type{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      background:#eef5ff;
+      border:1px solid #d8e7fb;
+      border-radius:999px;
+      padding:5px 10px;
+      font-size:12px;
+      font-weight:700;
+    }
+
+    .entry-amount{
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    .entry-actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .mini-btn{
+      border:0;
+      border-radius:12px;
+      padding:8px 12px;
+      font-weight:700;
+      cursor:pointer;
+      background:#eef5ff;
+      color:#203458;
+    }
+
+    .mini-btn.delete{
+      background:#ffe8e8;
+      color:#8f2424;
     }
 
     @media (max-width:640px){
@@ -347,7 +422,6 @@
       .section-title{font-size:17px}
 
       .actions .btn{width:100%}
-      .item-top{align-items:flex-start;flex-direction:column}
 
       .chips{
         grid-template-columns:repeat(4,1fr);
@@ -355,8 +429,8 @@
       }
 
       .chip{
-        font-size:13px;
-        padding:10px 4px;
+        font-size:12px;
+        padding:10px 2px;
       }
 
       .stats{
@@ -374,6 +448,25 @@
 
       .stat span{
         font-size:11px;
+      }
+
+      .day-nav{
+        grid-template-columns:88px 1fr 88px;
+        gap:6px;
+      }
+
+      .entry-row{
+        grid-template-columns:68px 1fr;
+      }
+
+      .entry-actions{
+        grid-column:1 / -1;
+        justify-content:flex-start;
+        margin-top:4px;
+      }
+
+      .entry-time{
+        font-size:20px;
       }
     }
   </style>
@@ -400,7 +493,7 @@
       </div>
 
       <div class="top-mini-card">
-        <div class="top-mini-title">תאריך</div>
+        <div class="top-mini-title">תאריך נבחר</div>
         <div class="top-mini-value" id="topDateText">—</div>
       </div>
     </div>
@@ -448,23 +541,35 @@
 
     <div class="card">
       <div class="section-title">רישומים של היום</div>
+
+      <div class="day-nav">
+        <button class="btn secondary" type="button" onclick="goToNextDay()">יום הבא</button>
+        <div class="day-box">
+          <div class="day-main" id="selectedDayLabel">—</div>
+          <div class="day-sub" id="selectedDaySub">—</div>
+        </div>
+        <button class="btn secondary" type="button" onclick="goToPrevDay()">יום קודם</button>
+      </div>
+
       <div class="actions" style="margin-bottom:10px">
+        <button class="btn secondary" type="button" onclick="goToToday()">היום</button>
         <button class="btn secondary" type="button" onclick="exportJson()">ייצוא גיבוי</button>
         <button class="btn danger" type="button" onclick="clearDay()">נקה יום זה</button>
       </div>
-      <div id="entries" class="list"></div>
+
+      <div id="entries" class="entries-table"></div>
     </div>
   </div>
 
-  <div class="footer-note">האפליקציה מעדכנת את המסך מיד, ואז בודקת את השרת ברקע.</div>
+  <div class="footer-note">הרשימה מוצגת מהשעה החדשה לישנה, ואפשר לעבור בין ימים.</div>
 </div>
 
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycby5HlpD17IG1p217ot4kwuErP4BtVZPa92H9uNQWD3JnkYCBlHyRX0FR7c0eMA1mdVGfw/exec';
 const API_TOKEN = 'bt_7Fh29KqP4mX9Za81JrT6UvN2LsQ0';
-const STORAGE_KEY = 'baby-tracker-v15-state';
-const DEVICE_KEY = 'baby-tracker-v15-device';
-const SYNC_KEY = 'baby-tracker-v15-sync-meta';
+const STORAGE_KEY = 'baby-tracker-v16-state';
+const DEVICE_KEY = 'baby-tracker-v16-device';
+const SYNC_KEY = 'baby-tracker-v16-sync-meta';
 
 let deferredPrompt = null;
 let currentType = 'האכלה';
@@ -492,6 +597,12 @@ function typeEmoji(type){
   return {"האכלה":"🍼","פיפי":"💧","קקי":"💩","ויטמינים":"💊"}[type]||"•";
 }
 
+function getDayName(dateStr){
+  const days = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+  const d = new Date(dateStr + 'T12:00:00');
+  return days[d.getDay()] || '';
+}
+
 function formatTopDate(value){
   const normalized = normalizeDateStr(value);
   if(!normalized) return '—';
@@ -502,6 +613,36 @@ function formatTopDate(value){
 function updateTopDate(){
   const value = document.getElementById('logDate').value;
   document.getElementById('topDateText').textContent = formatTopDate(value);
+}
+
+function updateSelectedDayBox(){
+  const value = normalizeDateStr(document.getElementById('logDate').value);
+  document.getElementById('selectedDayLabel').textContent = formatTopDate(value);
+  document.getElementById('selectedDaySub').textContent = value ? `יום ${getDayName(value)}` : '—';
+}
+
+function shiftDateByDays(dateStr, days){
+  const d = new Date(dateStr + 'T12:00:00');
+  d.setDate(d.getDate() + days);
+  const off = d.getTimezoneOffset();
+  return new Date(d.getTime() - off*60000).toISOString().slice(0,10);
+}
+
+function goToPrevDay(){
+  const input = document.getElementById('logDate');
+  input.value = shiftDateByDays(normalizeDateStr(input.value), -1);
+  render();
+}
+
+function goToNextDay(){
+  const input = document.getElementById('logDate');
+  input.value = shiftDateByDays(normalizeDateStr(input.value), 1);
+  render();
+}
+
+function goToToday(){
+  document.getElementById('logDate').value = getTodayStr();
+  render();
 }
 
 function getDeviceId(){
@@ -609,7 +750,7 @@ function getEntriesForDay(date){
   return state.entries
     .map(normalizeEntry)
     .filter(e => !e.deleted && normalizeDateStr(e.date)===normalizeDateStr(date))
-    .sort((a,b)=>(a.time||'').localeCompare(b.time||''));
+    .sort((a,b)=>(b.time||'').localeCompare(a.time||'')); // חדש לישן
 }
 
 function setBusy(flag){
@@ -658,6 +799,7 @@ function updateSyncStatus(){
 
 function render(){
   updateTopDate();
+  updateSelectedDayBox();
 
   const date=document.getElementById('logDate').value;
   const entries=getEntriesForDay(date);
@@ -667,15 +809,19 @@ function render(){
     box.innerHTML='<div class="muted">עדיין אין רישומים ליום הזה.</div>';
   }else{
     box.innerHTML=entries.map(e=>`
-      <div class="item">
-        <div class="item-top">
-          <div><span class="badge">${typeEmoji(e.type)} ${esc(e.type)}</span></div>
-          <div><b>${esc(e.time||'')}</b></div>
+      <div class="entry-row">
+        <div class="entry-time">${esc(e.time||'')}</div>
+
+        <div class="entry-main">
+          <div class="entry-topline">
+            <span class="entry-type">${typeEmoji(e.type)} ${esc(e.type)}</span>
+          </div>
+          <div class="entry-amount">${e.amount ? `כמות: ${esc(e.amount)} מ״ל` : 'ללא כמות'}</div>
         </div>
-        <div class="muted" style="margin-top:8px">${e.amount?`כמות: <b>${esc(e.amount)}</b> מ״ל`:'ללא כמות'}</div>
-        <div class="actions" style="margin-top:10px">
-          <button class="btn secondary" type="button" onclick="editEntry('${e.id}')">עריכה</button>
-          <button class="btn danger" type="button" onclick="deleteEntry('${e.id}')">מחיקה</button>
+
+        <div class="entry-actions">
+          <button class="mini-btn" type="button" onclick="editEntry('${e.id}')">עריכה</button>
+          <button class="mini-btn delete" type="button" onclick="deleteEntry('${e.id}')">מחיקה</button>
         </div>
       </div>`).join('');
   }
@@ -973,6 +1119,7 @@ async function manualRefresh(){
 
 document.getElementById('logDate').value=getTodayStr();
 updateTopDate();
+updateSelectedDayBox();
 
 fillNow();
 render();
@@ -983,21 +1130,25 @@ window.addEventListener('online',manualRefresh);
 window.addEventListener('focus',manualRefresh);
 
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('./sw.js?v=15').catch(()=>{});
+  navigator.serviceWorker.register('./sw.js?v=16').catch(()=>{});
 }
 
 window.addEventListener('beforeinstallprompt',(e)=>{
   e.preventDefault();
   deferredPrompt=e;
-  document.getElementById('installBtn').style.display='block';
+  const btn = document.getElementById('installBtn');
+  if(btn) btn.style.display='block';
 });
 
-document.getElementById('installBtn').addEventListener('click',async()=>{
-  if(!deferredPrompt) return;
-  deferredPrompt.prompt();
-  await deferredPrompt.userChoice;
-  deferredPrompt=null;
-});
+const installBtn = document.getElementById('installBtn');
+if(installBtn){
+  installBtn.addEventListener('click',async()=>{
+    if(!deferredPrompt) return;
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt=null;
+  });
+}
 </script>
 </body>
 </html>
