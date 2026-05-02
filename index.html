@@ -5,55 +5,56 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#eef4fb" />
   <title>מעקב תינוק</title>
-  <link rel="manifest" href="manifest.json?v=24" />
+  <link rel="manifest" href="manifest.json?v=25" />
   <link rel="apple-touch-icon" href="icon-192.png" />
+
   <style>
     :root{
       --bg:#eef4fb;
-      --bg-soft:#f6f9fe;
+      --bg2:#f6f9fe;
       --card:#ffffff;
-      --line:#dbe6f3;
-      --line-soft:#e9eff7;
+      --line:#dde6f2;
+      --line-soft:#e8eef6;
       --text:#1f2b46;
-      --muted:#7f8ea5;
-      --blue:#74a8f0;
-      --blue-dark:#5d93dc;
-      --blue-soft:#edf4ff;
-      --blue-soft-2:#dfeafb;
-      --green-bg:#edf8ef;
-      --green-text:#2f9a4a;
-      --green-dot:#38c35a;
+      --muted:#8392a7;
+      --blue:#73a8f2;
+      --blue-dark:#4e8fe3;
+      --blue-soft:#e7f0ff;
+      --green-bg:#eff8f0;
+      --green-text:#2f9649;
+      --green-dot:#2ec35b;
       --red-bg:#fdf0f0;
-      --red-text:#b04545;
-      --shadow:0 10px 28px rgba(67, 97, 142, .08);
-      --radius-xl:32px;
-      --radius-lg:26px;
+      --red-text:#b34a4a;
+      --shadow:0 10px 28px rgba(67,97,142,.08);
+      --radius-xl:34px;
+      --radius-lg:28px;
       --radius-md:22px;
       --radius-sm:18px;
     }
 
     *{box-sizing:border-box}
     html,body{overflow-x:hidden}
+    html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
     body{
       margin:0;
       font-family:-apple-system,"SF Pro Display","SF Pro Text",BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
       color:var(--text);
       background:
-        radial-gradient(circle at top right, #f6faff 0%, transparent 24%),
-        linear-gradient(180deg,#edf4fb 0%, #f4f8fd 58%, #f7fbff 100%);
+        radial-gradient(circle at top right, #f8fbff 0%, transparent 22%),
+        linear-gradient(180deg,#edf4fb 0%,#f4f8fd 58%,#f8fbff 100%);
       -webkit-text-size-adjust:100%;
     }
 
     .wrap{
       max-width:940px;
       margin:0 auto;
-      padding:18px 14px 34px;
+      padding:18px 14px 30px;
     }
 
     .stack{display:grid;gap:18px}
 
     .hero{
-      background:rgba(255,255,255,.65);
+      background:rgba(255,255,255,.56);
       backdrop-filter:blur(10px);
       border:1px solid #edf2fa;
       border-radius:34px;
@@ -63,16 +64,16 @@
 
     .hero-top{
       display:grid;
-      grid-template-columns:170px 1fr 90px;
+      grid-template-columns:176px 1fr 92px;
       gap:16px;
-      align-items:start;
+      align-items:center;
       margin-bottom:16px;
     }
 
     .sync-card{
       background:#fff;
       border:1px solid var(--line-soft);
-      border-radius:24px;
+      border-radius:26px;
       box-shadow:var(--shadow);
       padding:14px;
       min-height:106px;
@@ -81,7 +82,7 @@
       justify-content:space-between;
     }
 
-    .sync-head{
+    .sync-row{
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -97,14 +98,14 @@
     .refresh-btn{
       width:42px;
       height:42px;
-      border-radius:14px;
+      border-radius:15px;
       border:1px solid var(--line);
       background:#fff;
-      color:#4d83d8;
+      color:#3f84e3;
       font-size:22px;
       line-height:1;
       cursor:pointer;
-      box-shadow:0 4px 10px rgba(93,147,220,.06);
+      box-shadow:0 4px 12px rgba(78,143,227,.08);
     }
 
     .status-pill{
@@ -115,9 +116,9 @@
       border-radius:999px;
       font-size:14px;
       font-weight:800;
+      line-height:1;
       width:max-content;
       max-width:100%;
-      line-height:1;
     }
 
     .status-ok{
@@ -126,8 +127,8 @@
     }
 
     .status-warn{
-      background:#fff3df;
-      color:#9a6b11;
+      background:#fff4df;
+      color:#9a6c15;
     }
 
     .status-dot{
@@ -141,26 +142,32 @@
     .sync-meta{
       font-size:13px;
       color:var(--muted);
-      line-height:1.3;
+      line-height:1.25;
     }
 
-    .hero-title-wrap{
+    .title-wrap{
       display:flex;
       align-items:center;
       justify-content:center;
       gap:10px;
-      min-height:76px;
+      flex-wrap:nowrap;
       text-align:center;
-      flex-wrap:wrap;
+      min-height:72px;
+      white-space:nowrap;
     }
 
     h1{
       margin:0;
-      font-size:38px;
+      font-size:33px;
       line-height:1;
       font-weight:900;
       letter-spacing:-0.04em;
       color:#1f2b46;
+    }
+
+    .title-emoji{
+      font-size:36px;
+      line-height:1;
     }
 
     .hero-photo{
@@ -180,7 +187,7 @@
     .date-card{
       background:#fff;
       border:1px solid var(--line-soft);
-      border-radius:30px;
+      border-radius:32px;
       padding:24px 16px;
       text-align:center;
       box-shadow:var(--shadow);
@@ -193,7 +200,7 @@
     }
 
     .date-value{
-      font-size:46px;
+      font-size:48px;
       font-weight:900;
       line-height:1;
       letter-spacing:-0.04em;
@@ -234,7 +241,7 @@
       border:1px solid var(--line);
       border-radius:28px;
       background:#fff;
-      padding:16px 10px;
+      padding:16px 8px;
       display:flex;
       flex-direction:column;
       align-items:center;
@@ -263,8 +270,8 @@
     }
 
     .vitamin-stat.off{
-      background:linear-gradient(180deg,#fff3f3 0%, #fdeaea 100%);
-      border-color:#f3d1d1;
+      background:linear-gradient(180deg,#fff4f4 0%,#fdeaea 100%);
+      border-color:#f2d0d0;
     }
 
     .vitamin-stat.off b,
@@ -273,8 +280,8 @@
     }
 
     .vitamin-stat.on{
-      background:linear-gradient(180deg,#eef9f0 0%, #e2f4e6 100%);
-      border-color:#d5ead9;
+      background:linear-gradient(180deg,#eef9f0 0%,#e2f4e6 100%);
+      border-color:#d4e9d8;
     }
 
     .vitamin-stat.on b,
@@ -297,21 +304,21 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      gap:10px;
-      padding:10px 12px;
+      gap:8px;
+      padding:10px 8px;
       font-size:18px;
       font-weight:500;
       color:#1f2b46;
       cursor:pointer;
       user-select:none;
-      transition:.18s ease;
       text-align:center;
+      transition:.18s ease;
       box-shadow:0 1px 0 rgba(255,255,255,.7) inset;
     }
 
     .chip.active{
-      background:linear-gradient(180deg,#dfeafb 0%,#d3e4fb 100%);
-      border-color:#c2d7f3;
+      background:linear-gradient(180deg,#dde9fb 0%,#d2e2fb 100%);
+      border-color:#bfd4f1;
       color:#3a78c7;
       font-weight:700;
     }
@@ -351,16 +358,16 @@
     input[type="time"]:focus,
     input[type="number"]:focus{
       border-color:#bfd5f2;
-      box-shadow:0 0 0 4px rgba(116,168,240,.12);
+      box-shadow:0 0 0 4px rgba(115,168,242,.12);
     }
 
     input[type="number"]::placeholder{
-      color:#c0cad9;
+      color:#c1cad8;
     }
 
     input[type="number"]:disabled{
       background:#fafcff;
-      color:#b7c2d2;
+      color:#b8c2d1;
     }
 
     .save-row{
@@ -369,18 +376,17 @@
     }
 
     .primary-btn{
-      min-width:320px;
-      max-width:100%;
+      width:100%;
       height:68px;
       border:0;
       border-radius:22px;
-      background:linear-gradient(180deg,var(--blue) 0%, var(--blue-dark) 100%);
+      background:linear-gradient(180deg,var(--blue) 0%,var(--blue-dark) 100%);
       color:#fff;
       font-size:24px;
       font-weight:900;
       letter-spacing:-0.01em;
       cursor:pointer;
-      box-shadow:0 10px 20px rgba(116,168,240,.20);
+      box-shadow:0 10px 22px rgba(78,143,227,.20);
     }
 
     .primary-btn:disabled{
@@ -390,8 +396,8 @@
 
     .day-nav{
       display:grid;
-      grid-template-columns:210px 1fr 210px;
-      gap:16px;
+      grid-template-columns:1fr 1.9fr 1fr;
+      gap:14px;
       margin-bottom:18px;
     }
 
@@ -440,57 +446,74 @@
       gap:14px;
     }
 
-    .entry-row{
-      display:grid;
-      grid-template-columns:110px 1fr auto;
-      gap:16px;
-      align-items:center;
+    .entry-card{
       border:1px solid var(--line);
       border-radius:24px;
       background:#fff;
-      padding:18px;
+      padding:16px;
+    }
+
+    .entry-head{
+      display:grid;
+      grid-template-columns:110px 1fr 110px;
+      gap:12px;
+      align-items:center;
+      direction:ltr;
+    }
+
+    .entry-amount,
+    .entry-type-wrap,
+    .entry-time{
+      text-align:center;
     }
 
     .entry-time{
-      font-size:32px;
+      font-size:28px;
       font-weight:900;
-      line-height:1;
-      text-align:center;
       color:#1f2b46;
-    }
-
-    .entry-main{
-      min-width:0;
+      line-height:1;
     }
 
     .entry-type{
       display:inline-flex;
       align-items:center;
+      justify-content:center;
       gap:8px;
       padding:8px 14px;
       border:1px solid var(--line);
       border-radius:999px;
       background:#f8fbff;
       font-size:18px;
-      margin-bottom:10px;
+      margin-bottom:8px;
+      width:max-content;
+      max-width:100%;
     }
 
-    .entry-amount{
-      font-size:18px;
+    .entry-type-wrap{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      min-width:0;
+    }
+
+    .entry-sub{
+      font-size:17px;
       color:var(--muted);
+      line-height:1.25;
     }
 
     .entry-actions{
       display:flex;
       gap:10px;
-      align-items:center;
-      justify-content:flex-end;
+      justify-content:flex-start;
+      margin-top:14px;
       flex-wrap:wrap;
     }
 
     .mini-btn{
-      min-width:126px;
-      height:54px;
+      min-width:132px;
+      height:52px;
       border-radius:18px;
       border:1px solid var(--line);
       background:#fff;
@@ -511,7 +534,7 @@
     }
 
     .wide-btn{
-      height:60px;
+      height:58px;
       border-radius:20px;
       border:1px solid var(--line);
       background:#fff;
@@ -549,7 +572,7 @@
       }
 
       .hero-top{
-        grid-template-columns:120px 1fr 68px;
+        grid-template-columns:120px 1fr 70px;
         gap:10px;
         margin-bottom:12px;
       }
@@ -580,12 +603,17 @@
         font-size:11px;
       }
 
-      .hero-title-wrap{
-        min-height:62px;
+      .title-wrap{
+        min-height:58px;
+        gap:6px;
       }
 
       h1{
-        font-size:34px;
+        font-size:31px;
+      }
+
+      .title-emoji{
+        font-size:30px;
       }
 
       .hero-photo img{
@@ -595,7 +623,7 @@
       }
 
       .date-card{
-        padding:16px 10px;
+        padding:18px 10px;
         border-radius:24px;
       }
 
@@ -660,7 +688,7 @@
       }
 
       .form-grid{
-        grid-template-columns:1fr;
+        grid-template-columns:1fr 1fr;
         gap:12px;
       }
 
@@ -675,15 +703,13 @@
       }
 
       .primary-btn{
-        width:100%;
-        min-width:0;
         height:60px;
         border-radius:20px;
         font-size:20px;
       }
 
       .day-nav{
-        grid-template-columns:1fr 1.3fr 1fr;
+        grid-template-columns:1fr 1.35fr 1fr;
         gap:8px;
       }
 
@@ -707,11 +733,14 @@
         margin-top:4px;
       }
 
-      .entry-row{
-        grid-template-columns:84px 1fr;
-        gap:10px;
+      .entry-card{
         padding:14px;
         border-radius:20px;
+      }
+
+      .entry-head{
+        grid-template-columns:84px 1fr 84px;
+        gap:8px;
       }
 
       .entry-time{
@@ -721,17 +750,15 @@
       .entry-type{
         font-size:16px;
         padding:6px 12px;
-        margin-bottom:8px;
+        margin-bottom:6px;
       }
 
-      .entry-amount{
-        font-size:14px;
+      .entry-sub{
+        font-size:15px;
       }
 
       .entry-actions{
-        grid-column:2;
-        justify-content:flex-start;
-        margin-top:4px;
+        margin-top:12px;
       }
 
       .mini-btn{
@@ -758,7 +785,7 @@
   <div class="hero">
     <div class="hero-top">
       <div class="sync-card">
-        <div class="sync-head">
+        <div class="sync-row">
           <div class="sync-title">סנכרון</div>
           <button class="refresh-btn" type="button" onclick="manualRefresh()" aria-label="רענון">↻</button>
         </div>
@@ -769,8 +796,9 @@
         <div id="syncMeta" class="sync-meta">מכין נתונים</div>
       </div>
 
-      <div class="hero-title-wrap">
-        <h1>מעקב תינוק 👶</h1>
+      <div class="title-wrap">
+        <span class="title-emoji">👶</span>
+        <h1>מעקב תינוק</h1>
       </div>
 
       <div class="hero-photo">
@@ -1097,12 +1125,19 @@ function render(){
     box.innerHTML = '<div class="muted">עדיין אין רישומים ליום הזה.</div>';
   }else{
     box.innerHTML = entries.map(e=>`
-      <div class="entry-row">
-        <div class="entry-time">${esc(e.time || '')}</div>
-        <div class="entry-main">
-          <div class="entry-type">${esc(e.type)} ${typeEmoji(e.type)}</div>
-          <div class="entry-amount">${e.amount ? `${esc(e.amount)} מ״ל` : 'ללא כמות'}</div>
+      <div class="entry-card">
+        <div class="entry-head">
+          <div class="entry-amount">
+            <div class="entry-sub">${e.amount ? `${esc(e.amount)} מ״ל` : 'ללא כמות'}</div>
+          </div>
+
+          <div class="entry-type-wrap">
+            <div class="entry-type">${esc(e.type)} ${typeEmoji(e.type)}</div>
+          </div>
+
+          <div class="entry-time">${esc(e.time || '')}</div>
         </div>
+
         <div class="entry-actions">
           <button class="mini-btn delete" type="button" onclick="deleteEntry('${e.id}')">מחיקה</button>
           <button class="mini-btn" type="button" onclick="editEntry('${e.id}')">עריכה</button>
@@ -1382,7 +1417,7 @@ window.addEventListener('online',manualRefresh);
 window.addEventListener('focus',manualRefresh);
 
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('./sw.js?v=24').catch(()=>{});
+  navigator.serviceWorker.register('./sw.js?v=25').catch(()=>{});
 }
 </script>
 </body>
