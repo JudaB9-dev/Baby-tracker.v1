@@ -3,541 +3,452 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#edf4fb" />
+  <meta name="theme-color" content="#8fb8e8" />
   <title>מעקב תינוק</title>
-  <link rel="manifest" href="manifest.json?v=28" />
+  <link rel="manifest" href="manifest.json?v=20" />
   <link rel="apple-touch-icon" href="icon-192.png" />
-
   <style>
     :root{
-      --bg:#edf4fb;
-      --bg-soft:#f7fbff;
-      --card:#ffffff;
-      --line:#dde6f2;
-      --line-soft:#e9eff7;
-      --text:#1f2b46;
-      --muted:#8694a8;
-      --navy:#1f2b46;
-      --blue:#6fa6f0;
-      --blue-dark:#4c8ee2;
-      --blue-soft:#dce8fb;
-      --green:#2fbe59;
-      --green-bg:#eef8ef;
-      --green-line:#d7eadb;
-      --green-text:#2d9448;
-      --red-bg:#fdf1f1;
-      --red-line:#f0d3d3;
-      --red-text:#b44d4d;
-      --warn-bg:#fff4df;
-      --warn-text:#9f701a;
-      --shadow:0 8px 24px rgba(66,96,140,.065);
-
-      --radius-xl:30px;
-      --radius-lg:24px;
-      --radius-md:20px;
-      --radius-sm:16px;
-      --radius-xs:14px;
+      --bg1:#eef5ff;
+      --bg2:#f8fbff;
+      --card:#ffffffcc;
+      --card-solid:#ffffff;
+      --line:#dbe7f6;
+      --primary:#8fb8e8;
+      --primary-dark:#6f9fd9;
+      --text:#1d2a3c;
+      --muted:#728096;
+      --danger-text:#8f2424;
+      --ok:#e8f7ec;
+      --ok-text:#1f6b36;
+      --warn:#fff4df;
+      --warn-text:#8a5a00;
+      --vit-off-bg:#ffe8e8;
+      --vit-off-text:#8f2424;
+      --vit-on-bg:#e8f7ec;
+      --vit-on-text:#1f6b36;
+      --radius:22px;
+      --shadow:0 10px 30px rgba(43,77,124,.10);
+      --field-h:48px;
+      --page-pad:14px;
     }
 
     *{box-sizing:border-box}
     html,body{overflow-x:hidden}
-    html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-
     body{
       margin:0;
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
       color:var(--text);
       background:
-        radial-gradient(circle at top right, rgba(255,255,255,.72), transparent 22%),
-        linear-gradient(180deg,#edf4fb 0%, #f3f8fd 58%, #f8fbff 100%);
+        radial-gradient(circle at top right, #ddeeff 0%, transparent 28%),
+        radial-gradient(circle at top left, #f1f7ff 0%, transparent 22%),
+        linear-gradient(180deg,var(--bg1) 0%,var(--bg2) 45%,#ffffff 100%);
       -webkit-text-size-adjust:100%;
     }
 
     .wrap{
-      max-width:920px;
+      max-width:860px;
       margin:0 auto;
-      padding:14px 12px 24px;
+      padding:var(--page-pad) var(--page-pad) 42px;
     }
 
-    .stack{
-      display:grid;
-      gap:14px;
-    }
+    .grid{display:grid;gap:14px}
 
     .hero{
-      background:rgba(255,255,255,.55);
-      border:1px solid #edf2fa;
-      border-radius:30px;
+      display:grid;
+      grid-template-columns:1fr 250px;
+      gap:14px;
+      align-items:stretch;
+      background:var(--card);
+      backdrop-filter:blur(10px);
+      border:1px solid #e8f0fb;
+      border-radius:26px;
       padding:14px;
       box-shadow:var(--shadow);
-      backdrop-filter:blur(10px);
+      position:sticky;
+      top:0;
+      z-index:5;
+      margin-bottom:14px;
     }
 
-    .hero-top{
+    .hero-main{
       display:grid;
-      grid-template-columns:136px 1fr 64px;
+      grid-template-columns:72px 1fr;
       gap:12px;
       align-items:center;
-      margin-bottom:12px;
-      direction:ltr;
+      min-width:0;
     }
 
-    .sync-card{
-      background:#fff;
-      border:1px solid var(--line-soft);
-      border-radius:20px;
-      min-height:76px;
-      padding:10px 10px 9px;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      box-shadow:var(--shadow);
-      direction:rtl;
-    }
-
-    .sync-head{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:8px;
-      direction:ltr;
-    }
-
-    .sync-status{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      width:max-content;
-      max-width:100%;
-      font-size:12px;
-      font-weight:800;
-      line-height:1;
-      color:var(--green-text);
-    }
-
-    .sync-status.warn{
-      color:var(--warn-text);
-    }
-
-    .sync-dot{
-      width:8px;
-      height:8px;
-      border-radius:50%;
-      background:var(--green);
-      flex:0 0 auto;
-    }
-
-    .sync-status.warn .sync-dot{
-      background:var(--warn-text);
-    }
-
-    .sync-refresh{
-      width:30px;
-      height:30px;
-      border-radius:11px;
-      border:1px solid var(--line);
-      background:#fff;
-      color:#4386e7;
-      font-size:17px;
-      line-height:1;
-      cursor:pointer;
-      box-shadow:0 2px 8px rgba(78,143,227,.08);
-    }
-
-    .sync-meta{
-      font-size:10px;
-      color:var(--muted);
-      line-height:1.1;
-      text-align:right;
-    }
-
-    .title-wrap{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:6px;
-      white-space:nowrap;
-      min-height:36px;
-      text-align:center;
-      direction:rtl;
-    }
-
-    .title-wrap h1{
-      margin:0;
-      font-size:24px;
-      font-weight:900;
-      letter-spacing:-0.04em;
-      color:var(--navy);
-      line-height:1;
-    }
-
-    .title-wrap .emoji{
-      font-size:24px;
-      line-height:1;
-    }
-
-    .hero-avatar{
-      justify-self:end;
-      direction:rtl;
-    }
-
-    .hero-avatar img{
-      width:60px;
-      height:60px;
-      border-radius:17px;
+    .hero-main img{
+      width:72px;
+      height:72px;
       object-fit:cover;
-      background:#eef4fb;
+      border-radius:20px;
       border:3px solid #fff;
       box-shadow:var(--shadow);
+      background:#eef5ff;
     }
 
-    .date-card{
-      background:#fff;
-      border:1px solid var(--line-soft);
-      border-radius:24px;
-      padding:16px 10px;
-      text-align:center;
-      box-shadow:var(--shadow);
+    .hero-side{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+      align-content:start;
     }
 
-    .date-label{
-      font-size:13px;
+    .top-mini-card{
+      background:linear-gradient(180deg,#fbfdff 0%, #f4f9ff 100%);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:10px 11px;
+      min-width:0;
+    }
+
+    .top-mini-title{
+      font-size:11px;
       color:var(--muted);
-      margin-bottom:7px;
+      margin-bottom:5px;
     }
 
-    .date-value{
-      font-size:27px;
-      font-weight:900;
-      letter-spacing:-0.04em;
-      color:#000;
-      line-height:1;
-    }
-
-    .date-sub{
-      margin-top:7px;
+    .top-mini-value{
       font-size:13px;
-      color:var(--muted);
+      font-weight:700;
+      line-height:1.25;
+      word-break:break-word;
+    }
+
+    .top-mini-card .small-btn{
+      margin-top:6px;
+    }
+
+    h1{
+      font-size:30px;
+      line-height:1.05;
+      margin:0;
+      letter-spacing:-0.02em;
     }
 
     .card{
-      background:#fff;
-      border:1px solid #edf2fa;
-      border-radius:28px;
-      padding:16px;
+      background:var(--card-solid);
+      border:1px solid #ecf2fa;
+      border-radius:var(--radius);
       box-shadow:var(--shadow);
+      padding:14px;
+      min-width:0;
     }
 
-    .card-title{
-      margin:0 0 14px;
+    .section-title{
       font-size:20px;
-      line-height:1.05;
-      font-weight:900;
-      letter-spacing:-0.03em;
-      color:var(--navy);
-      text-align:right;
+      font-weight:800;
+      margin:0 0 12px;
+      line-height:1.2;
+      letter-spacing:-0.02em;
     }
 
-    .stats{
-      display:grid;
-      grid-template-columns:repeat(5,1fr);
-      gap:8px;
-    }
-
-    .stat{
-      min-height:86px;
-      border:1px solid var(--line);
-      border-radius:18px;
-      background:#fff;
-      padding:8px 4px;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-    }
-
-    .stat b{
-      font-size:18px;
-      font-weight:900;
-      line-height:1;
-      color:var(--navy);
-      margin-bottom:5px;
-    }
-
-    .stat span{
-      font-size:10px;
+    label{
+      display:block;
+      font-size:13px;
       color:var(--muted);
-      line-height:1.1;
-      margin-bottom:5px;
+      margin:0 0 6px;
+      line-height:1.25;
     }
 
-    .stat-icon{
-      font-size:22px;
-      line-height:1;
+    input,button{font:inherit}
+
+    input[type="time"],input[type="number"]{
+      width:100%;
+      height:var(--field-h);
+      padding:12px 14px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:#fbfdff;
+      color:var(--text);
+      outline:none;
+      font-size:16px;
+      appearance:none;
+      -webkit-appearance:none;
+      transition:border-color .2s ease, box-shadow .2s ease;
     }
 
-    .vitamin-stat.off{
-      background:linear-gradient(180deg,#fff3f3 0%,#fdeaea 100%);
-      border-color:var(--red-line);
+    input[type="time"]:focus,input[type="number"]:focus{
+      border-color:#b8d2f3;
+      box-shadow:0 0 0 4px rgba(143,184,232,.14);
     }
 
-    .vitamin-stat.off b,
-    .vitamin-stat.off span{
-      color:var(--red-text);
+    .row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      width:100%;
+      align-items:end;
     }
 
-    .vitamin-stat.on{
-      background:linear-gradient(180deg,#eef9f0 0%,#e4f4e8 100%);
-      border-color:var(--green-line);
-    }
-
-    .vitamin-stat.on b,
-    .vitamin-stat.on span{
-      color:var(--green-text);
-    }
+    .field{min-width:0}
 
     .chips{
       display:grid;
       grid-template-columns:repeat(4,1fr);
       gap:8px;
-      margin-bottom:14px;
+      width:100%;
     }
 
     .chip{
-      min-height:50px;
+      min-width:0;
+      text-align:center;
       border:1px solid var(--line);
-      border-radius:16px;
-      background:#fff;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:6px;
-      padding:8px 4px;
-      font-size:14px;
-      font-weight:500;
-      color:var(--navy);
+      background:#f7fbff;
+      border-radius:999px;
+      padding:10px 8px;
       cursor:pointer;
       user-select:none;
-      text-align:center;
-      transition:.18s ease;
-      box-shadow:0 1px 0 rgba(255,255,255,.7) inset;
+      line-height:1.15;
+      font-size:15px;
+      white-space:nowrap;
+      transition:all .18s ease;
     }
 
     .chip.active{
-      background:linear-gradient(180deg,#dfeafc 0%, #d3e3fb 100%);
-      border-color:#c2d6f2;
-      color:#3a79c8;
-      font-weight:700;
+      background:linear-gradient(180deg,#dcecff 0%, #cfe3ff 100%);
+      border-color:#b7d1f3;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.55);
     }
 
-    .form-grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px;
-      margin-bottom:14px;
-    }
-
-    .field label{
-      display:block;
-      margin:0 0 6px;
-      font-size:13px;
-      color:var(--muted);
-    }
-
-    input,button{font:inherit}
-
-    input[type="time"],
-    input[type="number"]{
-      width:100%;
-      height:52px;
-      border-radius:16px;
-      border:1px solid var(--line);
-      background:#fff;
-      padding:0 14px;
-      text-align:center;
-      font-size:17px;
-      color:var(--navy);
-      outline:none;
-      appearance:none;
-      -webkit-appearance:none;
-      box-shadow:0 1px 0 rgba(255,255,255,.7) inset;
-    }
-
-    input[type="time"]:focus,
-    input[type="number"]:focus{
-      border-color:#bfd5f2;
-      box-shadow:0 0 0 4px rgba(115,168,242,.12);
-    }
-
-    input[type="number"]::placeholder{
-      color:#c1cad9;
-    }
-
-    input[type="number"]:disabled{
-      background:#fafcff;
-      color:#b8c2d1;
-    }
-
-    .save-row{
-      display:flex;
-      justify-content:flex-start;
-    }
-
-    .primary-btn{
-      width:100%;
-      height:52px;
+    .btn{
       border:0;
       border-radius:16px;
-      background:linear-gradient(180deg,var(--blue) 0%, var(--blue-dark) 100%);
-      color:#fff;
-      font-size:18px;
-      font-weight:900;
-      letter-spacing:-0.01em;
+      min-height:46px;
+      padding:12px 16px;
+      background:linear-gradient(180deg,var(--primary) 0%, var(--primary-dark) 100%);
+      color:#0d2540;
+      font-weight:800;
       cursor:pointer;
-      box-shadow:0 8px 18px rgba(78,143,227,.16);
+      box-shadow:var(--shadow);
+      line-height:1.2;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      transition:transform .15s ease, opacity .2s ease, filter .2s ease;
     }
 
-    .primary-btn:disabled{
-      opacity:.65;
-      cursor:not-allowed;
+    .btn:hover{filter:brightness(1.02)}
+    .btn:active{transform:translateY(1px)}
+    .btn.secondary{
+      background:linear-gradient(180deg,#f4f8ff 0%, #e8f1ff 100%);
+      color:#223557;
+      border:1px solid var(--line);
+      box-shadow:none;
+    }
+    .btn.danger{
+      background:linear-gradient(180deg,#ffecec 0%, #ffdede 100%);
+      color:var(--danger-text);
+      box-shadow:none;
+      border:1px solid #f6d1d1;
+    }
+    .btn:disabled,.small-btn:disabled,.mini-btn:disabled{opacity:.6;cursor:not-allowed}
+
+    .actions,.small-actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .stats{
+      display:grid;
+      gap:10px;
+      width:100%;
+      grid-template-columns:repeat(5,1fr);
+    }
+
+    .stat{
+      background:linear-gradient(180deg,#fbfdff 0%,#f4f9ff 100%);
+      border:1px solid var(--line);
+      padding:13px 8px;
+      border-radius:18px;
+      text-align:center;
+      min-height:94px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+
+    .stat b{
+      display:block;
+      font-size:24px;
+      margin-bottom:4px;
+      line-height:1;
+    }
+
+    .stat span{
+      display:block;
+      font-size:13px;
+      line-height:1.25;
+      color:var(--muted);
+      word-break:break-word;
+    }
+
+    .vitamin-stat{
+      transition:all .2s ease;
+    }
+
+    .vitamin-stat.off{
+      background:linear-gradient(180deg,var(--vit-off-bg) 0%, #ffdede 100%);
+      border-color:#f3caca;
+    }
+
+    .vitamin-stat.off b,
+    .vitamin-stat.off span{
+      color:var(--vit-off-text);
+    }
+
+    .vitamin-stat.on{
+      background:linear-gradient(180deg,var(--vit-on-bg) 0%, #dcf1e3 100%);
+      border-color:#c8e8d1;
+    }
+
+    .vitamin-stat.on b,
+    .vitamin-stat.on span{
+      color:var(--vit-on-text);
+    }
+
+    .muted{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.35;
+      word-break:break-word;
+    }
+
+    .status-pill{
+      padding:6px 9px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+      display:inline-block;
+    }
+
+    .status-ok{background:var(--ok);color:var(--ok-text)}
+    .status-warn{background:var(--warn);color:var(--warn-text)}
+
+    .small-btn{
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:12px;
+      padding:7px 9px;
+      cursor:pointer;
+      font-size:12px;
+      width:100%;
     }
 
     .day-nav{
       display:grid;
-      grid-template-columns:1fr 1.35fr 1fr;
+      grid-template-columns:1fr 1fr 1fr;
       gap:8px;
+      align-items:stretch;
       margin-bottom:12px;
     }
 
-    .nav-btn,
-    .day-center{
-      min-height:58px;
+    .day-nav .btn,
+    .day-box{
+      min-height:56px;
+    }
+
+    .day-box{
+      background:linear-gradient(180deg,#fbfdff 0%, #f2f8ff 100%);
       border:1px solid var(--line);
       border-radius:16px;
-      background:#fff;
-    }
-
-    .nav-btn{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:6px;
-      color:#4c82d2;
-      font-size:15px;
-      cursor:pointer;
-      padding:0 6px;
-    }
-
-    .day-center{
+      padding:8px 10px;
+      text-align:center;
       display:flex;
       flex-direction:column;
-      align-items:center;
       justify-content:center;
-      text-align:center;
-      padding:8px;
+      min-width:0;
     }
 
-    .day-center-main{
+    .day-main{
       font-size:16px;
-      font-weight:700;
+      font-weight:800;
       line-height:1.1;
-      color:var(--navy);
     }
 
-    .day-center-sub{
-      font-size:10px;
+    .day-sub{
+      font-size:11px;
       color:var(--muted);
       margin-top:4px;
     }
 
     .entries-table{
       display:grid;
-      gap:10px;
-    }
-
-    .entry-card{
-      border:1px solid var(--line);
-      border-radius:18px;
-      background:#fff;
-      padding:12px;
-    }
-
-    .entry-head{
-      display:grid;
-      grid-template-columns:1fr auto 1fr;
-      align-items:center;
       gap:8px;
-      direction:ltr;
+    }
+
+    .entry-row{
+      display:grid;
+      grid-template-columns:72px 1fr auto;
+      gap:8px;
+      align-items:center;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg,#ffffff 0%,#fbfdff 100%);
+      border-radius:16px;
+      padding:8px 10px;
     }
 
     .entry-time{
-      text-align:right;
-      font-size:24px;
-      font-weight:900;
+      font-size:22px;
+      font-weight:800;
       line-height:1;
-      color:var(--navy);
-      white-space:nowrap;
+      text-align:center;
+      color:#1b2940;
     }
 
-    .entry-type-wrap{
+    .entry-main{min-width:0}
+
+    .entry-topline{
       display:flex;
-      justify-content:center;
       align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-bottom:3px;
     }
 
     .entry-type{
       display:inline-flex;
       align-items:center;
-      justify-content:center;
       gap:6px;
-      min-width:100px;
-      max-width:100%;
-      padding:6px 11px;
-      border:1px solid var(--line);
+      background:#eef5ff;
+      border:1px solid #d8e7fb;
       border-radius:999px;
-      background:#f8fbff;
-      font-size:15px;
-      color:var(--navy);
-      line-height:1.15;
-      text-align:center;
+      padding:4px 9px;
+      font-size:12px;
+      font-weight:700;
     }
 
     .entry-amount{
-      text-align:left;
-      font-size:14px;
+      font-size:13px;
       color:var(--muted);
-      white-space:nowrap;
     }
 
     .entry-actions{
       display:flex;
-      gap:10px;
-      justify-content:flex-start;
-      margin-top:10px;
-      direction:ltr;
-      flex-wrap:wrap;
+      gap:6px;
+      flex-wrap:nowrap;
+      justify-content:flex-end;
+      align-items:center;
     }
 
     .mini-btn{
-      min-width:96px;
-      height:42px;
-      border-radius:14px;
-      border:1px solid var(--line);
-      background:#fff;
-      color:#4a82d4;
-      font-size:15px;
+      border:0;
+      border-radius:12px;
+      padding:7px 11px;
+      font-weight:700;
       cursor:pointer;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:6px;
+      background:#eef5ff;
+      color:#203458;
+      white-space:nowrap;
     }
 
     .mini-btn.delete{
-      background:#fff1f1;
-      color:var(--red-text);
-      border-color:var(--red-line);
+      background:#ffe8e8;
+      color:#8f2424;
     }
 
     .bottom-tools{
@@ -545,154 +456,216 @@
       gap:10px;
     }
 
-    .wide-btn{
-      height:48px;
-      border-radius:16px;
-      border:1px solid var(--line);
-      background:#fff;
-      color:#4a82d4;
-      font-size:16px;
-      cursor:pointer;
-    }
-
-    .wide-btn.danger{
-      background:#fff1f1;
-      color:var(--red-text);
-      border-color:var(--red-line);
-    }
-
-    .muted{
+    .footer-note{
+      padding:8px 4px 0;
       color:var(--muted);
       font-size:12px;
+      text-align:center;
+      line-height:1.35;
     }
 
-    .footer-note{
-      text-align:center;
-      color:var(--muted);
-      font-size:11px;
-      padding:2px 4px 0;
+    @media (max-width:640px){
+      :root{--field-h:46px;--page-pad:12px}
+
+      .hero{
+        grid-template-columns:1fr;
+        gap:12px;
+        padding:12px;
+      }
+
+      .hero-main{
+        grid-template-columns:64px 1fr;
+        gap:10px;
+      }
+
+      .hero-main img{
+        width:64px;
+        height:64px;
+      }
+
+      h1{font-size:24px}
+
+      .hero-side{
+        grid-template-columns:1fr 1fr;
+      }
+
+      .row{
+        grid-template-columns:1fr;
+      }
+
+      .card{padding:12px}
+      .section-title{font-size:17px}
+
+      .chips{
+        grid-template-columns:repeat(4,1fr);
+        gap:6px;
+      }
+
+      .chip{
+        font-size:12px;
+        padding:10px 2px;
+      }
+
+      .stats{
+        grid-template-columns:repeat(5,1fr);
+        gap:6px;
+      }
+
+      .stat{
+        padding:10px 4px;
+        min-height:82px;
+      }
+
+      .stat b{
+        font-size:16px;
+      }
+
+      .stat span{
+        font-size:10px;
+      }
+
+      .day-nav{
+        grid-template-columns:1fr 1fr 1fr;
+        gap:6px;
+      }
+
+      .day-nav .btn,
+      .day-box{
+        min-height:52px;
+      }
+
+      .day-nav .btn{
+        font-size:12px;
+        padding:8px 6px;
+      }
+
+      .day-main{
+        font-size:14px;
+      }
+
+      .day-sub{
+        font-size:10px;
+      }
+
+      .entry-row{
+        grid-template-columns:56px 1fr;
+        gap:8px;
+        padding:8px 9px;
+      }
+
+      .entry-actions{
+        grid-column:2;
+        justify-content:flex-start;
+        margin-top:4px;
+      }
+
+      .entry-time{
+        font-size:18px;
+      }
+
+      .mini-btn{
+        padding:7px 10px;
+        font-size:12px;
+      }
+
+      .top-mini-card{
+        padding:9px 10px;
+      }
+
+      .top-mini-value{
+        font-size:12px;
+      }
     }
   </style>
 </head>
 <body>
 <div class="wrap">
   <div class="hero">
-    <div class="hero-top">
-      <div class="sync-card">
-        <div class="sync-head">
-          <div id="syncStatus" class="sync-status">מסונכרן</div>
-          <button class="sync-refresh" type="button" onclick="manualRefresh()" aria-label="רענון">↻</button>
-        </div>
-
-        <div id="syncMeta" class="sync-meta">עודכן --:--</div>
-      </div>
-
-      <div class="title-wrap">
-        <span class="emoji">👶</span>
-        <h1>מעקב תינוק</h1>
-      </div>
-
-      <div class="hero-avatar">
-        <img src="icon-192.png" alt="תינוק" />
+    <div class="hero-main">
+      <img src="icon-192.png" alt="תינוק" />
+      <div>
+        <h1>מעקב תינוק 👶</h1>
       </div>
     </div>
 
-    <div class="date-card">
-      <div class="date-label">תאריך</div>
-      <div id="topDateText" class="date-value">—</div>
-      <div id="topDateSub" class="date-sub">—</div>
+    <div class="hero-side">
+      <div class="top-mini-card">
+        <div class="top-mini-title">סנכרון</div>
+        <div id="syncStatus" class="status-pill status-warn">טוען...</div>
+        <div class="muted" id="syncMeta" style="margin-top:6px">מכין נתונים</div>
+        <button class="small-btn" type="button" onclick="manualRefresh()">רענון מהשרת</button>
+      </div>
+
+      <div class="top-mini-card">
+        <div class="top-mini-title">תאריך</div>
+        <div class="top-mini-value" id="topDateText">—</div>
+      </div>
     </div>
   </div>
 
-  <div class="stack">
-    <section class="card">
-      <h2 class="card-title">סיכום יומי</h2>
-
+  <div class="grid">
+    <div class="card">
+      <div class="section-title">סיכום יומי</div>
       <div class="stats">
-        <div class="stat">
-          <b id="feedCount">0</b>
-          <span>האכלות</span>
-          <div class="stat-icon">🍼</div>
-        </div>
-
-        <div class="stat">
-          <b id="feedMl">0</b>
-          <span>מ״ל סה״כ</span>
-          <div class="stat-icon">🧴</div>
-        </div>
-
-        <div class="stat">
-          <b id="peeCount">0</b>
-          <span>פיפי</span>
-          <div class="stat-icon">💧</div>
-        </div>
-
-        <div class="stat">
-          <b id="poopCount">0</b>
-          <span>קקי</span>
-          <div class="stat-icon">💩</div>
-        </div>
-
-        <div class="stat vitamin-stat off" id="vitaminStat">
+        <div class="stat"><b id="feedCount">0</b><span>האכלות</span></div>
+        <div class="stat"><b id="feedMl">0</b><span>מ״ל סה״כ</span></div>
+        <div class="stat"><b id="peeCount">0</b><span>פיפי</span></div>
+        <div class="stat"><b id="poopCount">0</b><span>קקי</span></div>
+        <div id="vitaminStat" class="stat vitamin-stat off">
           <b id="vitaminIcon">○</b>
-          <span id="vitaminLabel">ויטמינים</span>
-          <div class="stat-icon">💊</div>
+          <span>ויטמינים</span>
         </div>
       </div>
-    </section>
+    </div>
 
-    <section class="card">
-      <h2 class="card-title">רישום חדש</h2>
-
+    <div class="card">
+      <div class="section-title">רישום חדש</div>
       <input id="logDate" type="date" style="display:none" />
 
-      <div id="typeChips" class="chips">
-        <div class="chip active" data-type="האכלה">האכלה 🍼</div>
-        <div class="chip" data-type="פיפי">פיפי 💧</div>
-        <div class="chip" data-type="קקי">קקי 💩</div>
-        <div class="chip" data-type="ויטמינים">ויטמינים 💊</div>
+      <div class="chips" id="typeChips">
+        <div class="chip active" data-type="האכלה">🍼 האכלה</div>
+        <div class="chip" data-type="פיפי">💧 פיפי</div>
+        <div class="chip" data-type="קקי">💩 קקי</div>
+        <div class="chip" data-type="ויטמינים">💊 ויטמינים</div>
       </div>
 
-      <div class="form-grid">
+      <div class="row" style="margin-top:12px">
         <div class="field">
           <label for="time">שעה</label>
           <input id="time" type="time" />
         </div>
-
         <div class="field">
           <label for="amount">כמות (מ״ל)</label>
           <input id="amount" type="number" placeholder="למשל 90" />
         </div>
       </div>
 
-      <div class="save-row">
-        <button id="saveBtn" class="primary-btn" type="button" onclick="addEntry()">שמור רישום</button>
+      <div class="actions" style="margin-top:12px">
+        <button id="saveBtn" class="btn" type="button" onclick="addEntry()">שמור רישום</button>
       </div>
-    </section>
+    </div>
 
-    <section class="card">
-      <h2 class="card-title">רישומים של היום</h2>
+    <div class="card">
+      <div class="section-title">רישומים של היום</div>
 
       <div class="day-nav">
-        <button class="nav-btn" type="button" onclick="goToNextDay()">יום הבא ◀</button>
-
-        <div class="day-center">
-          <div id="selectedDayLabel" class="day-center-main">—</div>
-          <div id="selectedDaySub" class="day-center-sub">—</div>
+        <button class="btn secondary" type="button" onclick="goToNextDay()">יום הבא</button>
+        <div class="day-box">
+          <div class="day-main" id="selectedDayLabel">—</div>
+          <div class="day-sub" id="selectedDaySub">—</div>
         </div>
-
-        <button class="nav-btn" type="button" onclick="goToPrevDay()">▶ יום קודם</button>
+        <button class="btn secondary" type="button" onclick="goToPrevDay()">יום קודם</button>
       </div>
 
       <div id="entries" class="entries-table"></div>
-    </section>
+    </div>
 
-    <section class="card">
+    <div class="card">
       <div class="bottom-tools">
-        <button class="wide-btn" type="button" onclick="exportJson()">ייצוא גיבוי</button>
-        <button class="wide-btn danger" type="button" onclick="clearDay()">נקה יום זה</button>
+        <button class="btn secondary" type="button" onclick="exportJson()">ייצוא גיבוי</button>
+        <button class="btn danger" type="button" onclick="clearDay()">נקה יום זה</button>
       </div>
-    </section>
+    </div>
   </div>
 
   <div class="footer-note">הרשימה מוצגת מהשעה החדשה לישנה, ואפשר לעבור בין ימים.</div>
@@ -702,37 +675,141 @@
 const API_URL = 'https://script.google.com/macros/s/AKfycby5HlpD17IG1p217ot4kwuErP4BtVZPa92H9uNQWD3JnkYCBlHyRX0FR7c0eMA1mdVGfw/exec';
 const API_TOKEN = 'bt_7Fh29KqP4mX9Za81JrT6UvN2LsQ0';
 const STORAGE_KEY = 'baby-tracker-v20-state';
-const QUEUE_KEY = 'baby-tracker-v20-queue';
 const DEVICE_KEY = 'baby-tracker-v20-device';
 const SYNC_KEY = 'baby-tracker-v20-sync-meta';
 
 let currentType = 'האכלה';
-let syncInProgress = false;
+let busy = false;
 
-function getTodayStr(){const d=new Date();const off=d.getTimezoneOffset();return new Date(d.getTime()-off*60000).toISOString().slice(0,10)}
-function nowTime(){return new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false})}
-function nowIso(){return new Date().toISOString()}
-function esc(s){return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
-function getDayName(dateStr){const days=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];const d=new Date(dateStr+'T12:00:00');return days[d.getDay()]||''}
-function typeEmoji(type){return {"האכלה":"🍼","פיפי":"💧","קקי":"💩","ויטמינים":"💊"}[type]||"•"}
-function getDeviceId(){let id=localStorage.getItem(DEVICE_KEY);if(!id){id='dev_'+Math.random().toString(36).slice(2)+Date.now().toString(36);localStorage.setItem(DEVICE_KEY,id)}return id}
-function loadState(){try{const data=JSON.parse(localStorage.getItem(STORAGE_KEY));return data&&Array.isArray(data.entries)?data:{entries:[]}}catch{return{entries:[]}}}
-function saveState(state){localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}
-function loadQueue(){try{const q=JSON.parse(localStorage.getItem(QUEUE_KEY));return Array.isArray(q)?q:[]}catch{return[]}}
-function saveQueue(queue){localStorage.setItem(QUEUE_KEY,JSON.stringify(queue))}
-function loadSyncMeta(){try{return JSON.parse(localStorage.getItem(SYNC_KEY))||{}}catch{return{}}}
-function saveSyncMeta(meta){localStorage.setItem(SYNC_KEY,JSON.stringify(meta))}
+function getTodayStr(){
+  const d=new Date();
+  const off=d.getTimezoneOffset();
+  return new Date(d.getTime()-off*60000).toISOString().slice(0,10);
+}
+function nowTime(){
+  return new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false});
+}
+function nowIso(){
+  return new Date().toISOString();
+}
+function esc(s){
+  return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+}
+function typeEmoji(type){
+  return {"האכלה":"🍼","פיפי":"💧","קקי":"💩","ויטמינים":"💊"}[type]||"•";
+}
+function getDayName(dateStr){
+  const days = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+  const d = new Date(dateStr + 'T12:00:00');
+  return days[d.getDay()] || '';
+}
+function formatTopDate(value){
+  const normalized = normalizeDateStr(value);
+  if(!normalized) return '—';
+  const [y,m,d] = normalized.split('-');
+  return `${d}/${m}/${y}`;
+}
+function updateTopDate(){
+  const value = document.getElementById('logDate').value;
+  document.getElementById('topDateText').textContent = formatTopDate(value);
+}
+function updateSelectedDayBox(){
+  const value = normalizeDateStr(document.getElementById('logDate').value);
+  document.getElementById('selectedDayLabel').textContent = formatTopDate(value);
+  document.getElementById('selectedDaySub').textContent = value ? `יום ${getDayName(value)}` : '—';
+}
+function shiftDateByDays(dateStr, days){
+  const d = new Date(dateStr + 'T12:00:00');
+  d.setDate(d.getDate() + days);
+  const off = d.getTimezoneOffset();
+  return new Date(d.getTime() - off*60000).toISOString().slice(0,10);
+}
+function goToPrevDay(){
+  const input = document.getElementById('logDate');
+  input.value = shiftDateByDays(normalizeDateStr(input.value), -1);
+  render();
+}
+function goToNextDay(){
+  const input = document.getElementById('logDate');
+  input.value = shiftDateByDays(normalizeDateStr(input.value), 1);
+  render();
+}
+function getDeviceId(){
+  let id=localStorage.getItem(DEVICE_KEY);
+  if(!id){
+    id='dev_'+Math.random().toString(36).slice(2)+Date.now().toString(36);
+    localStorage.setItem(DEVICE_KEY,id);
+  }
+  return id;
+}
+function loadState(){
+  try{
+    const data=JSON.parse(localStorage.getItem(STORAGE_KEY));
+    return data&&Array.isArray(data.entries)?data:{entries:[]};
+  }catch{
+    return {entries:[]};
+  }
+}
+function saveState(state){
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
+}
+function loadSyncMeta(){
+  try{return JSON.parse(localStorage.getItem(SYNC_KEY))||{};}catch{return {};}
+}
+function saveSyncMeta(meta){
+  localStorage.setItem(SYNC_KEY,JSON.stringify(meta));
+}
 function normalizeDateStr(value){
   if(!value) return '';
   if(typeof value==='string'){
     if(/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
-    if(/^\d{1,2}\.\d{1,2}\.\d{4}$/.test(value)){const [d,m,y]=value.split('.');return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;}
-    if(/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(value)){const [d,m,y]=value.split('/');return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;}
+    if(/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(value)){
+      const [d,m,y]=value.split('/');
+      return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    }
+    if(/^\d{1,2}\.\d{1,2}\.\d{4}$/.test(value)){
+      const [d,m,y]=value.split('.');
+      return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    }
     const parsed=new Date(value);
-    if(!isNaN(parsed)){const off=parsed.getTimezoneOffset();return new Date(parsed.getTime()-off*60000).toISOString().slice(0,10);}
+    if(!isNaN(parsed)){
+      const off=parsed.getTimezoneOffset();
+      return new Date(parsed.getTime()-off*60000).toISOString().slice(0,10);
+    }
   }
-  if(Object.prototype.toString.call(value)==='[object Date]'&&!isNaN(value)){const off=value.getTimezoneOffset();return new Date(value.getTime()-off*60000).toISOString().slice(0,10);}
+  if(Object.prototype.toString.call(value)==='[object Date]' && !isNaN(value)){
+    const off=value.getTimezoneOffset();
+    return new Date(value.getTime()-off*60000).toISOString().slice(0,10);
+  }
   return '';
+}
+function normalizeTimeStr(value){
+  if(value===null||value===undefined||value==='') return '';
+  if(Object.prototype.toString.call(value)==='[object Date]' && !isNaN(value)){
+    return value.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false});
+  }
+  if(typeof value==='number' && isFinite(value)){
+    const totalMinutes=Math.round((value%1)*24*60);
+    const hh=String(Math.floor(totalMinutes/60)%24).padStart(2,'0');
+    const mm=String(totalMinutes%60).padStart(2,'0');
+    return `${hh}:${mm}`;
+  }
+  const s=String(value).trim();
+  if(!s) return '';
+  if(/^\d{2}:\d{2}$/.test(s)) return s;
+  if(/^\d{2}:\d{2}:\d{2}$/.test(s)) return s.slice(0,5);
+  const parsed=new Date(s);
+  if(!isNaN(parsed)){
+    return parsed.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false});
+  }
+  const match=s.match(/(\d{1,2}):(\d{2})/);
+  if(match){
+    return `${String(match[1]).padStart(2,'0')}:${match[2]}`;
+  }
+  return '';
+}
+function isDeletedValue(value){
+  return value===true || String(value).toLowerCase()==='true';
 }
 function normalizeEntry(raw){
   return {
@@ -740,98 +817,70 @@ function normalizeEntry(raw){
     createdAt:String(raw.createdAt||raw.updatedAt||nowIso()),
     updatedAt:String(raw.updatedAt||raw.createdAt||nowIso()),
     date:normalizeDateStr(raw.date),
-    time:String(raw.time||''),
+    time:normalizeTimeStr(raw.time),
     type:String(raw.type||''),
     amount:raw.amount===null||raw.amount===undefined?'':String(raw.amount),
-    note:String(raw.note||''),
+    note:'',
     device:String(raw.device||''),
-    deleted:raw.deleted===true||raw.deleted==='true'||raw.deleted==='TRUE'
+    deleted:isDeletedValue(raw.deleted)
   };
-}
-function mergeEntries(localEntries,incomingEntries){
-  const map=new Map();
-  [...localEntries,...incomingEntries].forEach(item=>{
-    const entry=normalizeEntry(item);
-    if(!entry.id)return;
-    const existing=map.get(entry.id);
-    if(!existing){map.set(entry.id,entry);return;}
-    const existingTs=new Date(existing.updatedAt||existing.createdAt||0).getTime();
-    const newTs=new Date(entry.updatedAt||entry.createdAt||0).getTime();
-    if(newTs>=existingTs)map.set(entry.id,entry);
-  });
-  return Array.from(map.values());
 }
 function getEntriesForDay(date){
   const state=loadState();
   return state.entries
     .map(normalizeEntry)
-    .filter(e=>!e.deleted&&normalizeDateStr(e.date)===normalizeDateStr(date))
+    .filter(e => !e.deleted && normalizeDateStr(e.date)===normalizeDateStr(date))
     .sort((a,b)=>(b.time||'').localeCompare(a.time||''));
 }
-function formatTopDate(value){
-  const normalized=normalizeDateStr(value);
-  if(!normalized) return '—';
-  const [y,m,d]=normalized.split('-');
-  return `${d}/${m}/${y}`;
+function setBusy(flag){
+  busy=flag;
+  const saveBtn=document.getElementById('saveBtn');
+  if(saveBtn) saveBtn.disabled=flag;
 }
-function updateTopDate(){
-  const value=normalizeDateStr(document.getElementById('logDate').value);
-  document.getElementById('topDateText').textContent=formatTopDate(value);
-  document.getElementById('topDateSub').textContent=value?`יום ${getDayName(value)}`:'—';
-}
-function updateSelectedDayBox(){
-  const value=normalizeDateStr(document.getElementById('logDate').value);
-  document.getElementById('selectedDayLabel').textContent=formatTopDate(value);
-  document.getElementById('selectedDaySub').textContent=value?`יום ${getDayName(value)}`:'—';
-}
-function shiftDateByDays(dateStr,days){
-  const d=new Date(dateStr+'T12:00:00');
-  d.setDate(d.getDate()+days);
-  const off=d.getTimezoneOffset();
-  return new Date(d.getTime()-off*60000).toISOString().slice(0,10);
-}
-function goToPrevDay(){
-  const input=document.getElementById('logDate');
-  input.value=shiftDateByDays(normalizeDateStr(input.value),-1);
-  render();
-}
-function goToNextDay(){
-  const input=document.getElementById('logDate');
-  input.value=shiftDateByDays(normalizeDateStr(input.value),1);
-  render();
-}
-function upsertLocalEntry(entry){const state=loadState();state.entries=mergeEntries(state.entries,[entry]);saveState(state)}
-function enqueue(action,payload){const q=loadQueue();q.push({action,payload,queuedAt:nowIso()});saveQueue(q);updateSyncStatus()}
 function setStatus(text,kind,metaText){
   const el=document.getElementById('syncStatus');
   const meta=document.getElementById('syncMeta');
   el.textContent=text;
-  el.className=`sync-status${kind==='warn'?' warn':''}`;
+  el.className=`status-pill ${kind}`;
   meta.textContent=metaText||'';
 }
-function updateSyncStatus(){
-  const q=loadQueue();
-  const meta=loadSyncMeta();
-  if(!navigator.onLine){setStatus('אופליין','warn','אין חיבור');return;}
-  if(syncInProgress){setStatus('מעדכן','warn','מסנכרן...');return;}
-  if(meta.lastError){setStatus('שים לב','warn','בודק שוב');return;}
-  const last=meta.lastSuccessAt?new Date(meta.lastSuccessAt).toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'}):'--:--';
-  setStatus('מסונכרן','ok',`עודכן ${last}`);
-}
-function makeEntry({date,time,type,amount,note}){
-  const ts=nowIso();
-  return{id:'entry_'+Math.random().toString(36).slice(2)+Date.now().toString(36),createdAt:ts,updatedAt:ts,date:normalizeDateStr(date),time:time||nowTime(),type:type||'',amount:type==='האכלה'?String(amount||''):'',note:note||'',device:getDeviceId(),deleted:false}
-}
-document.querySelectorAll('#typeChips .chip').forEach(chip=>{
-  chip.addEventListener('click',()=>{
-    document.querySelectorAll('#typeChips .chip').forEach(c=>c.classList.remove('active'));
-    chip.classList.add('active');
-    currentType=chip.dataset.type;
-    const amount=document.getElementById('amount');
-    amount.disabled=currentType!=='האכלה';
-    if(currentType!=='האכלה')amount.value='';
+function setSoftMessage(message){
+  saveSyncMeta({
+    ...loadSyncMeta(),
+    lastError: message || ''
   });
-});
+  updateSyncStatus();
+}
+function updateSyncStatus(){
+  const meta=loadSyncMeta();
+
+  if(!navigator.onLine){
+    setStatus('אופליין','status-warn','אין חיבור כרגע');
+    return;
+  }
+  if(busy){
+    setStatus('מעדכן','status-warn','שומר או טוען נתונים מהשרת');
+    return;
+  }
+  if(meta.lastError){
+    setStatus('שים לב','status-warn',meta.lastError);
+    return;
+  }
+
+  const last=meta.lastSuccessAt?new Date(meta.lastSuccessAt).toLocaleString('he-IL'):'עדיין לא בוצע';
+  setStatus('מסונכרן','status-ok',`עדכון אחרון: ${last}`);
+}
+
+function updateVitaminSummary(entries){
+  const hasVitamins = entries.some(e => e.type === 'ויטמינים');
+  const vitaminStat = document.getElementById('vitaminStat');
+  const vitaminIcon = document.getElementById('vitaminIcon');
+
+  vitaminStat.classList.remove('on','off');
+  vitaminStat.classList.add(hasVitamins ? 'on' : 'off');
+  vitaminIcon.textContent = hasVitamins ? '✓' : '○';
+}
+
 function render(){
   updateTopDate();
   updateSelectedDayBox();
@@ -844,17 +893,17 @@ function render(){
     box.innerHTML='<div class="muted">עדיין אין רישומים ליום הזה.</div>';
   }else{
     box.innerHTML=entries.map(e=>`
-      <div class="entry-card">
-        <div class="entry-head">
-          <div class="entry-amount">${e.amount?`${esc(e.amount)} מ״ל`:'ללא כמות'}</div>
-          <div class="entry-type-wrap">
-            <div class="entry-type">${esc(e.type)} ${typeEmoji(e.type)}</div>
+      <div class="entry-row">
+        <div class="entry-time">${esc(e.time||'')}</div>
+        <div class="entry-main">
+          <div class="entry-topline">
+            <span class="entry-type">${typeEmoji(e.type)} ${esc(e.type)}</span>
           </div>
-          <div class="entry-time">${esc(e.time||'')}</div>
+          <div class="entry-amount">${e.amount ? `כמות: ${esc(e.amount)} מ״ל` : 'ללא כמות'}</div>
         </div>
         <div class="entry-actions">
-          <button class="mini-btn delete" type="button" onclick="deleteEntry('${e.id}')">מחיקה 🗑️</button>
-          <button class="mini-btn" type="button" onclick="editEntry('${e.id}')">עריכה ✏️</button>
+          <button class="mini-btn" type="button" onclick="editEntry('${e.id}')">עריכה</button>
+          <button class="mini-btn delete" type="button" onclick="deleteEntry('${e.id}')">מחיקה</button>
         </div>
       </div>`).join('');
   }
@@ -864,53 +913,237 @@ function render(){
   document.getElementById('feedMl').textContent=feedEntries.reduce((s,e)=>s+Number(e.amount||0),0);
   document.getElementById('peeCount').textContent=entries.filter(e=>e.type==='פיפי').length;
   document.getElementById('poopCount').textContent=entries.filter(e=>e.type==='קקי').length;
-
-  const hasVitamins=entries.some(e=>e.type==='ויטמינים');
-  const vitaminStat=document.getElementById('vitaminStat');
-  const vitaminIcon=document.getElementById('vitaminIcon');
-  const vitaminLabel=document.getElementById('vitaminLabel');
-  vitaminStat.classList.remove('on','off');
-  vitaminStat.classList.add(hasVitamins?'on':'off');
-  vitaminIcon.textContent=hasVitamins?'✓':'○';
-  vitaminLabel.textContent=hasVitamins?'ניתן ויטמינים':'ויטמינים';
-
+  updateVitaminSummary(entries);
   updateSyncStatus();
 }
-function addEntry(){
-  const entry=makeEntry({
-    date:document.getElementById('logDate').value,
-    time:document.getElementById('time').value,
-    type:currentType,
-    amount:document.getElementById('amount').value,
-    note:''
+
+function replaceAllEntries(entries){
+  saveState({entries:entries.map(normalizeEntry).filter(e=>!e.deleted)});
+}
+function addOrReplaceLocalEntry(entry){
+  const state = loadState();
+  const normalized = normalizeEntry(entry);
+  const map = new Map(state.entries.map(e => [normalizeEntry(e).id, normalizeEntry(e)]));
+  map.set(normalized.id, normalized);
+  saveState({ entries: Array.from(map.values()).filter(e => !e.deleted) });
+}
+function removeLocalEntry(id){
+  const state = loadState();
+  saveState({
+    entries: state.entries
+      .map(normalizeEntry)
+      .filter(e => e.id !== id)
   });
-  upsertLocalEntry(entry);
-  enqueue('save',entry);
+}
+function makeEntry({date,time,type,amount}){
+  const ts=nowIso();
+  return {
+    id:'entry_'+Math.random().toString(36).slice(2)+Date.now().toString(36),
+    createdAt:ts,
+    updatedAt:ts,
+    date:normalizeDateStr(date),
+    time:normalizeTimeStr(time||nowTime()),
+    type:type||'',
+    amount:type==='האכלה'?String(amount||''):'',
+    note:'',
+    device:getDeviceId(),
+    deleted:false
+  };
+}
+document.querySelectorAll('#typeChips .chip').forEach(chip=>{
+  chip.addEventListener('click',()=>{
+    document.querySelectorAll('#typeChips .chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    currentType=chip.dataset.type;
+    const amount=document.getElementById('amount');
+    amount.disabled=currentType!=='האכלה';
+    if(currentType!=='האכלה') amount.value='';
+  });
+});
+async function apiGetAll(){
+  const url=`${API_URL}?token=${encodeURIComponent(API_TOKEN)}&_=${Date.now()}`;
+  const res=await fetch(url,{method:'GET',cache:'no-store'});
+  return res.json();
+}
+async function apiSave(entry){
+  const res=await fetch(API_URL,{
+    method:'POST',
+    cache:'no-store',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({token:API_TOKEN,action:'save',entry})
+  });
+  return res.json();
+}
+async function apiDelete(id){
+  const res=await fetch(API_URL,{
+    method:'POST',
+    cache:'no-store',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({token:API_TOKEN,action:'delete',id})
+  });
+  return res.json();
+}
+async function loadFromServer(){
+  const result=await apiGetAll();
+  if(!result.ok) throw new Error(result.error||'Failed to fetch');
+  const entries=(result.data||[]).map(normalizeEntry).filter(e=>!e.deleted);
+  replaceAllEntries(entries);
+  saveSyncMeta({lastSuccessAt:nowIso(),lastError:''});
+}
+async function loadFromServerWithRetry(retries = 3, delayMs = 1200){
+  let lastError = null;
+  for(let i = 0; i < retries; i++){
+    try{
+      await loadFromServer();
+      return true;
+    }catch(err){
+      lastError = err;
+      if(i < retries - 1){
+        await new Promise(resolve => setTimeout(resolve, delayMs));
+      }
+    }
+  }
+  throw lastError;
+}
+function refreshInBackground(){
+  setTimeout(async () => {
+    try{
+      await loadFromServerWithRetry(3, 1200);
+      saveSyncMeta({ lastSuccessAt: nowIso(), lastError: '' });
+      render();
+    }catch(err){
+      saveSyncMeta({
+        ...loadSyncMeta(),
+        lastError: 'הרענון מהשרת התעכב, אבל הפעולה נשמרה'
+      });
+      render();
+    }
+  }, 400);
+}
+async function addEntry(){
+  if(busy) return;
+
+  if(!navigator.onLine){
+    alert('אין חיבור כרגע. נסה שוב כשהאינטרנט חוזר.');
+    return;
+  }
+
+  const entry = makeEntry({
+    date: document.getElementById('logDate').value,
+    time: document.getElementById('time').value,
+    type: currentType,
+    amount: document.getElementById('amount').value
+  });
+
+  addOrReplaceLocalEntry(entry);
   document.getElementById('amount').value='';
   document.getElementById('time').value=nowTime();
   render();
-  syncAll();
+
+  try{
+    setBusy(true);
+    updateSyncStatus();
+
+    const result = await apiSave(entry);
+
+    if(result && result.ok){
+      saveSyncMeta({ lastSuccessAt: nowIso(), lastError: '' });
+      refreshInBackground();
+      return;
+    }
+
+    setSoftMessage('הפעולה נשלחה, בודק מול השרת...');
+    refreshInBackground();
+  }catch(err){
+    setSoftMessage('הפעולה נשלחה, בודק מול השרת...');
+    refreshInBackground();
+  }finally{
+    setBusy(false);
+    updateSyncStatus();
+  }
 }
-function findEntryById(id){return loadState().entries.map(normalizeEntry).find(e=>e.id===id)}
+function findEntryById(id){
+  return loadState().entries.map(normalizeEntry).find(e=>e.id===id);
+}
+async function deleteEntry(id){
+  if(busy) return;
+
+  if(!navigator.onLine){
+    alert('אין חיבור כרגע. נסה שוב כשהאינטרנט חוזר.');
+    return;
+  }
+
+  removeLocalEntry(id);
+  render();
+
+  try{
+    setBusy(true);
+    updateSyncStatus();
+
+    const result = await apiDelete(id);
+
+    if(result && result.ok){
+      saveSyncMeta({ lastSuccessAt: nowIso(), lastError: '' });
+      refreshInBackground();
+      return;
+    }
+
+    setSoftMessage('המחיקה נשלחה, בודק מול השרת...');
+    refreshInBackground();
+  }catch(err){
+    setSoftMessage('המחיקה נשלחה, בודק מול השרת...');
+    refreshInBackground();
+  }finally{
+    setBusy(false);
+    updateSyncStatus();
+  }
+}
 function editEntry(id){
   const e=findEntryById(id);
-  if(!e)return;
+  if(!e) return;
+
   currentType=e.type;
   document.querySelectorAll('#typeChips .chip').forEach(c=>c.classList.toggle('active',c.dataset.type===e.type));
   document.getElementById('time').value=e.time||'';
   document.getElementById('amount').value=e.amount||'';
+
   const amount=document.getElementById('amount');
   amount.disabled=currentType!=='האכלה';
-  deleteEntry(id,true);
+
+  deleteEntry(id);
 }
-function deleteEntry(id,silent){
-  const e=findEntryById(id);
-  if(!e)return;
-  const updated={...e,deleted:true,updatedAt:nowIso()};
-  upsertLocalEntry(updated);
-  enqueue('delete',{id});
+async function clearDay(){
+  const date = document.getElementById('logDate').value;
+  const entries = getEntriesForDay(date);
+
+  if(!entries.length) return;
+  if(!confirm('למחוק את כל הרישומים של היום הזה?')) return;
+
+  if(!navigator.onLine){
+    alert('אין חיבור כרגע. נסה שוב כשהאינטרנט חוזר.');
+    return;
+  }
+
+  entries.forEach(entry => removeLocalEntry(entry.id));
   render();
-  if(!silent)syncAll();
+
+  try{
+    setBusy(true);
+    updateSyncStatus();
+
+    for(const entry of entries){
+      await apiDelete(entry.id);
+    }
+
+    saveSyncMeta({ lastSuccessAt: nowIso(), lastError: '' });
+    refreshInBackground();
+  }catch(err){
+    setSoftMessage('מחיקת היום נשלחה, בודק מול השרת...');
+    refreshInBackground();
+  }finally{
+    setBusy(false);
+    updateSyncStatus();
+  }
 }
 function exportJson(){
   const blob=new Blob([JSON.stringify(loadState(),null,2)],{type:'application/json'});
@@ -919,77 +1152,38 @@ function exportJson(){
   a.download='baby-tracker-backup.json';
   a.click();
 }
-function clearDay(){
-  const date=document.getElementById('logDate').value;
-  if(!confirm('למחוק את כל הרישומים של היום הזה?'))return;
-  getEntriesForDay(date).forEach(e=>deleteEntry(e.id,true));
-  render();
-  syncAll();
-}
-async function apiGetAll(){
-  const url=`${API_URL}?token=${encodeURIComponent(API_TOKEN)}&_=${Date.now()}`;
-  const res=await fetch(url,{method:'GET',cache:'no-store'});
-  return res.json();
-}
-async function apiSave(entry){
-  const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:API_TOKEN,action:'save',entry})});
-  return res.json();
-}
-async function apiDelete(id){
-  const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:API_TOKEN,action:'delete',id})});
-  return res.json();
-}
-async function flushQueue(){
-  const queue=loadQueue();
-  if(!queue.length)return;
-  const remaining=[];
-  for(const item of queue){
-    try{
-      let result;
-      if(item.action==='save')result=await apiSave(item.payload);
-      else if(item.action==='delete')result=await apiDelete(item.payload.id);
-      else result={ok:true};
-      if(!result.ok)remaining.push(item);
-    }catch{
-      remaining.push(item);
-    }
+async function manualRefresh(){
+  if(busy) return;
+
+  if(!navigator.onLine){
+    updateSyncStatus();
+    return;
   }
-  saveQueue(remaining);
-}
-async function pullFromServer(){
-  const result=await apiGetAll();
-  if(!result.ok)throw new Error(result.error||'Failed to fetch');
-  const serverEntries=(result.data||[]).map(normalizeEntry);
-  const state=loadState();
-  state.entries=mergeEntries(state.entries,serverEntries);
-  saveState(state);
-}
-async function syncAll(){
-  if(syncInProgress)return;
-  if(!navigator.onLine){updateSyncStatus();return;}
-  syncInProgress=true;
-  updateSyncStatus();
+
   try{
-    await flushQueue();
-    await pullFromServer();
-    saveSyncMeta({lastSuccessAt:nowIso(),lastError:''});
+    setBusy(true);
+    updateSyncStatus();
+    await loadFromServerWithRetry(3, 1200);
+    saveSyncMeta({ lastSuccessAt: nowIso(), lastError: '' });
   }catch(err){
-    saveSyncMeta({...loadSyncMeta(),lastError:String(err.message||err)});
+    saveSyncMeta({ ...loadSyncMeta(), lastError: 'הרענון מהשרת נכשל זמנית' });
   }finally{
-    syncInProgress=false;
+    setBusy(false);
     render();
   }
 }
-function manualRefresh(){syncAll()}
 
 document.getElementById('logDate').value=getTodayStr();
+updateTopDate();
+updateSelectedDayBox();
 document.getElementById('time').value=nowTime();
-render();
-syncAll();
 
-setInterval(syncAll,15000);
-window.addEventListener('online',syncAll);
-window.addEventListener('focus',syncAll);
+render();
+manualRefresh();
+
+setInterval(manualRefresh,10000);
+window.addEventListener('online',manualRefresh);
+window.addEventListener('focus',manualRefresh);
 
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('./sw.js?v=20').catch(()=>{});
