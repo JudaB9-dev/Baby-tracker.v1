@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#8fb8e8" />
   <title>מעקב תינוק</title>
-  <link rel="manifest" href="manifest.json?v=22" />
+  <link rel="manifest" href="manifest.json?v=23" />
   <link rel="apple-touch-icon" href="icon-192.png" />
   <style>
     :root{
@@ -67,17 +67,17 @@
 
     .sync-widget{
       justify-self:start;
-      width:116px;
-      min-height:58px;
+      width:108px;
+      min-height:56px;
       border:1px solid #e8f0fb;
-      background:rgba(255,255,255,.76);
+      background:rgba(255,255,255,.78);
       backdrop-filter:blur(12px);
       -webkit-backdrop-filter:blur(12px);
       border-radius:15px;
       box-shadow:var(--soft-shadow);
-      padding:7px 7px 7px 8px;
+      padding:7px 8px;
       display:grid;
-      grid-template-columns:24px minmax(0,1fr);
+      grid-template-columns:22px minmax(0,1fr);
       gap:5px;
       align-items:center;
       overflow:hidden;
@@ -88,19 +88,23 @@
       min-width:0;
       direction:rtl;
       text-align:right;
-      padding-right:0;
+      padding:0;
+      justify-self:stretch;
     }
 
     .sync-line{
       display:flex;
+      flex-direction:row;
+      direction:rtl;
       align-items:center;
       justify-content:flex-start;
       gap:4px;
-      font-size:12px;
+      font-size:11.5px;
       font-weight:800;
       color:var(--text);
       min-width:0;
       line-height:1.15;
+      width:100%;
     }
 
     #syncStatusText{
@@ -109,16 +113,16 @@
       overflow:visible;
       text-overflow:clip;
       white-space:nowrap;
+      letter-spacing:-.03em;
     }
 
     .sync-dot{
-      width:9px;
-      height:9px;
+      width:8px;
+      height:8px;
       border-radius:999px;
       background:#28c66f;
-      box-shadow:0 0 0 4px rgba(40,198,111,.12);
+      box-shadow:0 0 0 3px rgba(40,198,111,.12);
       flex:0 0 auto;
-      order:-1;
     }
 
     .sync-dot.warn{
@@ -134,23 +138,24 @@
       white-space:normal;
       overflow:visible;
       text-overflow:clip;
+      letter-spacing:-.02em;
     }
 
     .refresh-icon-btn{
-      width:24px;
-      height:24px;
+      width:22px;
+      height:22px;
       border:0;
-      border-radius:10px;
+      border-radius:9px;
       background:transparent;
       color:#1f7edb;
       cursor:pointer;
       display:flex;
       align-items:center;
       justify-content:center;
-      font-size:21px;
+      font-size:19px;
       line-height:1;
       padding:0;
-      justify-self:start;
+      justify-self:center;
       transition:transform .15s ease, opacity .2s ease;
     }
 
@@ -541,17 +546,17 @@
       .wrap{padding-top:18px}
 
       .app-top{
-        grid-template-columns:116px minmax(0,1fr) 54px;
+        grid-template-columns:108px minmax(0,1fr) 54px;
         gap:8px;
         margin:6px 2px 14px;
       }
 
       .sync-widget{
-        width:116px;
-        min-height:58px;
+        width:108px;
+        min-height:56px;
         border-radius:15px;
-        padding:7px 7px 7px 8px;
-        grid-template-columns:24px minmax(0,1fr);
+        padding:7px 8px;
+        grid-template-columns:22px minmax(0,1fr);
         gap:5px;
       }
 
@@ -560,7 +565,7 @@
       }
 
       .sync-line{
-        font-size:12px;
+        font-size:11.5px;
         gap:4px;
       }
 
@@ -575,10 +580,10 @@
       }
 
       .refresh-icon-btn{
-        width:24px;
-        height:24px;
-        font-size:21px;
-        border-radius:10px;
+        width:22px;
+        height:22px;
+        font-size:19px;
+        border-radius:9px;
       }
 
       .app-title{
@@ -673,11 +678,11 @@
     }
 
     @media (max-width:370px){
-      .app-top{grid-template-columns:112px minmax(0,1fr) 50px;gap:6px}
-      .sync-widget{width:112px;padding:7px 6px 7px 7px;grid-template-columns:22px minmax(0,1fr)}
+      .app-top{grid-template-columns:104px minmax(0,1fr) 50px;gap:6px}
+      .sync-widget{width:104px;padding:7px 7px;grid-template-columns:21px minmax(0,1fr)}
       .sync-line{font-size:11px}
       .sync-updated{font-size:9.5px}
-      .refresh-icon-btn{width:22px;height:22px;font-size:19px}
+      .refresh-icon-btn{width:21px;height:21px;font-size:18px}
       .app-title{font-size:21px;gap:5px}
       .app-title .baby-emoji{font-size:21px}
       .baby-icon-box{width:50px;height:50px;border-radius:16px}
@@ -784,9 +789,9 @@
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycby5HlpD17IG1p217ot4kwuErP4BtVZPa92H9uNQWD3JnkYCBlHyRX0FR7c0eMA1mdVGfw/exec';
 const API_TOKEN = 'bt_7Fh29KqP4mX9Za81JrT6UvN2LsQ0';
-const STORAGE_KEY = 'baby-tracker-v22-state';
-const DEVICE_KEY = 'baby-tracker-v22-device';
-const SYNC_KEY = 'baby-tracker-v22-sync-meta';
+const STORAGE_KEY = 'baby-tracker-v23-state';
+const DEVICE_KEY = 'baby-tracker-v23-device';
+const SYNC_KEY = 'baby-tracker-v23-sync-meta';
 
 let currentType = 'האכלה';
 let busy = false;
