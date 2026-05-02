@@ -67,19 +67,20 @@
 
     .sync-widget{
       justify-self:start;
-      width:150px;
-      min-height:76px;
+      width:112px;
+      min-height:64px;
       border:1px solid #e8f0fb;
       background:rgba(255,255,255,.72);
       backdrop-filter:blur(12px);
       -webkit-backdrop-filter:blur(12px);
-      border-radius:18px;
+      border-radius:16px;
       box-shadow:var(--soft-shadow);
-      padding:10px 12px;
+      padding:8px 8px 8px 10px;
       display:grid;
-      grid-template-columns:38px 1fr;
-      gap:8px;
+      grid-template-columns:minmax(0,1fr) 30px;
+      gap:6px;
       align-items:center;
+      overflow:hidden;
       direction:ltr;
     }
 
@@ -87,15 +88,25 @@
       min-width:0;
       direction:rtl;
       text-align:right;
+      padding-right:4px;
     }
 
     .sync-line{
       display:flex;
       align-items:center;
-      gap:7px;
-      font-size:14px;
+      justify-content:flex-start;
+      gap:5px;
+      font-size:13px;
       font-weight:700;
       color:var(--text);
+      min-width:0;
+    }
+
+    #syncStatusText{
+      display:block;
+      min-width:0;
+      overflow:hidden;
+      text-overflow:ellipsis;
       white-space:nowrap;
     }
 
@@ -114,9 +125,9 @@
     }
 
     .sync-updated{
-      margin-top:7px;
+      margin-top:5px;
       color:var(--muted);
-      font-size:12px;
+      font-size:11px;
       line-height:1.2;
       white-space:nowrap;
       overflow:hidden;
@@ -124,19 +135,20 @@
     }
 
     .refresh-icon-btn{
-      width:38px;
-      height:38px;
+      width:30px;
+      height:30px;
       border:0;
-      border-radius:14px;
+      border-radius:12px;
       background:transparent;
       color:#1f7edb;
       cursor:pointer;
       display:flex;
       align-items:center;
       justify-content:center;
-      font-size:28px;
+      font-size:24px;
       line-height:1;
       padding:0;
+      justify-self:end;
       transition:transform .15s ease, opacity .2s ease;
     }
 
@@ -533,18 +545,21 @@
       }
 
       .sync-widget{
-        width:104px;
+        width:112px;
         min-height:64px;
         border-radius:16px;
-        padding:8px 8px;
-        grid-template-columns:30px 1fr;
-        gap:4px;
+        padding:8px 8px 8px 10px;
+        grid-template-columns:minmax(0,1fr) 30px;
+        gap:6px;
+      }
+
+      .sync-copy{
+        padding-right:4px;
       }
 
       .sync-line{
         font-size:13px;
         gap:5px;
-        justify-content:flex-start;
       }
 
       .sync-dot{
@@ -555,7 +570,6 @@
       .sync-updated{
         font-size:11px;
         margin-top:5px;
-        max-width:58px;
       }
 
       .refresh-icon-btn{
@@ -657,10 +671,10 @@
     }
 
     @media (max-width:370px){
-      .app-top{grid-template-columns:96px minmax(0,1fr) 54px;gap:6px}
-      .sync-widget{width:96px;padding:7px 7px;grid-template-columns:28px 1fr}
+      .app-top{grid-template-columns:104px minmax(0,1fr) 54px;gap:6px}
+      .sync-widget{width:104px;padding:7px 7px 7px 9px;grid-template-columns:minmax(0,1fr) 28px}
       .sync-line{font-size:12px}
-      .sync-updated{font-size:10px;max-width:52px}
+      .sync-updated{font-size:10px}
       .refresh-icon-btn{width:28px;height:28px;font-size:22px}
       .app-title{font-size:21px;gap:5px}
       .app-title .baby-emoji{font-size:22px}
