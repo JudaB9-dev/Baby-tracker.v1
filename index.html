@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#8fb8e8" />
   <title>מעקב תינוק</title>
-  <link rel="manifest" href="manifest.json?v=21" />
+  <link rel="manifest" href="manifest.json?v=22" />
   <link rel="apple-touch-icon" href="icon-192.png" />
   <style>
     :root{
@@ -58,27 +58,27 @@
     /* ===== Step 1: new elegant header ===== */
     .app-top{
       display:grid;
-      grid-template-columns:1fr auto 1fr;
+      grid-template-columns:116px minmax(0,1fr) 54px;
       align-items:center;
-      gap:12px;
-      margin:8px 4px 20px;
+      gap:8px;
+      margin:6px 2px 14px;
       direction:ltr;
     }
 
     .sync-widget{
       justify-self:start;
-      width:112px;
-      min-height:64px;
+      width:116px;
+      min-height:58px;
       border:1px solid #e8f0fb;
-      background:rgba(255,255,255,.72);
+      background:rgba(255,255,255,.76);
       backdrop-filter:blur(12px);
       -webkit-backdrop-filter:blur(12px);
-      border-radius:16px;
+      border-radius:15px;
       box-shadow:var(--soft-shadow);
-      padding:8px 8px 8px 10px;
+      padding:7px 7px 7px 8px;
       display:grid;
-      grid-template-columns:minmax(0,1fr) 30px;
-      gap:6px;
+      grid-template-columns:24px minmax(0,1fr);
+      gap:5px;
       align-items:center;
       overflow:hidden;
       direction:ltr;
@@ -88,35 +88,37 @@
       min-width:0;
       direction:rtl;
       text-align:right;
-      padding-right:4px;
+      padding-right:0;
     }
 
     .sync-line{
       display:flex;
       align-items:center;
       justify-content:flex-start;
-      gap:5px;
-      font-size:13px;
-      font-weight:700;
+      gap:4px;
+      font-size:12px;
+      font-weight:800;
       color:var(--text);
       min-width:0;
+      line-height:1.15;
     }
 
     #syncStatusText{
       display:block;
       min-width:0;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      overflow:visible;
+      text-overflow:clip;
       white-space:nowrap;
     }
 
     .sync-dot{
-      width:10px;
-      height:10px;
+      width:9px;
+      height:9px;
       border-radius:999px;
       background:#28c66f;
       box-shadow:0 0 0 4px rgba(40,198,111,.12);
       flex:0 0 auto;
+      order:-1;
     }
 
     .sync-dot.warn{
@@ -127,28 +129,28 @@
     .sync-updated{
       margin-top:5px;
       color:var(--muted);
-      font-size:11px;
-      line-height:1.2;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      font-size:10px;
+      line-height:1.15;
+      white-space:normal;
+      overflow:visible;
+      text-overflow:clip;
     }
 
     .refresh-icon-btn{
-      width:30px;
-      height:30px;
+      width:24px;
+      height:24px;
       border:0;
-      border-radius:12px;
+      border-radius:10px;
       background:transparent;
       color:#1f7edb;
       cursor:pointer;
       display:flex;
       align-items:center;
       justify-content:center;
-      font-size:24px;
+      font-size:21px;
       line-height:1;
       padding:0;
-      justify-self:end;
+      justify-self:start;
       transition:transform .15s ease, opacity .2s ease;
     }
 
@@ -160,8 +162,8 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      gap:8px;
-      font-size:28px;
+      gap:6px;
+      font-size:24px;
       line-height:1;
       margin:0;
       font-weight:900;
@@ -173,16 +175,16 @@
     }
 
     .app-title .baby-emoji{
-      font-size:28px;
+      font-size:23px;
       line-height:1;
       flex:0 0 auto;
     }
 
     .baby-icon-box{
       justify-self:end;
-      width:76px;
-      height:76px;
-      border-radius:22px;
+      width:54px;
+      height:54px;
+      border-radius:17px;
       border:3px solid rgba(255,255,255,.95);
       background:#eef5ff;
       box-shadow:var(--soft-shadow);
@@ -202,22 +204,22 @@
     .date-hero-card{
       background:rgba(255,255,255,.86);
       border:1px solid #ecf2fa;
-      border-radius:26px;
+      border-radius:22px;
       box-shadow:var(--shadow);
-      padding:26px 16px 28px;
+      padding:18px 12px 19px;
       text-align:center;
       margin-bottom:14px;
     }
 
     .date-hero-label{
       color:var(--muted);
-      font-size:18px;
+      font-size:13px;
       line-height:1.2;
-      margin-bottom:8px;
+      margin-bottom:6px;
     }
 
     .date-hero-value{
-      font-size:34px;
+      font-size:24px;
       font-weight:900;
       letter-spacing:.01em;
       line-height:1.08;
@@ -226,9 +228,9 @@
 
     .date-hero-day{
       color:var(--muted);
-      font-size:18px;
+      font-size:13px;
       line-height:1.2;
-      margin-top:10px;
+      margin-top:7px;
     }
 
     .card{
@@ -539,27 +541,27 @@
       .wrap{padding-top:18px}
 
       .app-top{
-        grid-template-columns:104px minmax(0,1fr) 58px;
-        gap:7px;
-        margin:6px 2px 18px;
+        grid-template-columns:116px minmax(0,1fr) 54px;
+        gap:8px;
+        margin:6px 2px 14px;
       }
 
       .sync-widget{
-        width:112px;
-        min-height:64px;
-        border-radius:16px;
-        padding:8px 8px 8px 10px;
-        grid-template-columns:minmax(0,1fr) 30px;
-        gap:6px;
+        width:116px;
+        min-height:58px;
+        border-radius:15px;
+        padding:7px 7px 7px 8px;
+        grid-template-columns:24px minmax(0,1fr);
+        gap:5px;
       }
 
       .sync-copy{
-        padding-right:4px;
+        padding-right:0;
       }
 
       .sync-line{
-        font-size:13px;
-        gap:5px;
+        font-size:12px;
+        gap:4px;
       }
 
       .sync-dot{
@@ -568,15 +570,15 @@
       }
 
       .sync-updated{
-        font-size:11px;
+        font-size:10px;
         margin-top:5px;
       }
 
       .refresh-icon-btn{
-        width:30px;
-        height:30px;
-        font-size:24px;
-        border-radius:12px;
+        width:24px;
+        height:24px;
+        font-size:21px;
+        border-radius:10px;
       }
 
       .app-title{
@@ -585,27 +587,27 @@
         justify-self:center;
       }
 
-      .app-title .baby-emoji{font-size:24px}
+      .app-title .baby-emoji{font-size:23px}
 
       .baby-icon-box{
-        width:58px;
-        height:58px;
-        border-radius:18px;
+        width:54px;
+        height:54px;
+        border-radius:17px;
       }
 
       .date-hero-card{
-        border-radius:24px;
-        padding:26px 14px 27px;
+        border-radius:22px;
+        padding:18px 12px 19px;
         margin-bottom:14px;
       }
 
       .date-hero-label,
       .date-hero-day{
-        font-size:18px;
+        font-size:13px;
       }
 
       .date-hero-value{
-        font-size:34px;
+        font-size:24px;
       }
 
       .row{grid-template-columns:1fr}
@@ -671,15 +673,15 @@
     }
 
     @media (max-width:370px){
-      .app-top{grid-template-columns:104px minmax(0,1fr) 54px;gap:6px}
-      .sync-widget{width:104px;padding:7px 7px 7px 9px;grid-template-columns:minmax(0,1fr) 28px}
-      .sync-line{font-size:12px}
-      .sync-updated{font-size:10px}
-      .refresh-icon-btn{width:28px;height:28px;font-size:22px}
+      .app-top{grid-template-columns:112px minmax(0,1fr) 50px;gap:6px}
+      .sync-widget{width:112px;padding:7px 6px 7px 7px;grid-template-columns:22px minmax(0,1fr)}
+      .sync-line{font-size:11px}
+      .sync-updated{font-size:9.5px}
+      .refresh-icon-btn{width:22px;height:22px;font-size:19px}
       .app-title{font-size:21px;gap:5px}
-      .app-title .baby-emoji{font-size:22px}
-      .baby-icon-box{width:54px;height:54px;border-radius:17px}
-      .date-hero-value{font-size:30px}
+      .app-title .baby-emoji{font-size:21px}
+      .baby-icon-box{width:50px;height:50px;border-radius:16px}
+      .date-hero-value{font-size:22px}
     }
   </style>
 </head>
@@ -782,9 +784,9 @@
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycby5HlpD17IG1p217ot4kwuErP4BtVZPa92H9uNQWD3JnkYCBlHyRX0FR7c0eMA1mdVGfw/exec';
 const API_TOKEN = 'bt_7Fh29KqP4mX9Za81JrT6UvN2LsQ0';
-const STORAGE_KEY = 'baby-tracker-v21-state';
-const DEVICE_KEY = 'baby-tracker-v21-device';
-const SYNC_KEY = 'baby-tracker-v21-sync-meta';
+const STORAGE_KEY = 'baby-tracker-v22-state';
+const DEVICE_KEY = 'baby-tracker-v22-device';
+const SYNC_KEY = 'baby-tracker-v22-sync-meta';
 
 let currentType = 'האכלה';
 let busy = false;
@@ -954,9 +956,9 @@ function setSoftMessage(message){
   updateSyncStatus();
 }
 function formatSyncTime(iso){
-  if(!iso) return 'עדיין לא בוצע';
+  if(!iso) return 'עודכן --:--';
   const d = new Date(iso);
-  if(isNaN(d)) return 'עדיין לא בוצע';
+  if(isNaN(d)) return 'עודכן --:--';
   return `עודכן ${d.toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit',hour12:false})}`;
 }
 function updateSyncStatus(){
