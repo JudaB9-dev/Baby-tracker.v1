@@ -67,7 +67,7 @@
 
     .sync-widget{
       justify-self:start;
-      width:166px;
+      width:150px;
       min-height:76px;
       border:1px solid #e8f0fb;
       background:rgba(255,255,255,.72);
@@ -77,14 +77,16 @@
       box-shadow:var(--soft-shadow);
       padding:10px 12px;
       display:grid;
-      grid-template-columns:1fr 38px;
+      grid-template-columns:38px 1fr;
       gap:8px;
       align-items:center;
-      direction:rtl;
+      direction:ltr;
     }
 
     .sync-copy{
       min-width:0;
+      direction:rtl;
+      text-align:right;
     }
 
     .sync-line{
@@ -147,7 +149,7 @@
       align-items:center;
       justify-content:center;
       gap:8px;
-      font-size:30px;
+      font-size:28px;
       line-height:1;
       margin:0;
       font-weight:900;
@@ -155,11 +157,13 @@
       color:#172235;
       white-space:nowrap;
       direction:rtl;
+      min-width:0;
     }
 
     .app-title .baby-emoji{
-      font-size:31px;
+      font-size:28px;
       line-height:1;
+      flex:0 0 auto;
     }
 
     .baby-icon-box{
@@ -523,23 +527,24 @@
       .wrap{padding-top:18px}
 
       .app-top{
-        grid-template-columns:1fr auto 1fr;
-        gap:8px;
-        margin:6px 4px 18px;
+        grid-template-columns:104px minmax(0,1fr) 58px;
+        gap:7px;
+        margin:6px 2px 18px;
       }
 
       .sync-widget{
-        width:112px;
+        width:104px;
         min-height:64px;
         border-radius:16px;
-        padding:8px 9px;
-        grid-template-columns:1fr 32px;
+        padding:8px 8px;
+        grid-template-columns:30px 1fr;
         gap:4px;
       }
 
       .sync-line{
         font-size:13px;
-        gap:6px;
+        gap:5px;
+        justify-content:flex-start;
       }
 
       .sync-dot{
@@ -548,28 +553,30 @@
       }
 
       .sync-updated{
-        font-size:12px;
+        font-size:11px;
         margin-top:5px;
+        max-width:58px;
       }
 
       .refresh-icon-btn{
-        width:32px;
-        height:32px;
-        font-size:25px;
+        width:30px;
+        height:30px;
+        font-size:24px;
         border-radius:12px;
       }
 
       .app-title{
-        font-size:26px;
-        gap:7px;
+        font-size:24px;
+        gap:6px;
+        justify-self:center;
       }
 
-      .app-title .baby-emoji{font-size:27px}
+      .app-title .baby-emoji{font-size:24px}
 
       .baby-icon-box{
-        width:64px;
-        height:64px;
-        border-radius:20px;
+        width:58px;
+        height:58px;
+        border-radius:18px;
       }
 
       .date-hero-card{
@@ -650,10 +657,14 @@
     }
 
     @media (max-width:370px){
-      .sync-widget{width:104px}
-      .app-title{font-size:23px}
-      .app-title .baby-emoji{font-size:24px}
-      .baby-icon-box{width:58px;height:58px;border-radius:18px}
+      .app-top{grid-template-columns:96px minmax(0,1fr) 54px;gap:6px}
+      .sync-widget{width:96px;padding:7px 7px;grid-template-columns:28px 1fr}
+      .sync-line{font-size:12px}
+      .sync-updated{font-size:10px;max-width:52px}
+      .refresh-icon-btn{width:28px;height:28px;font-size:22px}
+      .app-title{font-size:21px;gap:5px}
+      .app-title .baby-emoji{font-size:22px}
+      .baby-icon-box{width:54px;height:54px;border-radius:17px}
       .date-hero-value{font-size:30px}
     }
   </style>
