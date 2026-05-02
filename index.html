@@ -3,80 +3,85 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#eaf2fb" />
+  <meta name="theme-color" content="#eef4fb" />
   <title>מעקב תינוק</title>
-  <link rel="manifest" href="manifest.json?v=23" />
+  <link rel="manifest" href="manifest.json?v=24" />
   <link rel="apple-touch-icon" href="icon-192.png" />
   <style>
     :root{
       --bg:#eef4fb;
+      --bg-soft:#f6f9fe;
       --card:#ffffff;
-      --line:#d9e5f3;
-      --line-soft:#e7eef8;
-      --text:#1d2a3c;
-      --muted:#7f8ea3;
-      --blue:#7fb0ee;
-      --blue-dark:#5f94d8;
-      --blue-soft:#e9f2ff;
-      --green-bg:#e7f6e9;
-      --green-text:#248348;
-      --red-bg:#fde9e9;
-      --red-text:#b33a3a;
-      --shadow:0 8px 24px rgba(66, 99, 148, .08);
-      --radius-xl:30px;
-      --radius-lg:24px;
-      --radius-md:18px;
-      --radius-sm:14px;
-      --field-h:54px;
-      --maxw:920px;
+      --line:#dbe6f3;
+      --line-soft:#e9eff7;
+      --text:#1f2b46;
+      --muted:#7f8ea5;
+      --blue:#74a8f0;
+      --blue-dark:#5d93dc;
+      --blue-soft:#edf4ff;
+      --blue-soft-2:#dfeafb;
+      --green-bg:#edf8ef;
+      --green-text:#2f9a4a;
+      --green-dot:#38c35a;
+      --red-bg:#fdf0f0;
+      --red-text:#b04545;
+      --shadow:0 10px 28px rgba(67, 97, 142, .08);
+      --radius-xl:32px;
+      --radius-lg:26px;
+      --radius-md:22px;
+      --radius-sm:18px;
     }
 
     *{box-sizing:border-box}
     html,body{overflow-x:hidden}
     body{
       margin:0;
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
-      background:
-        radial-gradient(circle at top right, #f7fbff 0%, transparent 22%),
-        linear-gradient(180deg,#edf4fb 0%,#f4f8fd 55%,#f8fbff 100%);
+      font-family:-apple-system,"SF Pro Display","SF Pro Text",BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
       color:var(--text);
+      background:
+        radial-gradient(circle at top right, #f6faff 0%, transparent 24%),
+        linear-gradient(180deg,#edf4fb 0%, #f4f8fd 58%, #f7fbff 100%);
       -webkit-text-size-adjust:100%;
     }
 
     .wrap{
-      max-width:var(--maxw);
+      max-width:940px;
       margin:0 auto;
-      padding:18px 14px 36px;
+      padding:18px 14px 34px;
     }
 
-    .stack{display:grid;gap:16px}
+    .stack{display:grid;gap:18px}
 
     .hero{
-      display:grid;
-      grid-template-columns:160px 1fr 100px;
-      gap:16px;
-      align-items:start;
-      background:rgba(255,255,255,.7);
+      background:rgba(255,255,255,.65);
       backdrop-filter:blur(10px);
-      border:1px solid #edf3fb;
-      border-radius:32px;
+      border:1px solid #edf2fa;
+      border-radius:34px;
       padding:18px;
       box-shadow:var(--shadow);
     }
 
-    .sync-box{
+    .hero-top{
+      display:grid;
+      grid-template-columns:170px 1fr 90px;
+      gap:16px;
+      align-items:start;
+      margin-bottom:16px;
+    }
+
+    .sync-card{
       background:#fff;
-      border:1px solid var(--line);
-      border-radius:22px;
+      border:1px solid var(--line-soft);
+      border-radius:24px;
+      box-shadow:var(--shadow);
       padding:14px;
-      min-height:122px;
+      min-height:106px;
       display:flex;
       flex-direction:column;
       justify-content:space-between;
-      box-shadow:var(--shadow);
     }
 
-    .sync-top{
+    .sync-head{
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -84,32 +89,34 @@
     }
 
     .sync-title{
-      font-size:12px;
+      font-size:13px;
       color:var(--muted);
+      font-weight:500;
     }
 
-    .sync-refresh{
-      width:36px;
-      height:36px;
-      border-radius:12px;
+    .refresh-btn{
+      width:42px;
+      height:42px;
+      border-radius:14px;
       border:1px solid var(--line);
       background:#fff;
-      color:#3e7ed4;
+      color:#4d83d8;
       font-size:22px;
       line-height:1;
       cursor:pointer;
+      box-shadow:0 4px 10px rgba(93,147,220,.06);
     }
 
     .status-pill{
       display:inline-flex;
       align-items:center;
       gap:8px;
-      width:max-content;
-      max-width:100%;
       padding:10px 14px;
       border-radius:999px;
-      font-size:13px;
+      font-size:14px;
       font-weight:800;
+      width:max-content;
+      max-width:100%;
       line-height:1;
     }
 
@@ -119,13 +126,13 @@
     }
 
     .status-warn{
-      background:#fff4de;
-      color:#946200;
+      background:#fff3df;
+      color:#9a6b11;
     }
 
     .status-dot{
-      width:9px;
-      height:9px;
+      width:10px;
+      height:10px;
       border-radius:50%;
       background:currentColor;
       flex:0 0 auto;
@@ -137,57 +144,23 @@
       line-height:1.3;
     }
 
-    .hero-center{
-      display:grid;
-      gap:18px;
-      align-content:start;
-      text-align:center;
-    }
-
-    .title-row{
+    .hero-title-wrap{
       display:flex;
       align-items:center;
       justify-content:center;
       gap:10px;
+      min-height:76px;
+      text-align:center;
       flex-wrap:wrap;
-      min-height:72px;
     }
 
     h1{
       margin:0;
-      font-size:48px;
+      font-size:38px;
       line-height:1;
-      letter-spacing:-0.03em;
       font-weight:900;
-      color:#1d2a45;
-    }
-
-    .date-hero{
-      background:#fff;
-      border:1px solid var(--line-soft);
-      border-radius:28px;
-      padding:20px 18px;
-      box-shadow:var(--shadow);
-    }
-
-    .date-label{
-      font-size:15px;
-      color:var(--muted);
-      margin-bottom:10px;
-    }
-
-    .date-value{
-      font-size:52px;
-      font-weight:900;
-      line-height:1;
       letter-spacing:-0.04em;
-      color:#000;
-    }
-
-    .date-sub{
-      font-size:16px;
-      color:var(--muted);
-      margin-top:12px;
+      color:#1f2b46;
     }
 
     .hero-photo{
@@ -195,13 +168,42 @@
     }
 
     .hero-photo img{
-      width:92px;
-      height:92px;
+      width:86px;
+      height:86px;
       object-fit:cover;
       border-radius:24px;
       border:4px solid #fff;
       box-shadow:var(--shadow);
-      background:#eef5ff;
+      background:#eef4fb;
+    }
+
+    .date-card{
+      background:#fff;
+      border:1px solid var(--line-soft);
+      border-radius:30px;
+      padding:24px 16px;
+      text-align:center;
+      box-shadow:var(--shadow);
+    }
+
+    .date-label{
+      font-size:16px;
+      color:var(--muted);
+      margin-bottom:10px;
+    }
+
+    .date-value{
+      font-size:46px;
+      font-weight:900;
+      line-height:1;
+      letter-spacing:-0.04em;
+      color:#000;
+    }
+
+    .date-sub{
+      margin-top:12px;
+      font-size:16px;
+      color:var(--muted);
     }
 
     .card{
@@ -213,56 +215,56 @@
     }
 
     .card-title{
-      margin:0 0 16px;
+      margin:0 0 18px;
       font-size:28px;
-      line-height:1.1;
+      line-height:1.05;
       font-weight:900;
       letter-spacing:-0.03em;
-      color:#1f2c46;
+      color:#1f2b46;
     }
 
     .stats{
       display:grid;
-      grid-template-columns:repeat(5,1fr);
-      gap:16px;
+      grid-template-columns:repeat(5, 1fr);
+      gap:14px;
     }
 
     .stat{
-      min-height:148px;
+      min-height:138px;
       border:1px solid var(--line);
       border-radius:28px;
       background:#fff;
+      padding:16px 10px;
       display:flex;
       flex-direction:column;
       align-items:center;
       justify-content:center;
-      padding:14px 10px;
       text-align:center;
     }
 
     .stat b{
-      font-size:36px;
+      font-size:34px;
       line-height:1;
-      margin-bottom:12px;
+      margin-bottom:8px;
       font-weight:900;
-      color:#1f2b43;
+      color:#1f2b46;
     }
 
     .stat span{
       font-size:14px;
       color:var(--muted);
-      line-height:1.25;
+      line-height:1.2;
+      margin-bottom:10px;
     }
 
     .stat-icon{
-      margin-top:8px;
       font-size:34px;
       line-height:1;
     }
 
     .vitamin-stat.off{
-      background:linear-gradient(180deg,#fff1f1 0%,#ffe6e6 100%);
-      border-color:#f4cdcd;
+      background:linear-gradient(180deg,#fff3f3 0%, #fdeaea 100%);
+      border-color:#f3d1d1;
     }
 
     .vitamin-stat.off b,
@@ -271,8 +273,8 @@
     }
 
     .vitamin-stat.on{
-      background:linear-gradient(180deg,#effbf1 0%,#e0f4e4 100%);
-      border-color:#cfe7d4;
+      background:linear-gradient(180deg,#eef9f0 0%, #e2f4e6 100%);
+      border-color:#d5ead9;
     }
 
     .vitamin-stat.on b,
@@ -288,25 +290,30 @@
     }
 
     .chip{
-      height:68px;
+      min-height:72px;
       border:1px solid var(--line);
+      border-radius:24px;
       background:#fff;
-      border-radius:22px;
       display:flex;
       align-items:center;
       justify-content:center;
-      gap:8px;
-      font-size:20px;
-      color:#1f2b43;
+      gap:10px;
+      padding:10px 12px;
+      font-size:18px;
+      font-weight:500;
+      color:#1f2b46;
       cursor:pointer;
       user-select:none;
       transition:.18s ease;
+      text-align:center;
+      box-shadow:0 1px 0 rgba(255,255,255,.7) inset;
     }
 
     .chip.active{
-      background:linear-gradient(180deg,#dcecff 0%,#cfe2ff 100%);
-      border-color:#bfd5f3;
-      color:#356fb5;
+      background:linear-gradient(180deg,#dfeafb 0%,#d3e4fb 100%);
+      border-color:#c2d7f3;
+      color:#3a78c7;
+      font-weight:700;
     }
 
     .form-grid{
@@ -316,38 +323,44 @@
       margin-bottom:18px;
     }
 
-    label{
+    .field label{
       display:block;
+      margin:0 0 8px;
       font-size:16px;
       color:var(--muted);
-      margin:0 0 8px;
     }
 
     input,button{font:inherit}
 
     input[type="time"],input[type="number"]{
       width:100%;
-      height:68px;
+      height:66px;
       border-radius:22px;
       border:1px solid var(--line);
       background:#fff;
       padding:0 18px;
-      font-size:24px;
       text-align:center;
+      font-size:22px;
+      color:#1f2b46;
       outline:none;
-      color:#1f2b43;
-      -webkit-appearance:none;
       appearance:none;
+      -webkit-appearance:none;
+      box-shadow:0 1px 0 rgba(255,255,255,.7) inset;
     }
 
-    input[type="time"]:focus,input[type="number"]:focus{
-      border-color:#bfd5f3;
-      box-shadow:0 0 0 4px rgba(127,176,238,.14);
+    input[type="time"]:focus,
+    input[type="number"]:focus{
+      border-color:#bfd5f2;
+      box-shadow:0 0 0 4px rgba(116,168,240,.12);
+    }
+
+    input[type="number"]::placeholder{
+      color:#c0cad9;
     }
 
     input[type="number"]:disabled{
       background:#fafcff;
-      color:#b3bcc9;
+      color:#b7c2d2;
     }
 
     .save-row{
@@ -356,31 +369,35 @@
     }
 
     .primary-btn{
-      border:0;
       min-width:320px;
       max-width:100%;
-      height:74px;
-      border-radius:24px;
-      padding:0 28px;
-      background:linear-gradient(180deg,#7fb0ee 0%,#5f94d8 100%);
+      height:68px;
+      border:0;
+      border-radius:22px;
+      background:linear-gradient(180deg,var(--blue) 0%, var(--blue-dark) 100%);
       color:#fff;
-      font-size:26px;
+      font-size:24px;
       font-weight:900;
+      letter-spacing:-0.01em;
       cursor:pointer;
-      box-shadow:var(--shadow);
+      box-shadow:0 10px 20px rgba(116,168,240,.20);
     }
 
-    .primary-btn:disabled{opacity:.6;cursor:not-allowed}
+    .primary-btn:disabled{
+      opacity:.65;
+      cursor:not-allowed;
+    }
 
     .day-nav{
       display:grid;
-      grid-template-columns:220px 1fr 220px;
-      gap:18px;
+      grid-template-columns:210px 1fr 210px;
+      gap:16px;
       margin-bottom:18px;
     }
 
-    .nav-btn,.day-center{
-      min-height:86px;
+    .nav-btn,
+    .day-center{
+      min-height:82px;
       border-radius:22px;
       border:1px solid var(--line);
       background:#fff;
@@ -391,8 +408,8 @@
       align-items:center;
       justify-content:center;
       gap:10px;
+      color:#4a82d4;
       font-size:22px;
-      color:#356fb5;
       cursor:pointer;
     }
 
@@ -402,18 +419,20 @@
       align-items:center;
       justify-content:center;
       padding:10px;
+      text-align:center;
     }
 
     .day-center-main{
-      font-size:24px;
-      font-weight:800;
-      color:#1f2b43;
+      font-size:22px;
+      font-weight:700;
+      color:#202c46;
+      line-height:1.1;
     }
 
     .day-center-sub{
-      font-size:15px;
+      font-size:14px;
       color:var(--muted);
-      margin-top:4px;
+      margin-top:6px;
     }
 
     .entries-table{
@@ -423,21 +442,21 @@
 
     .entry-row{
       display:grid;
-      grid-template-columns:120px 1fr auto;
+      grid-template-columns:110px 1fr auto;
       gap:16px;
       align-items:center;
       border:1px solid var(--line);
-      background:#fff;
       border-radius:24px;
+      background:#fff;
       padding:18px;
     }
 
     .entry-time{
-      font-size:34px;
+      font-size:32px;
       font-weight:900;
-      text-align:center;
-      color:#1f2b43;
       line-height:1;
+      text-align:center;
+      color:#1f2b46;
     }
 
     .entry-main{
@@ -449,10 +468,10 @@
       align-items:center;
       gap:8px;
       padding:8px 14px;
-      border-radius:999px;
       border:1px solid var(--line);
-      background:#f7fbff;
-      font-size:20px;
+      border-radius:999px;
+      background:#f8fbff;
+      font-size:18px;
       margin-bottom:10px;
     }
 
@@ -465,25 +484,25 @@
       display:flex;
       gap:10px;
       align-items:center;
-      flex-wrap:wrap;
       justify-content:flex-end;
+      flex-wrap:wrap;
     }
 
     .mini-btn{
-      height:56px;
-      min-width:132px;
+      min-width:126px;
+      height:54px;
       border-radius:18px;
       border:1px solid var(--line);
       background:#fff;
-      color:#3d74bc;
+      color:#4981d3;
       font-size:20px;
       cursor:pointer;
     }
 
     .mini-btn.delete{
       background:#fff1f1;
-      border-color:#f3cdcd;
       color:var(--red-text);
+      border-color:#f3d1d1;
     }
 
     .bottom-tools{
@@ -491,65 +510,69 @@
       gap:12px;
     }
 
-    .bottom-tools .mini-btn-wide{
-      height:62px;
+    .wide-btn{
+      height:60px;
       border-radius:20px;
       border:1px solid var(--line);
       background:#fff;
+      color:#4981d3;
       font-size:22px;
       cursor:pointer;
-      color:#2f6fbc;
     }
 
-    .bottom-tools .danger{
+    .wide-btn.danger{
       background:#fff1f1;
-      border-color:#f3cdcd;
       color:var(--red-text);
+      border-color:#f3d1d1;
+    }
+
+    .muted{
+      color:var(--muted);
+      font-size:14px;
     }
 
     .footer-note{
-      padding:4px 6px 0;
+      text-align:center;
       color:var(--muted);
       font-size:13px;
-      text-align:center;
+      padding:2px 4px 0;
     }
 
     @media (max-width:640px){
-      .wrap{padding:12px 10px 28px}
+      .wrap{
+        padding:12px 10px 26px;
+      }
 
       .hero{
-        grid-template-columns:94px 1fr 78px;
+        padding:14px;
+        border-radius:28px;
+      }
+
+      .hero-top{
+        grid-template-columns:120px 1fr 68px;
         gap:10px;
-        padding:12px;
-        border-radius:24px;
+        margin-bottom:12px;
       }
 
-      .hero-photo img{
-        width:68px;
-        height:68px;
-        border-radius:18px;
-      }
-
-      h1{
-        font-size:32px;
-      }
-
-      .title-row{
-        min-height:auto;
-      }
-
-      .sync-box{
-        min-height:96px;
+      .sync-card{
         padding:10px;
-        border-radius:18px;
+        border-radius:20px;
+        min-height:92px;
       }
 
       .sync-title{
-        font-size:10px;
+        font-size:11px;
+      }
+
+      .refresh-btn{
+        width:34px;
+        height:34px;
+        border-radius:12px;
+        font-size:18px;
       }
 
       .status-pill{
-        font-size:11px;
+        font-size:12px;
         padding:8px 10px;
       }
 
@@ -557,29 +580,36 @@
         font-size:11px;
       }
 
-      .sync-refresh{
-        width:30px;
-        height:30px;
-        font-size:18px;
-        border-radius:10px;
+      .hero-title-wrap{
+        min-height:62px;
       }
 
-      .date-hero{
-        padding:14px 10px;
-        border-radius:22px;
+      h1{
+        font-size:34px;
+      }
+
+      .hero-photo img{
+        width:64px;
+        height:64px;
+        border-radius:18px;
+      }
+
+      .date-card{
+        padding:16px 10px;
+        border-radius:24px;
       }
 
       .date-label{
-        font-size:12px;
+        font-size:14px;
         margin-bottom:8px;
       }
 
       .date-value{
-        font-size:28px;
+        font-size:30px;
       }
 
       .date-sub{
-        font-size:12px;
+        font-size:13px;
         margin-top:8px;
       }
 
@@ -594,12 +624,11 @@
       }
 
       .stats{
-        grid-template-columns:repeat(5,1fr);
         gap:8px;
       }
 
       .stat{
-        min-height:94px;
+        min-height:98px;
         border-radius:20px;
         padding:10px 4px;
       }
@@ -611,11 +640,11 @@
 
       .stat span{
         font-size:10px;
+        margin-bottom:6px;
       }
 
       .stat-icon{
         font-size:24px;
-        margin-top:4px;
       }
 
       .chips{
@@ -623,10 +652,11 @@
       }
 
       .chip{
-        height:56px;
+        min-height:56px;
         border-radius:18px;
-        font-size:16px;
-        padding:0 4px;
+        font-size:15px;
+        gap:6px;
+        padding:8px 4px;
       }
 
       .form-grid{
@@ -634,7 +664,7 @@
         gap:12px;
       }
 
-      label{
+      .field label{
         font-size:14px;
       }
 
@@ -647,7 +677,7 @@
       .primary-btn{
         width:100%;
         min-width:0;
-        height:62px;
+        height:60px;
         border-radius:20px;
         font-size:20px;
       }
@@ -657,7 +687,8 @@
         gap:8px;
       }
 
-      .nav-btn,.day-center{
+      .nav-btn,
+      .day-center{
         min-height:68px;
         border-radius:18px;
       }
@@ -673,10 +704,11 @@
 
       .day-center-sub{
         font-size:11px;
+        margin-top:4px;
       }
 
       .entry-row{
-        grid-template-columns:78px 1fr;
+        grid-template-columns:84px 1fr;
         gap:10px;
         padding:14px;
         border-radius:20px;
@@ -703,16 +735,20 @@
       }
 
       .mini-btn{
+        min-width:104px;
         height:46px;
-        min-width:108px;
         border-radius:16px;
-        font-size:17px;
+        font-size:16px;
       }
 
-      .bottom-tools .mini-btn-wide{
-        height:54px;
+      .wide-btn{
+        height:52px;
         border-radius:18px;
         font-size:18px;
+      }
+
+      .muted{
+        font-size:13px;
       }
     }
   </style>
@@ -720,28 +756,32 @@
 <body>
 <div class="wrap">
   <div class="hero">
-    <div class="sync-box">
-      <div class="sync-top">
-        <div class="sync-title">סנכרון</div>
-        <button class="sync-refresh" type="button" onclick="manualRefresh()" aria-label="רענון">↻</button>
+    <div class="hero-top">
+      <div class="sync-card">
+        <div class="sync-head">
+          <div class="sync-title">סנכרון</div>
+          <button class="refresh-btn" type="button" onclick="manualRefresh()" aria-label="רענון">↻</button>
+        </div>
+        <div id="syncStatus" class="status-pill status-warn">
+          <span class="status-dot"></span>
+          טוען...
+        </div>
+        <div id="syncMeta" class="sync-meta">מכין נתונים</div>
       </div>
-      <div id="syncStatus" class="status-pill status-warn"><span class="status-dot"></span>טוען...</div>
-      <div id="syncMeta" class="sync-meta">מכין נתונים</div>
-    </div>
 
-    <div class="hero-center">
-      <div class="title-row">
+      <div class="hero-title-wrap">
         <h1>מעקב תינוק 👶</h1>
       </div>
-      <div class="date-hero">
-        <div class="date-label">תאריך</div>
-        <div id="topDateText" class="date-value">—</div>
-        <div id="topDateSub" class="date-sub">—</div>
+
+      <div class="hero-photo">
+        <img src="icon-192.png" alt="תינוק" />
       </div>
     </div>
 
-    <div class="hero-photo">
-      <img src="icon-192.png" alt="תינוק" />
+    <div class="date-card">
+      <div class="date-label">תאריך</div>
+      <div id="topDateText" class="date-value">—</div>
+      <div id="topDateSub" class="date-sub">—</div>
     </div>
   </div>
 
@@ -779,6 +819,7 @@
 
     <section class="card">
       <h2 class="card-title">רישום חדש</h2>
+
       <input id="logDate" type="date" style="display:none" />
 
       <div id="typeChips" class="chips">
@@ -821,8 +862,8 @@
 
     <section class="card">
       <div class="bottom-tools">
-        <button class="mini-btn-wide" type="button" onclick="exportJson()">ייצוא גיבוי</button>
-        <button class="mini-btn-wide danger" type="button" onclick="clearDay()">נקה יום זה</button>
+        <button class="wide-btn" type="button" onclick="exportJson()">ייצוא גיבוי</button>
+        <button class="wide-btn danger" type="button" onclick="clearDay()">נקה יום זה</button>
       </div>
     </section>
   </div>
@@ -833,9 +874,9 @@
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycby5HlpD17IG1p217ot4kwuErP4BtVZPa92H9uNQWD3JnkYCBlHyRX0FR7c0eMA1mdVGfw/exec';
 const API_TOKEN = 'bt_7Fh29KqP4mX9Za81JrT6UvN2LsQ0';
-const STORAGE_KEY = 'baby-tracker-v23-state';
-const DEVICE_KEY = 'baby-tracker-v23-device';
-const SYNC_KEY = 'baby-tracker-v23-sync-meta';
+const STORAGE_KEY = 'baby-tracker-v24-state';
+const DEVICE_KEY = 'baby-tracker-v24-device';
+const SYNC_KEY = 'baby-tracker-v24-sync-meta';
 
 let currentType = 'האכלה';
 let busy = false;
@@ -851,8 +892,11 @@ function nowTime(){
 function nowIso(){
   return new Date().toISOString();
 }
+function typeEmoji(type){
+  return {"האכלה":"🍼","פיפי":"💧","קקי":"💩","ויטמינים":"💊"}[type] || "•";
+}
 function esc(s){
-  return String(s || '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  return String(s || '').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 }
 function getDayName(dateStr){
   const days = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
@@ -1067,29 +1111,29 @@ function render(){
     `).join('');
   }
 
-  const feedEntries = entries.filter(e=>e.type === 'האכלה');
+  const feedEntries = entries.filter(e => e.type === 'האכלה');
   document.getElementById('feedCount').textContent = feedEntries.length;
   document.getElementById('feedMl').textContent = feedEntries.reduce((s,e)=>s + Number(e.amount || 0), 0);
-  document.getElementById('peeCount').textContent = entries.filter(e=>e.type === 'פיפי').length;
-  document.getElementById('poopCount').textContent = entries.filter(e=>e.type === 'קקי').length;
+  document.getElementById('peeCount').textContent = entries.filter(e => e.type === 'פיפי').length;
+  document.getElementById('poopCount').textContent = entries.filter(e => e.type === 'קקי').length;
 
   updateVitaminSummary(entries);
   updateSyncStatus();
 }
 function replaceAllEntries(entries){
-  saveState({entries: entries.map(normalizeEntry).filter(e=>!e.deleted)});
+  saveState({entries: entries.map(normalizeEntry).filter(e => !e.deleted)});
 }
 function addOrReplaceLocalEntry(entry){
   const state = loadState();
   const normalized = normalizeEntry(entry);
   const map = new Map(state.entries.map(e => [normalizeEntry(e).id, normalizeEntry(e)]));
   map.set(normalized.id, normalized);
-  saveState({entries: Array.from(map.values()).filter(e=>!e.deleted)});
+  saveState({entries: Array.from(map.values()).filter(e => !e.deleted)});
 }
 function removeLocalEntry(id){
   const state = loadState();
   saveState({
-    entries: state.entries.map(normalizeEntry).filter(e=>e.id !== id)
+    entries: state.entries.map(normalizeEntry).filter(e => e.id !== id)
   });
 }
 function makeEntry({date,time,type,amount}){
@@ -1145,7 +1189,7 @@ async function apiDelete(id){
 async function loadFromServer(){
   const result = await apiGetAll();
   if(!result.ok) throw new Error(result.error || 'Failed to fetch');
-  const entries = (result.data || []).map(normalizeEntry).filter(e=>!e.deleted);
+  const entries = (result.data || []).map(normalizeEntry).filter(e => !e.deleted);
   replaceAllEntries(entries);
   saveSyncMeta({lastSuccessAt:nowIso(),lastError:''});
 }
@@ -1218,7 +1262,7 @@ async function addEntry(){
   }
 }
 function findEntryById(id){
-  return loadState().entries.map(normalizeEntry).find(e=>e.id === id);
+  return loadState().entries.map(normalizeEntry).find(e => e.id === id);
 }
 async function deleteEntry(id){
   if(busy) return;
@@ -1338,7 +1382,7 @@ window.addEventListener('online',manualRefresh);
 window.addEventListener('focus',manualRefresh);
 
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('./sw.js?v=23').catch(()=>{});
+  navigator.serviceWorker.register('./sw.js?v=24').catch(()=>{});
 }
 </script>
 </body>
