@@ -11,60 +11,70 @@
   <style>
     :root{
       --bg:#eef4fb;
-      --bg2:#f6f9fe;
+      --bg-soft:#f7faff;
       --card:#ffffff;
       --line:#dde6f2;
-      --line-soft:#e8eef6;
+      --line-soft:#e8eef7;
       --text:#1f2b46;
-      --muted:#8392a7;
-      --blue:#73a8f2;
+      --muted:#8190a5;
+      --navy:#1f2b46;
+      --blue:#71a8f2;
       --blue-dark:#4e8fe3;
-      --blue-soft:#e7f0ff;
-      --green-bg:#eff8f0;
-      --green-text:#2f9649;
-      --green-dot:#2ec35b;
+      --blue-soft:#e6efff;
+      --blue-soft-2:#dbe8fb;
+      --green:#31b95d;
+      --green-bg:#eef8ef;
+      --green-line:#d5ead9;
+      --green-text:#2d9447;
       --red-bg:#fdf0f0;
-      --red-text:#b34a4a;
-      --shadow:0 10px 28px rgba(67,97,142,.08);
-      --radius-xl:34px;
+      --red-line:#f0d1d1;
+      --red-text:#b34b4b;
+      --shadow:0 10px 30px rgba(67,97,142,.08);
+
+      --radius-xl:32px;
       --radius-lg:28px;
       --radius-md:22px;
       --radius-sm:18px;
+      --radius-xs:14px;
     }
 
     *{box-sizing:border-box}
     html,body{overflow-x:hidden}
     html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+
     body{
       margin:0;
-      font-family:-apple-system,"SF Pro Display","SF Pro Text",BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       color:var(--text);
       background:
-        radial-gradient(circle at top right, #f8fbff 0%, transparent 22%),
-        linear-gradient(180deg,#edf4fb 0%,#f4f8fd 58%,#f8fbff 100%);
+        radial-gradient(circle at top right, rgba(255,255,255,.7), transparent 25%),
+        linear-gradient(180deg,#edf4fb 0%, #f3f8fd 58%, #f8fbff 100%);
       -webkit-text-size-adjust:100%;
     }
 
     .wrap{
       max-width:940px;
       margin:0 auto;
-      padding:18px 14px 30px;
+      padding:18px 14px 34px;
     }
 
-    .stack{display:grid;gap:18px}
+    .stack{
+      display:grid;
+      gap:18px;
+    }
 
     .hero{
-      background:rgba(255,255,255,.56);
-      backdrop-filter:blur(10px);
+      background:rgba(255,255,255,.55);
       border:1px solid #edf2fa;
       border-radius:34px;
       padding:18px;
       box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
     }
 
     .hero-top{
       display:grid;
-      grid-template-columns:176px 1fr 92px;
+      grid-template-columns:180px 1fr 92px;
       gap:16px;
       align-items:center;
       margin-bottom:16px;
@@ -74,114 +84,113 @@
       background:#fff;
       border:1px solid var(--line-soft);
       border-radius:26px;
-      box-shadow:var(--shadow);
-      padding:14px;
       min-height:106px;
+      padding:14px;
       display:flex;
       flex-direction:column;
       justify-content:space-between;
+      box-shadow:var(--shadow);
     }
 
-    .sync-row{
+    .sync-head{
       display:flex;
       align-items:center;
       justify-content:space-between;
+      gap:10px;
+    }
+
+    .sync-main{
+      display:flex;
+      align-items:center;
       gap:8px;
+      font-size:14px;
+      font-weight:800;
+      color:var(--text);
     }
 
-    .sync-title{
-      font-size:13px;
-      color:var(--muted);
-      font-weight:500;
+    .sync-dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:var(--green);
+      flex:0 0 auto;
     }
 
-    .refresh-btn{
+    .sync-refresh{
       width:42px;
       height:42px;
       border-radius:15px;
       border:1px solid var(--line);
       background:#fff;
-      color:#3f84e3;
+      color:#4386e7;
       font-size:22px;
       line-height:1;
       cursor:pointer;
       box-shadow:0 4px 12px rgba(78,143,227,.08);
     }
 
-    .status-pill{
+    .sync-status{
       display:inline-flex;
       align-items:center;
       gap:8px;
+      width:max-content;
+      max-width:100%;
       padding:10px 14px;
       border-radius:999px;
+      background:var(--green-bg);
+      color:var(--green-text);
       font-size:14px;
       font-weight:800;
       line-height:1;
-      width:max-content;
-      max-width:100%;
     }
 
-    .status-ok{
-      background:var(--green-bg);
-      color:var(--green-text);
-    }
-
-    .status-warn{
+    .sync-status.warn{
       background:#fff4df;
-      color:#9a6c15;
-    }
-
-    .status-dot{
-      width:10px;
-      height:10px;
-      border-radius:50%;
-      background:currentColor;
-      flex:0 0 auto;
+      color:#9d6d18;
     }
 
     .sync-meta{
       font-size:13px;
       color:var(--muted);
-      line-height:1.25;
+      line-height:1.2;
     }
 
     .title-wrap{
       display:flex;
       align-items:center;
       justify-content:center;
-      gap:10px;
-      flex-wrap:nowrap;
-      text-align:center;
-      min-height:72px;
+      gap:8px;
       white-space:nowrap;
+      min-height:64px;
+      text-align:center;
     }
 
-    h1{
+    .title-wrap h1{
       margin:0;
-      font-size:33px;
-      line-height:1;
+      font-size:32px;
       font-weight:900;
       letter-spacing:-0.04em;
-      color:#1f2b46;
-    }
-
-    .title-emoji{
-      font-size:36px;
+      color:var(--navy);
       line-height:1;
     }
 
-    .hero-photo{
+    .title-wrap .emoji{
+      font-size:34px;
+      line-height:1;
+    }
+
+    .hero-avatar{
       justify-self:end;
     }
 
-    .hero-photo img{
+    .hero-avatar img{
       width:86px;
       height:86px;
-      object-fit:cover;
       border-radius:24px;
+      object-fit:cover;
+      background:#eef4fb;
       border:4px solid #fff;
       box-shadow:var(--shadow);
-      background:#eef4fb;
     }
 
     .date-card{
@@ -202,9 +211,9 @@
     .date-value{
       font-size:48px;
       font-weight:900;
-      line-height:1;
       letter-spacing:-0.04em;
       color:#000;
+      line-height:1;
     }
 
     .date-sub{
@@ -227,12 +236,14 @@
       line-height:1.05;
       font-weight:900;
       letter-spacing:-0.03em;
-      color:#1f2b46;
+      color:var(--navy);
+      text-align:right;
     }
 
+    /* summary */
     .stats{
       display:grid;
-      grid-template-columns:repeat(5, 1fr);
+      grid-template-columns:repeat(5,1fr);
       gap:14px;
     }
 
@@ -251,10 +262,10 @@
 
     .stat b{
       font-size:34px;
-      line-height:1;
-      margin-bottom:8px;
       font-weight:900;
-      color:#1f2b46;
+      line-height:1;
+      color:var(--navy);
+      margin-bottom:8px;
     }
 
     .stat span{
@@ -270,8 +281,8 @@
     }
 
     .vitamin-stat.off{
-      background:linear-gradient(180deg,#fff4f4 0%,#fdeaea 100%);
-      border-color:#f2d0d0;
+      background:linear-gradient(180deg,#fff3f3 0%,#fdeaea 100%);
+      border-color:var(--red-line);
     }
 
     .vitamin-stat.off b,
@@ -280,8 +291,8 @@
     }
 
     .vitamin-stat.on{
-      background:linear-gradient(180deg,#eef9f0 0%,#e2f4e6 100%);
-      border-color:#d4e9d8;
+      background:linear-gradient(180deg,#eef9f0 0%,#e4f4e8 100%);
+      border-color:var(--green-line);
     }
 
     .vitamin-stat.on b,
@@ -289,6 +300,7 @@
       color:var(--green-text);
     }
 
+    /* tabs */
     .chips{
       display:grid;
       grid-template-columns:repeat(4,1fr);
@@ -308,7 +320,7 @@
       padding:10px 8px;
       font-size:18px;
       font-weight:500;
-      color:#1f2b46;
+      color:var(--navy);
       cursor:pointer;
       user-select:none;
       text-align:center;
@@ -317,12 +329,13 @@
     }
 
     .chip.active{
-      background:linear-gradient(180deg,#dde9fb 0%,#d2e2fb 100%);
-      border-color:#bfd4f1;
-      color:#3a78c7;
+      background:linear-gradient(180deg,#dfeafc 0%, #d3e3fb 100%);
+      border-color:#c2d6f2;
+      color:#3a79c8;
       font-weight:700;
     }
 
+    /* form */
     .form-grid{
       display:grid;
       grid-template-columns:1fr 1fr;
@@ -339,7 +352,8 @@
 
     input,button{font:inherit}
 
-    input[type="time"],input[type="number"]{
+    input[type="time"],
+    input[type="number"]{
       width:100%;
       height:66px;
       border-radius:22px;
@@ -348,7 +362,7 @@
       padding:0 18px;
       text-align:center;
       font-size:22px;
-      color:#1f2b46;
+      color:var(--navy);
       outline:none;
       appearance:none;
       -webkit-appearance:none;
@@ -362,7 +376,7 @@
     }
 
     input[type="number"]::placeholder{
-      color:#c1cad8;
+      color:#c1cad9;
     }
 
     input[type="number"]:disabled{
@@ -380,7 +394,7 @@
       height:68px;
       border:0;
       border-radius:22px;
-      background:linear-gradient(180deg,var(--blue) 0%,var(--blue-dark) 100%);
+      background:linear-gradient(180deg,var(--blue) 0%, var(--blue-dark) 100%);
       color:#fff;
       font-size:24px;
       font-weight:900;
@@ -394,6 +408,7 @@
       cursor:not-allowed;
     }
 
+    /* day nav */
     .day-nav{
       display:grid;
       grid-template-columns:1fr 1.9fr 1fr;
@@ -404,8 +419,8 @@
     .nav-btn,
     .day-center{
       min-height:82px;
-      border-radius:22px;
       border:1px solid var(--line);
+      border-radius:22px;
       background:#fff;
     }
 
@@ -414,7 +429,7 @@
       align-items:center;
       justify-content:center;
       gap:10px;
-      color:#4a82d4;
+      color:#4c82d2;
       font-size:22px;
       cursor:pointer;
     }
@@ -424,15 +439,15 @@
       flex-direction:column;
       align-items:center;
       justify-content:center;
-      padding:10px;
       text-align:center;
+      padding:10px;
     }
 
     .day-center-main{
       font-size:22px;
       font-weight:700;
-      color:#202c46;
       line-height:1.1;
+      color:var(--navy);
     }
 
     .day-center-sub{
@@ -441,6 +456,7 @@
       margin-top:6px;
     }
 
+    /* entries */
     .entries-table{
       display:grid;
       gap:14px;
@@ -450,28 +466,30 @@
       border:1px solid var(--line);
       border-radius:24px;
       background:#fff;
-      padding:16px;
+      padding:18px;
     }
 
     .entry-head{
       display:grid;
-      grid-template-columns:110px 1fr 110px;
-      gap:12px;
+      grid-template-columns:1fr auto 1fr;
       align-items:center;
+      gap:12px;
       direction:ltr;
     }
 
-    .entry-amount,
-    .entry-type-wrap,
     .entry-time{
-      text-align:center;
+      text-align:right;
+      font-size:32px;
+      font-weight:900;
+      line-height:1;
+      color:var(--navy);
+      white-space:nowrap;
     }
 
-    .entry-time{
-      font-size:28px;
-      font-weight:900;
-      color:#1f2b46;
-      line-height:1;
+    .entry-type-wrap{
+      display:flex;
+      justify-content:center;
+      align-items:center;
     }
 
     .entry-type{
@@ -479,35 +497,31 @@
       align-items:center;
       justify-content:center;
       gap:8px;
-      padding:8px 14px;
+      min-width:160px;
+      max-width:100%;
+      padding:8px 16px;
       border:1px solid var(--line);
       border-radius:999px;
       background:#f8fbff;
       font-size:18px;
-      margin-bottom:8px;
-      width:max-content;
-      max-width:100%;
+      color:var(--navy);
+      line-height:1.2;
+      text-align:center;
     }
 
-    .entry-type-wrap{
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      min-width:0;
-    }
-
-    .entry-sub{
+    .entry-amount{
+      text-align:left;
       font-size:17px;
       color:var(--muted);
-      line-height:1.25;
+      white-space:nowrap;
     }
 
     .entry-actions{
       display:flex;
-      gap:10px;
+      gap:12px;
       justify-content:flex-start;
-      margin-top:14px;
+      margin-top:16px;
+      direction:rtl;
       flex-wrap:wrap;
     }
 
@@ -517,15 +531,19 @@
       border-radius:18px;
       border:1px solid var(--line);
       background:#fff;
-      color:#4981d3;
+      color:#4a82d4;
       font-size:20px;
       cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
     }
 
     .mini-btn.delete{
       background:#fff1f1;
       color:var(--red-text);
-      border-color:#f3d1d1;
+      border-color:var(--red-line);
     }
 
     .bottom-tools{
@@ -538,7 +556,7 @@
       border-radius:20px;
       border:1px solid var(--line);
       background:#fff;
-      color:#4981d3;
+      color:#4a82d4;
       font-size:22px;
       cursor:pointer;
     }
@@ -546,7 +564,7 @@
     .wide-btn.danger{
       background:#fff1f1;
       color:var(--red-text);
-      border-color:#f3d1d1;
+      border-color:var(--red-line);
     }
 
     .muted{
@@ -572,29 +590,22 @@
       }
 
       .hero-top{
-        grid-template-columns:120px 1fr 70px;
+        grid-template-columns:116px 1fr 68px;
         gap:10px;
         margin-bottom:12px;
       }
 
       .sync-card{
         padding:10px;
-        border-radius:20px;
         min-height:92px;
+        border-radius:20px;
       }
 
-      .sync-title{
-        font-size:11px;
+      .sync-main{
+        font-size:12px;
       }
 
-      .refresh-btn{
-        width:34px;
-        height:34px;
-        border-radius:12px;
-        font-size:18px;
-      }
-
-      .status-pill{
+      .sync-status{
         font-size:12px;
         padding:8px 10px;
       }
@@ -603,20 +614,27 @@
         font-size:11px;
       }
 
-      .title-wrap{
-        min-height:58px;
-        gap:6px;
+      .sync-refresh{
+        width:34px;
+        height:34px;
+        font-size:18px;
+        border-radius:12px;
       }
 
-      h1{
+      .title-wrap{
+        gap:6px;
+        min-height:56px;
+      }
+
+      .title-wrap h1{
         font-size:31px;
       }
 
-      .title-emoji{
+      .title-wrap .emoji{
         font-size:30px;
       }
 
-      .hero-photo img{
+      .hero-avatar img{
         width:64px;
         height:64px;
         border-radius:18px;
@@ -656,7 +674,7 @@
       }
 
       .stat{
-        min-height:98px;
+        min-height:100px;
         border-radius:20px;
         padding:10px 4px;
       }
@@ -696,7 +714,8 @@
         font-size:14px;
       }
 
-      input[type="time"],input[type="number"]{
+      input[type="time"],
+      input[type="number"]{
         height:58px;
         border-radius:18px;
         font-size:20px;
@@ -704,8 +723,8 @@
 
       .primary-btn{
         height:60px;
-        border-radius:20px;
         font-size:20px;
+        border-radius:20px;
       }
 
       .day-nav{
@@ -739,39 +758,40 @@
       }
 
       .entry-head{
-        grid-template-columns:84px 1fr 84px;
+        grid-template-columns:1fr auto 1fr;
         gap:8px;
       }
 
       .entry-time{
-        font-size:24px;
+        font-size:26px;
       }
 
       .entry-type{
+        min-width:112px;
         font-size:16px;
         padding:6px 12px;
-        margin-bottom:6px;
       }
 
-      .entry-sub{
+      .entry-amount{
         font-size:15px;
       }
 
       .entry-actions{
         margin-top:12px;
+        gap:10px;
       }
 
       .mini-btn{
         min-width:104px;
         height:46px;
-        border-radius:16px;
         font-size:16px;
+        border-radius:16px;
       }
 
       .wide-btn{
         height:52px;
-        border-radius:18px;
         font-size:18px;
+        border-radius:18px;
       }
 
       .muted{
@@ -785,23 +805,24 @@
   <div class="hero">
     <div class="hero-top">
       <div class="sync-card">
-        <div class="sync-row">
-          <div class="sync-title">סנכרון</div>
-          <button class="refresh-btn" type="button" onclick="manualRefresh()" aria-label="רענון">↻</button>
+        <div class="sync-head">
+          <div class="sync-main">
+            <span class="sync-dot"></span>
+            <span>מסונכרן</span>
+          </div>
+          <button class="sync-refresh" type="button" onclick="manualRefresh()" aria-label="רענון">↻</button>
         </div>
-        <div id="syncStatus" class="status-pill status-warn">
-          <span class="status-dot"></span>
-          טוען...
-        </div>
-        <div id="syncMeta" class="sync-meta">מכין נתונים</div>
+
+        <div id="syncStatus" class="sync-status">מסונכרן</div>
+        <div id="syncMeta" class="sync-meta">עודכן --:--</div>
       </div>
 
       <div class="title-wrap">
-        <span class="title-emoji">👶</span>
+        <span class="emoji">👶</span>
         <h1>מעקב תינוק</h1>
       </div>
 
-      <div class="hero-photo">
+      <div class="hero-avatar">
         <img src="icon-192.png" alt="תינוק" />
       </div>
     </div>
@@ -816,27 +837,32 @@
   <div class="stack">
     <section class="card">
       <h2 class="card-title">סיכום יומי</h2>
+
       <div class="stats">
         <div class="stat vitamin-stat off" id="vitaminStat">
           <b id="vitaminIcon">○</b>
-          <span>ויטמינים</span>
+          <span id="vitaminLabel">ויטמינים</span>
           <div class="stat-icon">💊</div>
         </div>
+
         <div class="stat">
           <b id="poopCount">0</b>
           <span>קקי</span>
           <div class="stat-icon">💩</div>
         </div>
+
         <div class="stat">
           <b id="peeCount">0</b>
           <span>פיפי</span>
           <div class="stat-icon">💧</div>
         </div>
+
         <div class="stat">
           <b id="feedMl">0</b>
           <span>מ״ל סה״כ</span>
           <div class="stat-icon">🧴</div>
         </div>
+
         <div class="stat">
           <b id="feedCount">0</b>
           <span>האכלות</span>
@@ -862,6 +888,7 @@
           <label for="amount">כמות (מ״ל)</label>
           <input id="amount" type="number" placeholder="למשל 90" />
         </div>
+
         <div class="field">
           <label for="time">שעה</label>
           <input id="time" type="time" />
@@ -878,10 +905,12 @@
 
       <div class="day-nav">
         <button class="nav-btn" type="button" onclick="goToNextDay()">◀ יום הבא</button>
+
         <div class="day-center">
           <div id="selectedDayLabel" class="day-center-main">—</div>
           <div id="selectedDaySub" class="day-center-sub">—</div>
         </div>
+
         <button class="nav-btn" type="button" onclick="goToPrevDay()">יום קודם ▶</button>
       </div>
 
@@ -1067,16 +1096,17 @@ function setBusy(flag){
   if(saveBtn) saveBtn.disabled = flag;
 }
 function formatSyncStamp(iso){
-  if(!iso) return '—';
+  if(!iso) return '--:--';
   const d = new Date(iso);
-  if(isNaN(d)) return '—';
+  if(isNaN(d)) return '--:--';
   return d.toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'});
 }
 function setStatus(text, kind, metaText){
   const el = document.getElementById('syncStatus');
   const meta = document.getElementById('syncMeta');
-  el.innerHTML = `<span class="status-dot"></span>${text}`;
-  el.className = `status-pill ${kind}`;
+
+  el.textContent = text;
+  el.className = kind === 'warn' ? 'sync-status warn' : 'sync-status';
   meta.textContent = metaText || '';
 }
 function setSoftMessage(message){
@@ -1090,28 +1120,31 @@ function updateSyncStatus(){
   const meta = loadSyncMeta();
 
   if(!navigator.onLine){
-    setStatus('אופליין','status-warn','אין חיבור');
+    setStatus('אופליין','warn','אין חיבור');
     return;
   }
   if(busy){
-    setStatus('מעדכן','status-warn','מסנכרן');
+    setStatus('מעדכן','warn','מסנכרן...');
     return;
   }
   if(meta.lastError){
-    setStatus('שים לב','status-warn','בודק שוב');
+    setStatus('שים לב','warn','בודק שוב');
     return;
   }
 
   const last = formatSyncStamp(meta.lastSuccessAt);
-  setStatus('מסונכרן','status-ok', last === '—' ? '—' : `עודכן ${last}`);
+  setStatus('מסונכרן','ok',`עודכן ${last}`);
 }
 function updateVitaminSummary(entries){
   const hasVitamins = entries.some(e => e.type === 'ויטמינים');
   const vitaminStat = document.getElementById('vitaminStat');
   const vitaminIcon = document.getElementById('vitaminIcon');
+  const vitaminLabel = document.getElementById('vitaminLabel');
+
   vitaminStat.classList.remove('on','off');
   vitaminStat.classList.add(hasVitamins ? 'on' : 'off');
   vitaminIcon.textContent = hasVitamins ? '✓' : '○';
+  vitaminLabel.textContent = hasVitamins ? 'ניתן ויטמינים' : 'ויטמינים';
 }
 function render(){
   updateTopDate();
@@ -1127,20 +1160,16 @@ function render(){
     box.innerHTML = entries.map(e=>`
       <div class="entry-card">
         <div class="entry-head">
-          <div class="entry-amount">
-            <div class="entry-sub">${e.amount ? `${esc(e.amount)} מ״ל` : 'ללא כמות'}</div>
-          </div>
-
+          <div class="entry-amount">${e.amount ? `${esc(e.amount)} מ״ל` : 'ללא כמות'}</div>
           <div class="entry-type-wrap">
             <div class="entry-type">${esc(e.type)} ${typeEmoji(e.type)}</div>
           </div>
-
           <div class="entry-time">${esc(e.time || '')}</div>
         </div>
 
         <div class="entry-actions">
-          <button class="mini-btn delete" type="button" onclick="deleteEntry('${e.id}')">מחיקה</button>
-          <button class="mini-btn" type="button" onclick="editEntry('${e.id}')">עריכה</button>
+          <button class="mini-btn delete" type="button" onclick="deleteEntry('${e.id}')">מחיקה 🗑️</button>
+          <button class="mini-btn" type="button" onclick="editEntry('${e.id}')">עריכה ✏️</button>
         </div>
       </div>
     `).join('');
