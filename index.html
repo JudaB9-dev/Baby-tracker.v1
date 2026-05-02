@@ -5,19 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#8fb8e8" />
   <title>מעקב תינוק</title>
-  <link rel="manifest" href="manifest.json?v=21" />
+  <link rel="manifest" href="manifest.json?v=20" />
   <link rel="apple-touch-icon" href="icon-192.png" />
   <style>
     :root{
       --bg1:#eef5ff;
       --bg2:#f8fbff;
-      --card:#ffffffd8;
+      --card:#ffffffcc;
       --card-solid:#ffffff;
       --line:#dbe7f6;
-      --line-strong:#c7daf5;
-      --primary:#7eaee8;
-      --primary-dark:#6998d3;
-      --primary-soft:#e8f2ff;
+      --primary:#8fb8e8;
+      --primary-dark:#6f9fd9;
       --text:#1d2a3c;
       --muted:#728096;
       --danger-text:#8f2424;
@@ -49,7 +47,7 @@
     }
 
     .wrap{
-      max-width:900px;
+      max-width:860px;
       margin:0 auto;
       padding:var(--page-pad) var(--page-pad) 42px;
     }
@@ -58,7 +56,7 @@
 
     .hero{
       display:grid;
-      grid-template-columns:1fr 240px;
+      grid-template-columns:1fr 250px;
       gap:14px;
       align-items:stretch;
       background:var(--card);
@@ -75,37 +73,30 @@
 
     .hero-main{
       display:grid;
-      grid-template-columns:64px 1fr;
+      grid-template-columns:72px 1fr;
       gap:12px;
       align-items:center;
       min-width:0;
     }
 
     .hero-main img{
-      width:64px;
-      height:64px;
+      width:72px;
+      height:72px;
       object-fit:cover;
-      border-radius:18px;
+      border-radius:20px;
       border:3px solid #fff;
       box-shadow:var(--shadow);
       background:#eef5ff;
     }
 
-    h1{
-      font-size:30px;
-      line-height:1.05;
-      margin:0;
-      letter-spacing:-0.02em;
-    }
-
-    .hero-meta{
+    .hero-side{
       display:grid;
       grid-template-columns:1fr 1fr;
       gap:8px;
       align-content:start;
     }
 
-    .mini-card{
+    .top-mini-card{
       background:linear-gradient(180deg,#fbfdff 0%, #f4f9ff 100%);
       border:1px solid var(--line);
       border-radius:16px;
@@ -113,28 +104,28 @@
       min-width:0;
     }
 
-    .mini-title{
+    .top-mini-title{
       font-size:11px;
       color:var(--muted);
       margin-bottom:5px;
     }
 
-    .mini-value{
+    .top-mini-value{
       font-size:13px;
       font-weight:700;
       line-height:1.25;
       word-break:break-word;
     }
 
-    .small-btn{
-      border:1px solid var(--line);
-      background:#fff;
-      border-radius:12px;
-      padding:7px 9px;
-      cursor:pointer;
-      font-size:12px;
-      width:100%;
+    .top-mini-card .small-btn{
       margin-top:6px;
+    }
+
+    h1{
+      font-size:30px;
+      line-height:1.05;
+      margin:0;
+      letter-spacing:-0.02em;
     }
 
     .card{
@@ -152,113 +143,6 @@
       margin:0 0 12px;
       line-height:1.2;
       letter-spacing:-0.02em;
-    }
-
-    .status-pill{
-      padding:6px 9px;
-      border-radius:999px;
-      font-size:12px;
-      font-weight:700;
-      display:inline-block;
-    }
-
-    .status-ok{background:var(--ok);color:var(--ok-text)}
-    .status-warn{background:var(--warn);color:var(--warn-text)}
-
-    .muted{
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.35;
-      word-break:break-word;
-    }
-
-    .now-cards{
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:10px;
-      width:100%;
-    }
-
-    .now-card{
-      background:linear-gradient(180deg,#fbfdff 0%,#f4f9ff 100%);
-      border:1px solid var(--line);
-      border-radius:18px;
-      padding:12px 10px;
-      min-height:94px;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      text-align:center;
-    }
-
-    .now-card-title{
-      font-size:12px;
-      color:var(--muted);
-      margin-bottom:6px;
-    }
-
-    .now-card-value{
-      font-size:18px;
-      font-weight:800;
-      line-height:1.15;
-    }
-
-    .stats{
-      display:grid;
-      gap:10px;
-      width:100%;
-      grid-template-columns:repeat(5,1fr);
-    }
-
-    .stat{
-      background:linear-gradient(180deg,#fbfdff 0%,#f4f9ff 100%);
-      border:1px solid var(--line);
-      padding:13px 8px;
-      border-radius:18px;
-      text-align:center;
-      min-height:94px;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-    }
-
-    .stat b{
-      display:block;
-      font-size:24px;
-      margin-bottom:4px;
-      line-height:1;
-    }
-
-    .stat span{
-      display:block;
-      font-size:13px;
-      line-height:1.25;
-      color:var(--muted);
-      word-break:break-word;
-    }
-
-    .vitamin-stat{
-      transition:all .2s ease;
-    }
-
-    .vitamin-stat.off{
-      background:linear-gradient(180deg,var(--vit-off-bg) 0%, #ffdede 100%);
-      border-color:#f3caca;
-    }
-
-    .vitamin-stat.off b,
-    .vitamin-stat.off span{
-      color:var(--vit-off-text);
-    }
-
-    .vitamin-stat.on{
-      background:linear-gradient(180deg,var(--vit-on-bg) 0%, #dcf1e3 100%);
-      border-color:#c8e8d1;
-    }
-
-    .vitamin-stat.on b,
-    .vitamin-stat.on span{
-      color:var(--vit-on-text);
     }
 
     label{
@@ -363,10 +247,96 @@
     }
     .btn:disabled,.small-btn:disabled,.mini-btn:disabled{opacity:.6;cursor:not-allowed}
 
-    .actions{
+    .actions,.small-actions{
       display:flex;
       gap:8px;
       flex-wrap:wrap;
+    }
+
+    .stats{
+      display:grid;
+      gap:10px;
+      width:100%;
+      grid-template-columns:repeat(5,1fr);
+    }
+
+    .stat{
+      background:linear-gradient(180deg,#fbfdff 0%,#f4f9ff 100%);
+      border:1px solid var(--line);
+      padding:13px 8px;
+      border-radius:18px;
+      text-align:center;
+      min-height:94px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+
+    .stat b{
+      display:block;
+      font-size:24px;
+      margin-bottom:4px;
+      line-height:1;
+    }
+
+    .stat span{
+      display:block;
+      font-size:13px;
+      line-height:1.25;
+      color:var(--muted);
+      word-break:break-word;
+    }
+
+    .vitamin-stat{
+      transition:all .2s ease;
+    }
+
+    .vitamin-stat.off{
+      background:linear-gradient(180deg,var(--vit-off-bg) 0%, #ffdede 100%);
+      border-color:#f3caca;
+    }
+
+    .vitamin-stat.off b,
+    .vitamin-stat.off span{
+      color:var(--vit-off-text);
+    }
+
+    .vitamin-stat.on{
+      background:linear-gradient(180deg,var(--vit-on-bg) 0%, #dcf1e3 100%);
+      border-color:#c8e8d1;
+    }
+
+    .vitamin-stat.on b,
+    .vitamin-stat.on span{
+      color:var(--vit-on-text);
+    }
+
+    .muted{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.35;
+      word-break:break-word;
+    }
+
+    .status-pill{
+      padding:6px 9px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+      display:inline-block;
+    }
+
+    .status-ok{background:var(--ok);color:var(--ok-text)}
+    .status-warn{background:var(--warn);color:var(--warn-text)}
+
+    .small-btn{
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:12px;
+      padding:7px 9px;
+      cursor:pointer;
+      font-size:12px;
+      width:100%;
     }
 
     .day-nav{
@@ -515,34 +485,16 @@
 
       h1{font-size:24px}
 
-      .hero-meta{
+      .hero-side{
         grid-template-columns:1fr 1fr;
-      }
-
-      .card{padding:12px}
-      .section-title{font-size:17px}
-
-      .now-cards{
-        grid-template-columns:repeat(2,1fr);
-        gap:8px;
-      }
-
-      .now-card{
-        min-height:78px;
-        padding:10px 8px;
-      }
-
-      .now-card-title{
-        font-size:11px;
-      }
-
-      .now-card-value{
-        font-size:15px;
       }
 
       .row{
         grid-template-columns:1fr;
       }
+
+      .card{padding:12px}
+      .section-title{font-size:17px}
 
       .chips{
         grid-template-columns:repeat(4,1fr);
@@ -636,44 +588,22 @@
       </div>
     </div>
 
-    <div class="hero-meta">
-      <div class="mini-card">
-        <div class="mini-title">סנכרון</div>
+    <div class="hero-side">
+      <div class="top-mini-card">
+        <div class="top-mini-title">סנכרון</div>
         <div id="syncStatus" class="status-pill status-warn">טוען...</div>
         <div class="muted" id="syncMeta" style="margin-top:6px">מכין נתונים</div>
         <button class="small-btn" type="button" onclick="manualRefresh()">רענון מהשרת</button>
       </div>
 
-      <div class="mini-card">
-        <div class="mini-title">תאריך</div>
-        <div class="mini-value" id="topDateText">—</div>
+      <div class="top-mini-card">
+        <div class="top-mini-title">תאריך</div>
+        <div class="top-mini-value" id="topDateText">—</div>
       </div>
     </div>
   </div>
 
   <div class="grid">
-    <div class="card">
-      <div class="section-title">מצב עכשיו</div>
-      <div class="now-cards">
-        <div class="now-card">
-          <div class="now-card-title">האכלה אחרונה</div>
-          <div class="now-card-value" id="lastFeedValue">—</div>
-        </div>
-        <div class="now-card">
-          <div class="now-card-title">פיפי אחרון</div>
-          <div class="now-card-value" id="lastPeeValue">—</div>
-        </div>
-        <div class="now-card">
-          <div class="now-card-title">קקי אחרון</div>
-          <div class="now-card-value" id="lastPoopValue">—</div>
-        </div>
-        <div id="lastVitaminCard" class="now-card vitamin-stat off">
-          <div class="now-card-title">ויטמינים היום</div>
-          <div class="now-card-value" id="lastVitaminValue">לא ניתן</div>
-        </div>
-      </div>
-    </div>
-
     <div class="card">
       <div class="section-title">סיכום יומי</div>
       <div class="stats">
@@ -744,9 +674,9 @@
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycby5HlpD17IG1p217ot4kwuErP4BtVZPa92H9uNQWD3JnkYCBlHyRX0FR7c0eMA1mdVGfw/exec';
 const API_TOKEN = 'bt_7Fh29KqP4mX9Za81JrT6UvN2LsQ0';
-const STORAGE_KEY = 'baby-tracker-v21-state';
-const DEVICE_KEY = 'baby-tracker-v21-device';
-const SYNC_KEY = 'baby-tracker-v21-sync-meta';
+const STORAGE_KEY = 'baby-tracker-v20-state';
+const DEVICE_KEY = 'baby-tracker-v20-device';
+const SYNC_KEY = 'baby-tracker-v20-sync-meta';
 
 let currentType = 'האכלה';
 let busy = false;
@@ -941,26 +871,6 @@ function updateSyncStatus(){
   setStatus('מסונכרן','status-ok',`עדכון אחרון: ${last}`);
 }
 
-function getLastEntryByType(entries, type){
-  return entries.find(e => e.type === type) || null;
-}
-
-function updateNowCards(entries){
-  const lastFeed = getLastEntryByType(entries, 'האכלה');
-  const lastPee = getLastEntryByType(entries, 'פיפי');
-  const lastPoop = getLastEntryByType(entries, 'קקי');
-  const hasVitamins = entries.some(e => e.type === 'ויטמינים');
-
-  document.getElementById('lastFeedValue').textContent = lastFeed ? `${lastFeed.time}${lastFeed.amount ? ` · ${lastFeed.amount} מ״ל` : ''}` : '—';
-  document.getElementById('lastPeeValue').textContent = lastPee ? lastPee.time : '—';
-  document.getElementById('lastPoopValue').textContent = lastPoop ? lastPoop.time : '—';
-  document.getElementById('lastVitaminValue').textContent = hasVitamins ? 'ניתן' : 'לא ניתן';
-
-  const vitaminCard = document.getElementById('lastVitaminCard');
-  vitaminCard.classList.remove('on','off');
-  vitaminCard.classList.add(hasVitamins ? 'on' : 'off');
-}
-
 function updateVitaminSummary(entries){
   const hasVitamins = entries.some(e => e.type === 'ויטמינים');
   const vitaminStat = document.getElementById('vitaminStat');
@@ -1003,9 +913,7 @@ function render(){
   document.getElementById('feedMl').textContent=feedEntries.reduce((s,e)=>s+Number(e.amount||0),0);
   document.getElementById('peeCount').textContent=entries.filter(e=>e.type==='פיפי').length;
   document.getElementById('poopCount').textContent=entries.filter(e=>e.type==='קקי').length;
-
   updateVitaminSummary(entries);
-  updateNowCards(entries);
   updateSyncStatus();
 }
 
@@ -1278,7 +1186,7 @@ window.addEventListener('online',manualRefresh);
 window.addEventListener('focus',manualRefresh);
 
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('./sw.js?v=21').catch(()=>{});
+  navigator.serviceWorker.register('./sw.js?v=20').catch(()=>{});
 }
 </script>
 </body>
