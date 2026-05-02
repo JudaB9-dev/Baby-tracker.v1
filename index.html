@@ -3,34 +3,32 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#8fb8e8" />
+  <meta name="theme-color" content="#eaf2fb" />
   <title>מעקב תינוק</title>
-  <link rel="manifest" href="manifest.json?v=20" />
+  <link rel="manifest" href="manifest.json?v=23" />
   <link rel="apple-touch-icon" href="icon-192.png" />
   <style>
     :root{
-      --bg1:#eef5ff;
-      --bg2:#f8fbff;
-      --card:#ffffffcc;
-      --card-solid:#ffffff;
-      --line:#dbe7f6;
-      --primary:#8fb8e8;
-      --primary-dark:#6f9fd9;
+      --bg:#eef4fb;
+      --card:#ffffff;
+      --line:#d9e5f3;
+      --line-soft:#e7eef8;
       --text:#1d2a3c;
-      --muted:#728096;
-      --danger-text:#8f2424;
-      --ok:#e8f7ec;
-      --ok-text:#1f6b36;
-      --warn:#fff4df;
-      --warn-text:#8a5a00;
-      --vit-off-bg:#ffe8e8;
-      --vit-off-text:#8f2424;
-      --vit-on-bg:#e8f7ec;
-      --vit-on-text:#1f6b36;
-      --radius:22px;
-      --shadow:0 10px 30px rgba(43,77,124,.10);
-      --field-h:48px;
-      --page-pad:14px;
+      --muted:#7f8ea3;
+      --blue:#7fb0ee;
+      --blue-dark:#5f94d8;
+      --blue-soft:#e9f2ff;
+      --green-bg:#e7f6e9;
+      --green-text:#248348;
+      --red-bg:#fde9e9;
+      --red-text:#b33a3a;
+      --shadow:0 8px 24px rgba(66, 99, 148, .08);
+      --radius-xl:30px;
+      --radius-lg:24px;
+      --radius-md:18px;
+      --radius-sm:14px;
+      --field-h:54px;
+      --maxw:920px;
     }
 
     *{box-sizing:border-box}
@@ -38,519 +36,664 @@
     body{
       margin:0;
       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
-      color:var(--text);
       background:
-        radial-gradient(circle at top right, #ddeeff 0%, transparent 28%),
-        radial-gradient(circle at top left, #f1f7ff 0%, transparent 22%),
-        linear-gradient(180deg,var(--bg1) 0%,var(--bg2) 45%,#ffffff 100%);
+        radial-gradient(circle at top right, #f7fbff 0%, transparent 22%),
+        linear-gradient(180deg,#edf4fb 0%,#f4f8fd 55%,#f8fbff 100%);
+      color:var(--text);
       -webkit-text-size-adjust:100%;
     }
 
     .wrap{
-      max-width:860px;
+      max-width:var(--maxw);
       margin:0 auto;
-      padding:var(--page-pad) var(--page-pad) 42px;
+      padding:18px 14px 36px;
     }
 
-    .grid{display:grid;gap:14px}
+    .stack{display:grid;gap:16px}
 
     .hero{
       display:grid;
-      grid-template-columns:1fr 250px;
-      gap:14px;
-      align-items:stretch;
-      background:var(--card);
+      grid-template-columns:160px 1fr 100px;
+      gap:16px;
+      align-items:start;
+      background:rgba(255,255,255,.7);
       backdrop-filter:blur(10px);
-      border:1px solid #e8f0fb;
-      border-radius:26px;
-      padding:14px;
+      border:1px solid #edf3fb;
+      border-radius:32px;
+      padding:18px;
       box-shadow:var(--shadow);
-      position:sticky;
-      top:0;
-      z-index:5;
-      margin-bottom:14px;
     }
 
-    .hero-main{
-      display:grid;
-      grid-template-columns:72px 1fr;
-      gap:12px;
+    .sync-box{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:14px;
+      min-height:122px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      box-shadow:var(--shadow);
+    }
+
+    .sync-top{
+      display:flex;
       align-items:center;
-      min-width:0;
+      justify-content:space-between;
+      gap:8px;
     }
 
-    .hero-main img{
-      width:72px;
-      height:72px;
+    .sync-title{
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .sync-refresh{
+      width:36px;
+      height:36px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:#fff;
+      color:#3e7ed4;
+      font-size:22px;
+      line-height:1;
+      cursor:pointer;
+    }
+
+    .status-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      width:max-content;
+      max-width:100%;
+      padding:10px 14px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:800;
+      line-height:1;
+    }
+
+    .status-ok{
+      background:var(--green-bg);
+      color:var(--green-text);
+    }
+
+    .status-warn{
+      background:#fff4de;
+      color:#946200;
+    }
+
+    .status-dot{
+      width:9px;
+      height:9px;
+      border-radius:50%;
+      background:currentColor;
+      flex:0 0 auto;
+    }
+
+    .sync-meta{
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.3;
+    }
+
+    .hero-center{
+      display:grid;
+      gap:18px;
+      align-content:start;
+      text-align:center;
+    }
+
+    .title-row{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+      min-height:72px;
+    }
+
+    h1{
+      margin:0;
+      font-size:48px;
+      line-height:1;
+      letter-spacing:-0.03em;
+      font-weight:900;
+      color:#1d2a45;
+    }
+
+    .date-hero{
+      background:#fff;
+      border:1px solid var(--line-soft);
+      border-radius:28px;
+      padding:20px 18px;
+      box-shadow:var(--shadow);
+    }
+
+    .date-label{
+      font-size:15px;
+      color:var(--muted);
+      margin-bottom:10px;
+    }
+
+    .date-value{
+      font-size:52px;
+      font-weight:900;
+      line-height:1;
+      letter-spacing:-0.04em;
+      color:#000;
+    }
+
+    .date-sub{
+      font-size:16px;
+      color:var(--muted);
+      margin-top:12px;
+    }
+
+    .hero-photo{
+      justify-self:end;
+    }
+
+    .hero-photo img{
+      width:92px;
+      height:92px;
       object-fit:cover;
-      border-radius:20px;
-      border:3px solid #fff;
+      border-radius:24px;
+      border:4px solid #fff;
       box-shadow:var(--shadow);
       background:#eef5ff;
     }
 
-    .hero-side{
+    .card{
+      background:#fff;
+      border:1px solid #edf2fa;
+      border-radius:32px;
+      padding:22px;
+      box-shadow:var(--shadow);
+    }
+
+    .card-title{
+      margin:0 0 16px;
+      font-size:28px;
+      line-height:1.1;
+      font-weight:900;
+      letter-spacing:-0.03em;
+      color:#1f2c46;
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:16px;
+    }
+
+    .stat{
+      min-height:148px;
+      border:1px solid var(--line);
+      border-radius:28px;
+      background:#fff;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      padding:14px 10px;
+      text-align:center;
+    }
+
+    .stat b{
+      font-size:36px;
+      line-height:1;
+      margin-bottom:12px;
+      font-weight:900;
+      color:#1f2b43;
+    }
+
+    .stat span{
+      font-size:14px;
+      color:var(--muted);
+      line-height:1.25;
+    }
+
+    .stat-icon{
+      margin-top:8px;
+      font-size:34px;
+      line-height:1;
+    }
+
+    .vitamin-stat.off{
+      background:linear-gradient(180deg,#fff1f1 0%,#ffe6e6 100%);
+      border-color:#f4cdcd;
+    }
+
+    .vitamin-stat.off b,
+    .vitamin-stat.off span{
+      color:var(--red-text);
+    }
+
+    .vitamin-stat.on{
+      background:linear-gradient(180deg,#effbf1 0%,#e0f4e4 100%);
+      border-color:#cfe7d4;
+    }
+
+    .vitamin-stat.on b,
+    .vitamin-stat.on span{
+      color:var(--green-text);
+    }
+
+    .chips{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:14px;
+      margin-bottom:18px;
+    }
+
+    .chip{
+      height:68px;
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:22px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      font-size:20px;
+      color:#1f2b43;
+      cursor:pointer;
+      user-select:none;
+      transition:.18s ease;
+    }
+
+    .chip.active{
+      background:linear-gradient(180deg,#dcecff 0%,#cfe2ff 100%);
+      border-color:#bfd5f3;
+      color:#356fb5;
+    }
+
+    .form-grid{
       display:grid;
       grid-template-columns:1fr 1fr;
-      gap:8px;
-      align-content:start;
-    }
-
-    .top-mini-card{
-      background:linear-gradient(180deg,#fbfdff 0%, #f4f9ff 100%);
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:10px 11px;
-      min-width:0;
-    }
-
-    .top-mini-title{
-      font-size:11px;
-      color:var(--muted);
-      margin-bottom:5px;
-    }
-
-    .top-mini-value{
-      font-size:13px;
-      font-weight:700;
-      line-height:1.25;
-      word-break:break-word;
-    }
-
-    .top-mini-card .small-btn{
-      margin-top:6px;
-    }
-
-    h1{
-      font-size:30px;
-      line-height:1.05;
-      margin:0;
-      letter-spacing:-0.02em;
-    }
-
-    .card{
-      background:var(--card-solid);
-      border:1px solid #ecf2fa;
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:14px;
-      min-width:0;
-    }
-
-    .section-title{
-      font-size:20px;
-      font-weight:800;
-      margin:0 0 12px;
-      line-height:1.2;
-      letter-spacing:-0.02em;
+      gap:18px;
+      margin-bottom:18px;
     }
 
     label{
       display:block;
-      font-size:13px;
+      font-size:16px;
       color:var(--muted);
-      margin:0 0 6px;
-      line-height:1.25;
+      margin:0 0 8px;
     }
 
     input,button{font:inherit}
 
     input[type="time"],input[type="number"]{
       width:100%;
-      height:var(--field-h);
-      padding:12px 14px;
-      border-radius:16px;
+      height:68px;
+      border-radius:22px;
       border:1px solid var(--line);
-      background:#fbfdff;
-      color:var(--text);
+      background:#fff;
+      padding:0 18px;
+      font-size:24px;
+      text-align:center;
       outline:none;
-      font-size:16px;
-      appearance:none;
+      color:#1f2b43;
       -webkit-appearance:none;
-      transition:border-color .2s ease, box-shadow .2s ease;
+      appearance:none;
     }
 
     input[type="time"]:focus,input[type="number"]:focus{
-      border-color:#b8d2f3;
-      box-shadow:0 0 0 4px rgba(143,184,232,.14);
+      border-color:#bfd5f3;
+      box-shadow:0 0 0 4px rgba(127,176,238,.14);
     }
 
-    .row{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-      width:100%;
-      align-items:end;
+    input[type="number"]:disabled{
+      background:#fafcff;
+      color:#b3bcc9;
     }
 
-    .field{min-width:0}
-
-    .chips{
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:8px;
-      width:100%;
+    .save-row{
+      display:flex;
+      justify-content:flex-start;
     }
 
-    .chip{
-      min-width:0;
-      text-align:center;
-      border:1px solid var(--line);
-      background:#f7fbff;
-      border-radius:999px;
-      padding:10px 8px;
-      cursor:pointer;
-      user-select:none;
-      line-height:1.15;
-      font-size:15px;
-      white-space:nowrap;
-      transition:all .18s ease;
-    }
-
-    .chip.active{
-      background:linear-gradient(180deg,#dcecff 0%, #cfe3ff 100%);
-      border-color:#b7d1f3;
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.55);
-    }
-
-    .btn{
+    .primary-btn{
       border:0;
-      border-radius:16px;
-      min-height:46px;
-      padding:12px 16px;
-      background:linear-gradient(180deg,var(--primary) 0%, var(--primary-dark) 100%);
-      color:#0d2540;
-      font-weight:800;
+      min-width:320px;
+      max-width:100%;
+      height:74px;
+      border-radius:24px;
+      padding:0 28px;
+      background:linear-gradient(180deg,#7fb0ee 0%,#5f94d8 100%);
+      color:#fff;
+      font-size:26px;
+      font-weight:900;
       cursor:pointer;
       box-shadow:var(--shadow);
-      line-height:1.2;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      transition:transform .15s ease, opacity .2s ease, filter .2s ease;
     }
 
-    .btn:hover{filter:brightness(1.02)}
-    .btn:active{transform:translateY(1px)}
-    .btn.secondary{
-      background:linear-gradient(180deg,#f4f8ff 0%, #e8f1ff 100%);
-      color:#223557;
-      border:1px solid var(--line);
-      box-shadow:none;
-    }
-    .btn.danger{
-      background:linear-gradient(180deg,#ffecec 0%, #ffdede 100%);
-      color:var(--danger-text);
-      box-shadow:none;
-      border:1px solid #f6d1d1;
-    }
-    .btn:disabled,.small-btn:disabled,.mini-btn:disabled{opacity:.6;cursor:not-allowed}
-
-    .actions,.small-actions{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-    }
-
-    .stats{
-      display:grid;
-      gap:10px;
-      width:100%;
-      grid-template-columns:repeat(5,1fr);
-    }
-
-    .stat{
-      background:linear-gradient(180deg,#fbfdff 0%,#f4f9ff 100%);
-      border:1px solid var(--line);
-      padding:13px 8px;
-      border-radius:18px;
-      text-align:center;
-      min-height:94px;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-    }
-
-    .stat b{
-      display:block;
-      font-size:24px;
-      margin-bottom:4px;
-      line-height:1;
-    }
-
-    .stat span{
-      display:block;
-      font-size:13px;
-      line-height:1.25;
-      color:var(--muted);
-      word-break:break-word;
-    }
-
-    .vitamin-stat{
-      transition:all .2s ease;
-    }
-
-    .vitamin-stat.off{
-      background:linear-gradient(180deg,var(--vit-off-bg) 0%, #ffdede 100%);
-      border-color:#f3caca;
-    }
-
-    .vitamin-stat.off b,
-    .vitamin-stat.off span{
-      color:var(--vit-off-text);
-    }
-
-    .vitamin-stat.on{
-      background:linear-gradient(180deg,var(--vit-on-bg) 0%, #dcf1e3 100%);
-      border-color:#c8e8d1;
-    }
-
-    .vitamin-stat.on b,
-    .vitamin-stat.on span{
-      color:var(--vit-on-text);
-    }
-
-    .muted{
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.35;
-      word-break:break-word;
-    }
-
-    .status-pill{
-      padding:6px 9px;
-      border-radius:999px;
-      font-size:12px;
-      font-weight:700;
-      display:inline-block;
-    }
-
-    .status-ok{background:var(--ok);color:var(--ok-text)}
-    .status-warn{background:var(--warn);color:var(--warn-text)}
-
-    .small-btn{
-      border:1px solid var(--line);
-      background:#fff;
-      border-radius:12px;
-      padding:7px 9px;
-      cursor:pointer;
-      font-size:12px;
-      width:100%;
-    }
+    .primary-btn:disabled{opacity:.6;cursor:not-allowed}
 
     .day-nav{
       display:grid;
-      grid-template-columns:1fr 1fr 1fr;
-      gap:8px;
-      align-items:stretch;
-      margin-bottom:12px;
+      grid-template-columns:220px 1fr 220px;
+      gap:18px;
+      margin-bottom:18px;
     }
 
-    .day-nav .btn,
-    .day-box{
-      min-height:56px;
-    }
-
-    .day-box{
-      background:linear-gradient(180deg,#fbfdff 0%, #f2f8ff 100%);
+    .nav-btn,.day-center{
+      min-height:86px;
+      border-radius:22px;
       border:1px solid var(--line);
-      border-radius:16px;
-      padding:8px 10px;
-      text-align:center;
+      background:#fff;
+    }
+
+    .nav-btn{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      font-size:22px;
+      color:#356fb5;
+      cursor:pointer;
+    }
+
+    .day-center{
       display:flex;
       flex-direction:column;
+      align-items:center;
       justify-content:center;
-      min-width:0;
+      padding:10px;
     }
 
-    .day-main{
-      font-size:16px;
+    .day-center-main{
+      font-size:24px;
       font-weight:800;
-      line-height:1.1;
+      color:#1f2b43;
     }
 
-    .day-sub{
-      font-size:11px;
+    .day-center-sub{
+      font-size:15px;
       color:var(--muted);
       margin-top:4px;
     }
 
     .entries-table{
       display:grid;
-      gap:8px;
+      gap:14px;
     }
 
     .entry-row{
       display:grid;
-      grid-template-columns:72px 1fr auto;
-      gap:8px;
+      grid-template-columns:120px 1fr auto;
+      gap:16px;
       align-items:center;
       border:1px solid var(--line);
-      background:linear-gradient(180deg,#ffffff 0%,#fbfdff 100%);
-      border-radius:16px;
-      padding:8px 10px;
+      background:#fff;
+      border-radius:24px;
+      padding:18px;
     }
 
     .entry-time{
-      font-size:22px;
-      font-weight:800;
-      line-height:1;
+      font-size:34px;
+      font-weight:900;
       text-align:center;
-      color:#1b2940;
+      color:#1f2b43;
+      line-height:1;
     }
 
-    .entry-main{min-width:0}
-
-    .entry-topline{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      flex-wrap:wrap;
-      margin-bottom:3px;
+    .entry-main{
+      min-width:0;
     }
 
     .entry-type{
       display:inline-flex;
       align-items:center;
-      gap:6px;
-      background:#eef5ff;
-      border:1px solid #d8e7fb;
+      gap:8px;
+      padding:8px 14px;
       border-radius:999px;
-      padding:4px 9px;
-      font-size:12px;
-      font-weight:700;
+      border:1px solid var(--line);
+      background:#f7fbff;
+      font-size:20px;
+      margin-bottom:10px;
     }
 
     .entry-amount{
-      font-size:13px;
+      font-size:18px;
       color:var(--muted);
     }
 
     .entry-actions{
       display:flex;
-      gap:6px;
-      flex-wrap:nowrap;
-      justify-content:flex-end;
+      gap:10px;
       align-items:center;
+      flex-wrap:wrap;
+      justify-content:flex-end;
     }
 
     .mini-btn{
-      border:0;
-      border-radius:12px;
-      padding:7px 11px;
-      font-weight:700;
+      height:56px;
+      min-width:132px;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:#fff;
+      color:#3d74bc;
+      font-size:20px;
       cursor:pointer;
-      background:#eef5ff;
-      color:#203458;
-      white-space:nowrap;
     }
 
     .mini-btn.delete{
-      background:#ffe8e8;
-      color:#8f2424;
+      background:#fff1f1;
+      border-color:#f3cdcd;
+      color:var(--red-text);
     }
 
     .bottom-tools{
       display:grid;
-      gap:10px;
+      gap:12px;
+    }
+
+    .bottom-tools .mini-btn-wide{
+      height:62px;
+      border-radius:20px;
+      border:1px solid var(--line);
+      background:#fff;
+      font-size:22px;
+      cursor:pointer;
+      color:#2f6fbc;
+    }
+
+    .bottom-tools .danger{
+      background:#fff1f1;
+      border-color:#f3cdcd;
+      color:var(--red-text);
     }
 
     .footer-note{
-      padding:8px 4px 0;
+      padding:4px 6px 0;
       color:var(--muted);
-      font-size:12px;
+      font-size:13px;
       text-align:center;
-      line-height:1.35;
     }
 
     @media (max-width:640px){
-      :root{--field-h:46px;--page-pad:12px}
+      .wrap{padding:12px 10px 28px}
 
       .hero{
-        grid-template-columns:1fr;
-        gap:12px;
-        padding:12px;
-      }
-
-      .hero-main{
-        grid-template-columns:64px 1fr;
+        grid-template-columns:94px 1fr 78px;
         gap:10px;
+        padding:12px;
+        border-radius:24px;
       }
 
-      .hero-main img{
-        width:64px;
-        height:64px;
+      .hero-photo img{
+        width:68px;
+        height:68px;
+        border-radius:18px;
       }
 
-      h1{font-size:24px}
-
-      .hero-side{
-        grid-template-columns:1fr 1fr;
+      h1{
+        font-size:32px;
       }
 
-      .row{
-        grid-template-columns:1fr;
+      .title-row{
+        min-height:auto;
       }
 
-      .card{padding:12px}
-      .section-title{font-size:17px}
-
-      .chips{
-        grid-template-columns:repeat(4,1fr);
-        gap:6px;
+      .sync-box{
+        min-height:96px;
+        padding:10px;
+        border-radius:18px;
       }
 
-      .chip{
+      .sync-title{
+        font-size:10px;
+      }
+
+      .status-pill{
+        font-size:11px;
+        padding:8px 10px;
+      }
+
+      .sync-meta{
+        font-size:11px;
+      }
+
+      .sync-refresh{
+        width:30px;
+        height:30px;
+        font-size:18px;
+        border-radius:10px;
+      }
+
+      .date-hero{
+        padding:14px 10px;
+        border-radius:22px;
+      }
+
+      .date-label{
         font-size:12px;
-        padding:10px 2px;
+        margin-bottom:8px;
+      }
+
+      .date-value{
+        font-size:28px;
+      }
+
+      .date-sub{
+        font-size:12px;
+        margin-top:8px;
+      }
+
+      .card{
+        padding:14px;
+        border-radius:28px;
+      }
+
+      .card-title{
+        font-size:24px;
+        margin-bottom:14px;
       }
 
       .stats{
         grid-template-columns:repeat(5,1fr);
-        gap:6px;
+        gap:8px;
       }
 
       .stat{
+        min-height:94px;
+        border-radius:20px;
         padding:10px 4px;
-        min-height:82px;
       }
 
       .stat b{
-        font-size:16px;
+        font-size:20px;
+        margin-bottom:6px;
       }
 
       .stat span{
         font-size:10px;
       }
 
-      .day-nav{
-        grid-template-columns:1fr 1fr 1fr;
-        gap:6px;
+      .stat-icon{
+        font-size:24px;
+        margin-top:4px;
       }
 
-      .day-nav .btn,
-      .day-box{
-        min-height:52px;
+      .chips{
+        gap:8px;
       }
 
-      .day-nav .btn{
-        font-size:12px;
-        padding:8px 6px;
+      .chip{
+        height:56px;
+        border-radius:18px;
+        font-size:16px;
+        padding:0 4px;
       }
 
-      .day-main{
+      .form-grid{
+        grid-template-columns:1fr;
+        gap:12px;
+      }
+
+      label{
         font-size:14px;
       }
 
-      .day-sub{
-        font-size:10px;
+      input[type="time"],input[type="number"]{
+        height:58px;
+        border-radius:18px;
+        font-size:20px;
+      }
+
+      .primary-btn{
+        width:100%;
+        min-width:0;
+        height:62px;
+        border-radius:20px;
+        font-size:20px;
+      }
+
+      .day-nav{
+        grid-template-columns:1fr 1.3fr 1fr;
+        gap:8px;
+      }
+
+      .nav-btn,.day-center{
+        min-height:68px;
+        border-radius:18px;
+      }
+
+      .nav-btn{
+        font-size:16px;
+        padding:0 6px;
+      }
+
+      .day-center-main{
+        font-size:18px;
+      }
+
+      .day-center-sub{
+        font-size:11px;
       }
 
       .entry-row{
-        grid-template-columns:56px 1fr;
-        gap:8px;
-        padding:8px 9px;
+        grid-template-columns:78px 1fr;
+        gap:10px;
+        padding:14px;
+        border-radius:20px;
+      }
+
+      .entry-time{
+        font-size:24px;
+      }
+
+      .entry-type{
+        font-size:16px;
+        padding:6px 12px;
+        margin-bottom:8px;
+      }
+
+      .entry-amount{
+        font-size:14px;
       }
 
       .entry-actions{
@@ -559,21 +702,17 @@
         margin-top:4px;
       }
 
-      .entry-time{
-        font-size:18px;
-      }
-
       .mini-btn{
-        padding:7px 10px;
-        font-size:12px;
+        height:46px;
+        min-width:108px;
+        border-radius:16px;
+        font-size:17px;
       }
 
-      .top-mini-card{
-        padding:9px 10px;
-      }
-
-      .top-mini-value{
-        font-size:12px;
+      .bottom-tools .mini-btn-wide{
+        height:54px;
+        border-radius:18px;
+        font-size:18px;
       }
     }
   </style>
@@ -581,91 +720,111 @@
 <body>
 <div class="wrap">
   <div class="hero">
-    <div class="hero-main">
-      <img src="icon-192.png" alt="תינוק" />
-      <div>
+    <div class="sync-box">
+      <div class="sync-top">
+        <div class="sync-title">סנכרון</div>
+        <button class="sync-refresh" type="button" onclick="manualRefresh()" aria-label="רענון">↻</button>
+      </div>
+      <div id="syncStatus" class="status-pill status-warn"><span class="status-dot"></span>טוען...</div>
+      <div id="syncMeta" class="sync-meta">מכין נתונים</div>
+    </div>
+
+    <div class="hero-center">
+      <div class="title-row">
         <h1>מעקב תינוק 👶</h1>
+      </div>
+      <div class="date-hero">
+        <div class="date-label">תאריך</div>
+        <div id="topDateText" class="date-value">—</div>
+        <div id="topDateSub" class="date-sub">—</div>
       </div>
     </div>
 
-    <div class="hero-side">
-      <div class="top-mini-card">
-        <div class="top-mini-title">סנכרון</div>
-        <div id="syncStatus" class="status-pill status-warn">טוען...</div>
-        <div class="muted" id="syncMeta" style="margin-top:6px">מכין נתונים</div>
-        <button class="small-btn" type="button" onclick="manualRefresh()">רענון מהשרת</button>
-      </div>
-
-      <div class="top-mini-card">
-        <div class="top-mini-title">תאריך</div>
-        <div class="top-mini-value" id="topDateText">—</div>
-      </div>
+    <div class="hero-photo">
+      <img src="icon-192.png" alt="תינוק" />
     </div>
   </div>
 
-  <div class="grid">
-    <div class="card">
-      <div class="section-title">סיכום יומי</div>
+  <div class="stack">
+    <section class="card">
+      <h2 class="card-title">סיכום יומי</h2>
       <div class="stats">
-        <div class="stat"><b id="feedCount">0</b><span>האכלות</span></div>
-        <div class="stat"><b id="feedMl">0</b><span>מ״ל סה״כ</span></div>
-        <div class="stat"><b id="peeCount">0</b><span>פיפי</span></div>
-        <div class="stat"><b id="poopCount">0</b><span>קקי</span></div>
-        <div id="vitaminStat" class="stat vitamin-stat off">
+        <div class="stat vitamin-stat off" id="vitaminStat">
           <b id="vitaminIcon">○</b>
           <span>ויטמינים</span>
+          <div class="stat-icon">💊</div>
+        </div>
+        <div class="stat">
+          <b id="poopCount">0</b>
+          <span>קקי</span>
+          <div class="stat-icon">💩</div>
+        </div>
+        <div class="stat">
+          <b id="peeCount">0</b>
+          <span>פיפי</span>
+          <div class="stat-icon">💧</div>
+        </div>
+        <div class="stat">
+          <b id="feedMl">0</b>
+          <span>מ״ל סה״כ</span>
+          <div class="stat-icon">🧴</div>
+        </div>
+        <div class="stat">
+          <b id="feedCount">0</b>
+          <span>האכלות</span>
+          <div class="stat-icon">🍼</div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div class="card">
-      <div class="section-title">רישום חדש</div>
+    <section class="card">
+      <h2 class="card-title">רישום חדש</h2>
       <input id="logDate" type="date" style="display:none" />
 
-      <div class="chips" id="typeChips">
-        <div class="chip active" data-type="האכלה">🍼 האכלה</div>
-        <div class="chip" data-type="פיפי">💧 פיפי</div>
-        <div class="chip" data-type="קקי">💩 קקי</div>
-        <div class="chip" data-type="ויטמינים">💊 ויטמינים</div>
+      <div id="typeChips" class="chips">
+        <div class="chip active" data-type="האכלה">האכלה 🍼</div>
+        <div class="chip" data-type="פיפי">פיפי 💧</div>
+        <div class="chip" data-type="קקי">קקי 💩</div>
+        <div class="chip" data-type="ויטמינים">ויטמינים 💊</div>
       </div>
 
-      <div class="row" style="margin-top:12px">
-        <div class="field">
-          <label for="time">שעה</label>
-          <input id="time" type="time" />
-        </div>
+      <div class="form-grid">
         <div class="field">
           <label for="amount">כמות (מ״ל)</label>
           <input id="amount" type="number" placeholder="למשל 90" />
         </div>
+        <div class="field">
+          <label for="time">שעה</label>
+          <input id="time" type="time" />
+        </div>
       </div>
 
-      <div class="actions" style="margin-top:12px">
-        <button id="saveBtn" class="btn" type="button" onclick="addEntry()">שמור רישום</button>
+      <div class="save-row">
+        <button id="saveBtn" class="primary-btn" type="button" onclick="addEntry()">שמור רישום</button>
       </div>
-    </div>
+    </section>
 
-    <div class="card">
-      <div class="section-title">רישומים של היום</div>
+    <section class="card">
+      <h2 class="card-title">רישומים של היום</h2>
 
       <div class="day-nav">
-        <button class="btn secondary" type="button" onclick="goToNextDay()">יום הבא</button>
-        <div class="day-box">
-          <div class="day-main" id="selectedDayLabel">—</div>
-          <div class="day-sub" id="selectedDaySub">—</div>
+        <button class="nav-btn" type="button" onclick="goToNextDay()">◀ יום הבא</button>
+        <div class="day-center">
+          <div id="selectedDayLabel" class="day-center-main">—</div>
+          <div id="selectedDaySub" class="day-center-sub">—</div>
         </div>
-        <button class="btn secondary" type="button" onclick="goToPrevDay()">יום קודם</button>
+        <button class="nav-btn" type="button" onclick="goToPrevDay()">יום קודם ▶</button>
       </div>
 
       <div id="entries" class="entries-table"></div>
-    </div>
+    </section>
 
-    <div class="card">
+    <section class="card">
       <div class="bottom-tools">
-        <button class="btn secondary" type="button" onclick="exportJson()">ייצוא גיבוי</button>
-        <button class="btn danger" type="button" onclick="clearDay()">נקה יום זה</button>
+        <button class="mini-btn-wide" type="button" onclick="exportJson()">ייצוא גיבוי</button>
+        <button class="mini-btn-wide danger" type="button" onclick="clearDay()">נקה יום זה</button>
       </div>
-    </div>
+    </section>
   </div>
 
   <div class="footer-note">הרשימה מוצגת מהשעה החדשה לישנה, ואפשר לעבור בין ימים.</div>
@@ -674,17 +833,17 @@
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycby5HlpD17IG1p217ot4kwuErP4BtVZPa92H9uNQWD3JnkYCBlHyRX0FR7c0eMA1mdVGfw/exec';
 const API_TOKEN = 'bt_7Fh29KqP4mX9Za81JrT6UvN2LsQ0';
-const STORAGE_KEY = 'baby-tracker-v20-state';
-const DEVICE_KEY = 'baby-tracker-v20-device';
-const SYNC_KEY = 'baby-tracker-v20-sync-meta';
+const STORAGE_KEY = 'baby-tracker-v23-state';
+const DEVICE_KEY = 'baby-tracker-v23-device';
+const SYNC_KEY = 'baby-tracker-v23-sync-meta';
 
 let currentType = 'האכלה';
 let busy = false;
 
 function getTodayStr(){
-  const d=new Date();
-  const off=d.getTimezoneOffset();
-  return new Date(d.getTime()-off*60000).toISOString().slice(0,10);
+  const d = new Date();
+  const off = d.getTimezoneOffset();
+  return new Date(d.getTime() - off * 60000).toISOString().slice(0,10);
 }
 function nowTime(){
   return new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false});
@@ -693,15 +852,110 @@ function nowIso(){
   return new Date().toISOString();
 }
 function esc(s){
-  return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-}
-function typeEmoji(type){
-  return {"האכלה":"🍼","פיפי":"💧","קקי":"💩","ויטמינים":"💊"}[type]||"•";
+  return String(s || '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 }
 function getDayName(dateStr){
   const days = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
   const d = new Date(dateStr + 'T12:00:00');
   return days[d.getDay()] || '';
+}
+function normalizeDateStr(value){
+  if(!value) return '';
+  if(typeof value === 'string'){
+    if(/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+    if(/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(value)){
+      const [d,m,y] = value.split('/');
+      return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    }
+    if(/^\d{1,2}\.\d{1,2}\.\d{4}$/.test(value)){
+      const [d,m,y] = value.split('.');
+      return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    }
+    const parsed = new Date(value);
+    if(!isNaN(parsed)){
+      const off = parsed.getTimezoneOffset();
+      return new Date(parsed.getTime() - off * 60000).toISOString().slice(0,10);
+    }
+  }
+  if(Object.prototype.toString.call(value) === '[object Date]' && !isNaN(value)){
+    const off = value.getTimezoneOffset();
+    return new Date(value.getTime() - off * 60000).toISOString().slice(0,10);
+  }
+  return '';
+}
+function normalizeTimeStr(value){
+  if(value === null || value === undefined || value === '') return '';
+  if(Object.prototype.toString.call(value) === '[object Date]' && !isNaN(value)){
+    return value.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false});
+  }
+  if(typeof value === 'number' && isFinite(value)){
+    const totalMinutes = Math.round((value % 1) * 24 * 60);
+    const hh = String(Math.floor(totalMinutes / 60) % 24).padStart(2,'0');
+    const mm = String(totalMinutes % 60).padStart(2,'0');
+    return `${hh}:${mm}`;
+  }
+  const s = String(value).trim();
+  if(!s) return '';
+  if(/^\d{2}:\d{2}$/.test(s)) return s;
+  if(/^\d{2}:\d{2}:\d{2}$/.test(s)) return s.slice(0,5);
+  const parsed = new Date(s);
+  if(!isNaN(parsed)){
+    return parsed.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false});
+  }
+  const match = s.match(/(\d{1,2}):(\d{2})/);
+  if(match){
+    return `${String(match[1]).padStart(2,'0')}:${match[2]}`;
+  }
+  return '';
+}
+function isDeletedValue(value){
+  return value === true || String(value).toLowerCase() === 'true';
+}
+function normalizeEntry(raw){
+  return {
+    id: String(raw.id || ''),
+    createdAt: String(raw.createdAt || raw.updatedAt || nowIso()),
+    updatedAt: String(raw.updatedAt || raw.createdAt || nowIso()),
+    date: normalizeDateStr(raw.date),
+    time: normalizeTimeStr(raw.time),
+    type: String(raw.type || ''),
+    amount: raw.amount === null || raw.amount === undefined ? '' : String(raw.amount),
+    note: '',
+    device: String(raw.device || ''),
+    deleted: isDeletedValue(raw.deleted)
+  };
+}
+function loadState(){
+  try{
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    return data && Array.isArray(data.entries) ? data : {entries:[]};
+  }catch{
+    return {entries:[]};
+  }
+}
+function saveState(state){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+function loadSyncMeta(){
+  try{return JSON.parse(localStorage.getItem(SYNC_KEY)) || {};}catch{return {};}
+}
+function saveSyncMeta(meta){
+  localStorage.setItem(SYNC_KEY, JSON.stringify(meta));
+}
+function getDeviceId(){
+  let id = localStorage.getItem(DEVICE_KEY);
+  if(!id){
+    id = 'dev_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+    localStorage.setItem(DEVICE_KEY, id);
+  }
+  return id;
+}
+function getEntriesForDay(date){
+  const state = loadState();
+  return state.entries
+    .map(normalizeEntry)
+    .filter(e => !e.deleted && normalizeDateStr(e.date) === normalizeDateStr(date))
+    .sort((a,b)=>(b.time || '').localeCompare(a.time || ''));
 }
 function formatTopDate(value){
   const normalized = normalizeDateStr(value);
@@ -710,8 +964,9 @@ function formatTopDate(value){
   return `${d}/${m}/${y}`;
 }
 function updateTopDate(){
-  const value = document.getElementById('logDate').value;
+  const value = normalizeDateStr(document.getElementById('logDate').value);
   document.getElementById('topDateText').textContent = formatTopDate(value);
+  document.getElementById('topDateSub').textContent = value ? `יום ${getDayName(value)}` : '—';
 }
 function updateSelectedDayBox(){
   const value = normalizeDateStr(document.getElementById('logDate').value);
@@ -722,7 +977,7 @@ function shiftDateByDays(dateStr, days){
   const d = new Date(dateStr + 'T12:00:00');
   d.setDate(d.getDate() + days);
   const off = d.getTimezoneOffset();
-  return new Date(d.getTime() - off*60000).toISOString().slice(0,10);
+  return new Date(d.getTime() - off * 60000).toISOString().slice(0,10);
 }
 function goToPrevDay(){
   const input = document.getElementById('logDate');
@@ -734,115 +989,23 @@ function goToNextDay(){
   input.value = shiftDateByDays(normalizeDateStr(input.value), 1);
   render();
 }
-function getDeviceId(){
-  let id=localStorage.getItem(DEVICE_KEY);
-  if(!id){
-    id='dev_'+Math.random().toString(36).slice(2)+Date.now().toString(36);
-    localStorage.setItem(DEVICE_KEY,id);
-  }
-  return id;
-}
-function loadState(){
-  try{
-    const data=JSON.parse(localStorage.getItem(STORAGE_KEY));
-    return data&&Array.isArray(data.entries)?data:{entries:[]};
-  }catch{
-    return {entries:[]};
-  }
-}
-function saveState(state){
-  localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
-}
-function loadSyncMeta(){
-  try{return JSON.parse(localStorage.getItem(SYNC_KEY))||{};}catch{return {};}
-}
-function saveSyncMeta(meta){
-  localStorage.setItem(SYNC_KEY,JSON.stringify(meta));
-}
-function normalizeDateStr(value){
-  if(!value) return '';
-  if(typeof value==='string'){
-    if(/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
-    if(/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(value)){
-      const [d,m,y]=value.split('/');
-      return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    }
-    if(/^\d{1,2}\.\d{1,2}\.\d{4}$/.test(value)){
-      const [d,m,y]=value.split('.');
-      return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    }
-    const parsed=new Date(value);
-    if(!isNaN(parsed)){
-      const off=parsed.getTimezoneOffset();
-      return new Date(parsed.getTime()-off*60000).toISOString().slice(0,10);
-    }
-  }
-  if(Object.prototype.toString.call(value)==='[object Date]' && !isNaN(value)){
-    const off=value.getTimezoneOffset();
-    return new Date(value.getTime()-off*60000).toISOString().slice(0,10);
-  }
-  return '';
-}
-function normalizeTimeStr(value){
-  if(value===null||value===undefined||value==='') return '';
-  if(Object.prototype.toString.call(value)==='[object Date]' && !isNaN(value)){
-    return value.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false});
-  }
-  if(typeof value==='number' && isFinite(value)){
-    const totalMinutes=Math.round((value%1)*24*60);
-    const hh=String(Math.floor(totalMinutes/60)%24).padStart(2,'0');
-    const mm=String(totalMinutes%60).padStart(2,'0');
-    return `${hh}:${mm}`;
-  }
-  const s=String(value).trim();
-  if(!s) return '';
-  if(/^\d{2}:\d{2}$/.test(s)) return s;
-  if(/^\d{2}:\d{2}:\d{2}$/.test(s)) return s.slice(0,5);
-  const parsed=new Date(s);
-  if(!isNaN(parsed)){
-    return parsed.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false});
-  }
-  const match=s.match(/(\d{1,2}):(\d{2})/);
-  if(match){
-    return `${String(match[1]).padStart(2,'0')}:${match[2]}`;
-  }
-  return '';
-}
-function isDeletedValue(value){
-  return value===true || String(value).toLowerCase()==='true';
-}
-function normalizeEntry(raw){
-  return {
-    id:String(raw.id||''),
-    createdAt:String(raw.createdAt||raw.updatedAt||nowIso()),
-    updatedAt:String(raw.updatedAt||raw.createdAt||nowIso()),
-    date:normalizeDateStr(raw.date),
-    time:normalizeTimeStr(raw.time),
-    type:String(raw.type||''),
-    amount:raw.amount===null||raw.amount===undefined?'':String(raw.amount),
-    note:'',
-    device:String(raw.device||''),
-    deleted:isDeletedValue(raw.deleted)
-  };
-}
-function getEntriesForDay(date){
-  const state=loadState();
-  return state.entries
-    .map(normalizeEntry)
-    .filter(e => !e.deleted && normalizeDateStr(e.date)===normalizeDateStr(date))
-    .sort((a,b)=>(b.time||'').localeCompare(a.time||''));
-}
 function setBusy(flag){
-  busy=flag;
-  const saveBtn=document.getElementById('saveBtn');
-  if(saveBtn) saveBtn.disabled=flag;
+  busy = flag;
+  const saveBtn = document.getElementById('saveBtn');
+  if(saveBtn) saveBtn.disabled = flag;
 }
-function setStatus(text,kind,metaText){
-  const el=document.getElementById('syncStatus');
-  const meta=document.getElementById('syncMeta');
-  el.textContent=text;
-  el.className=`status-pill ${kind}`;
-  meta.textContent=metaText||'';
+function formatSyncStamp(iso){
+  if(!iso) return '—';
+  const d = new Date(iso);
+  if(isNaN(d)) return '—';
+  return d.toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'});
+}
+function setStatus(text, kind, metaText){
+  const el = document.getElementById('syncStatus');
+  const meta = document.getElementById('syncMeta');
+  el.innerHTML = `<span class="status-dot"></span>${text}`;
+  el.className = `status-pill ${kind}`;
+  meta.textContent = metaText || '';
 }
 function setSoftMessage(message){
   saveSyncMeta({
@@ -852,121 +1015,117 @@ function setSoftMessage(message){
   updateSyncStatus();
 }
 function updateSyncStatus(){
-  const meta=loadSyncMeta();
+  const meta = loadSyncMeta();
 
   if(!navigator.onLine){
-    setStatus('אופליין','status-warn','אין חיבור כרגע');
+    setStatus('אופליין','status-warn','אין חיבור');
     return;
   }
   if(busy){
-    setStatus('מעדכן','status-warn','שומר או טוען נתונים מהשרת');
+    setStatus('מעדכן','status-warn','מסנכרן');
     return;
   }
   if(meta.lastError){
-    setStatus('שים לב','status-warn',meta.lastError);
+    setStatus('שים לב','status-warn','בודק שוב');
     return;
   }
 
-  const last=meta.lastSuccessAt?new Date(meta.lastSuccessAt).toLocaleString('he-IL'):'עדיין לא בוצע';
-  setStatus('מסונכרן','status-ok',`עדכון אחרון: ${last}`);
+  const last = formatSyncStamp(meta.lastSuccessAt);
+  setStatus('מסונכרן','status-ok', last === '—' ? '—' : `עודכן ${last}`);
 }
-
 function updateVitaminSummary(entries){
   const hasVitamins = entries.some(e => e.type === 'ויטמינים');
   const vitaminStat = document.getElementById('vitaminStat');
   const vitaminIcon = document.getElementById('vitaminIcon');
-
   vitaminStat.classList.remove('on','off');
   vitaminStat.classList.add(hasVitamins ? 'on' : 'off');
   vitaminIcon.textContent = hasVitamins ? '✓' : '○';
 }
-
 function render(){
   updateTopDate();
   updateSelectedDayBox();
 
-  const date=document.getElementById('logDate').value;
-  const entries=getEntriesForDay(date);
-  const box=document.getElementById('entries');
+  const date = document.getElementById('logDate').value;
+  const entries = getEntriesForDay(date);
+  const box = document.getElementById('entries');
 
   if(!entries.length){
-    box.innerHTML='<div class="muted">עדיין אין רישומים ליום הזה.</div>';
+    box.innerHTML = '<div class="muted">עדיין אין רישומים ליום הזה.</div>';
   }else{
-    box.innerHTML=entries.map(e=>`
+    box.innerHTML = entries.map(e=>`
       <div class="entry-row">
-        <div class="entry-time">${esc(e.time||'')}</div>
+        <div class="entry-time">${esc(e.time || '')}</div>
         <div class="entry-main">
-          <div class="entry-topline">
-            <span class="entry-type">${typeEmoji(e.type)} ${esc(e.type)}</span>
-          </div>
-          <div class="entry-amount">${e.amount ? `כמות: ${esc(e.amount)} מ״ל` : 'ללא כמות'}</div>
+          <div class="entry-type">${esc(e.type)} ${typeEmoji(e.type)}</div>
+          <div class="entry-amount">${e.amount ? `${esc(e.amount)} מ״ל` : 'ללא כמות'}</div>
         </div>
         <div class="entry-actions">
-          <button class="mini-btn" type="button" onclick="editEntry('${e.id}')">עריכה</button>
           <button class="mini-btn delete" type="button" onclick="deleteEntry('${e.id}')">מחיקה</button>
+          <button class="mini-btn" type="button" onclick="editEntry('${e.id}')">עריכה</button>
         </div>
-      </div>`).join('');
+      </div>
+    `).join('');
   }
 
-  const feedEntries=entries.filter(e=>e.type==='האכלה');
-  document.getElementById('feedCount').textContent=feedEntries.length;
-  document.getElementById('feedMl').textContent=feedEntries.reduce((s,e)=>s+Number(e.amount||0),0);
-  document.getElementById('peeCount').textContent=entries.filter(e=>e.type==='פיפי').length;
-  document.getElementById('poopCount').textContent=entries.filter(e=>e.type==='קקי').length;
+  const feedEntries = entries.filter(e=>e.type === 'האכלה');
+  document.getElementById('feedCount').textContent = feedEntries.length;
+  document.getElementById('feedMl').textContent = feedEntries.reduce((s,e)=>s + Number(e.amount || 0), 0);
+  document.getElementById('peeCount').textContent = entries.filter(e=>e.type === 'פיפי').length;
+  document.getElementById('poopCount').textContent = entries.filter(e=>e.type === 'קקי').length;
+
   updateVitaminSummary(entries);
   updateSyncStatus();
 }
-
 function replaceAllEntries(entries){
-  saveState({entries:entries.map(normalizeEntry).filter(e=>!e.deleted)});
+  saveState({entries: entries.map(normalizeEntry).filter(e=>!e.deleted)});
 }
 function addOrReplaceLocalEntry(entry){
   const state = loadState();
   const normalized = normalizeEntry(entry);
   const map = new Map(state.entries.map(e => [normalizeEntry(e).id, normalizeEntry(e)]));
   map.set(normalized.id, normalized);
-  saveState({ entries: Array.from(map.values()).filter(e => !e.deleted) });
+  saveState({entries: Array.from(map.values()).filter(e=>!e.deleted)});
 }
 function removeLocalEntry(id){
   const state = loadState();
   saveState({
-    entries: state.entries
-      .map(normalizeEntry)
-      .filter(e => e.id !== id)
+    entries: state.entries.map(normalizeEntry).filter(e=>e.id !== id)
   });
 }
 function makeEntry({date,time,type,amount}){
-  const ts=nowIso();
+  const ts = nowIso();
   return {
-    id:'entry_'+Math.random().toString(36).slice(2)+Date.now().toString(36),
+    id:'entry_' + Math.random().toString(36).slice(2) + Date.now().toString(36),
     createdAt:ts,
     updatedAt:ts,
     date:normalizeDateStr(date),
-    time:normalizeTimeStr(time||nowTime()),
-    type:type||'',
-    amount:type==='האכלה'?String(amount||''):'',
+    time:normalizeTimeStr(time || nowTime()),
+    type:type || '',
+    amount:type === 'האכלה' ? String(amount || '') : '',
     note:'',
     device:getDeviceId(),
     deleted:false
   };
 }
+
 document.querySelectorAll('#typeChips .chip').forEach(chip=>{
   chip.addEventListener('click',()=>{
     document.querySelectorAll('#typeChips .chip').forEach(c=>c.classList.remove('active'));
     chip.classList.add('active');
-    currentType=chip.dataset.type;
-    const amount=document.getElementById('amount');
-    amount.disabled=currentType!=='האכלה';
-    if(currentType!=='האכלה') amount.value='';
+    currentType = chip.dataset.type;
+    const amount = document.getElementById('amount');
+    amount.disabled = currentType !== 'האכלה';
+    if(currentType !== 'האכלה') amount.value = '';
   });
 });
+
 async function apiGetAll(){
-  const url=`${API_URL}?token=${encodeURIComponent(API_TOKEN)}&_=${Date.now()}`;
-  const res=await fetch(url,{method:'GET',cache:'no-store'});
+  const url = `${API_URL}?token=${encodeURIComponent(API_TOKEN)}&_=${Date.now()}`;
+  const res = await fetch(url,{method:'GET',cache:'no-store'});
   return res.json();
 }
 async function apiSave(entry){
-  const res=await fetch(API_URL,{
+  const res = await fetch(API_URL,{
     method:'POST',
     cache:'no-store',
     headers:{'Content-Type':'application/json'},
@@ -975,7 +1134,7 @@ async function apiSave(entry){
   return res.json();
 }
 async function apiDelete(id){
-  const res=await fetch(API_URL,{
+  const res = await fetch(API_URL,{
     method:'POST',
     cache:'no-store',
     headers:{'Content-Type':'application/json'},
@@ -984,15 +1143,15 @@ async function apiDelete(id){
   return res.json();
 }
 async function loadFromServer(){
-  const result=await apiGetAll();
-  if(!result.ok) throw new Error(result.error||'Failed to fetch');
-  const entries=(result.data||[]).map(normalizeEntry).filter(e=>!e.deleted);
+  const result = await apiGetAll();
+  if(!result.ok) throw new Error(result.error || 'Failed to fetch');
+  const entries = (result.data || []).map(normalizeEntry).filter(e=>!e.deleted);
   replaceAllEntries(entries);
   saveSyncMeta({lastSuccessAt:nowIso(),lastError:''});
 }
 async function loadFromServerWithRetry(retries = 3, delayMs = 1200){
   let lastError = null;
-  for(let i = 0; i < retries; i++){
+  for(let i=0;i<retries;i++){
     try{
       await loadFromServer();
       return true;
@@ -1006,19 +1165,16 @@ async function loadFromServerWithRetry(retries = 3, delayMs = 1200){
   throw lastError;
 }
 function refreshInBackground(){
-  setTimeout(async () => {
+  setTimeout(async()=>{
     try{
-      await loadFromServerWithRetry(3, 1200);
-      saveSyncMeta({ lastSuccessAt: nowIso(), lastError: '' });
+      await loadFromServerWithRetry(3,1200);
+      saveSyncMeta({lastSuccessAt:nowIso(),lastError:''});
       render();
     }catch(err){
-      saveSyncMeta({
-        ...loadSyncMeta(),
-        lastError: 'הרענון מהשרת התעכב, אבל הפעולה נשמרה'
-      });
+      saveSyncMeta({...loadSyncMeta(),lastError:'הרענון מהשרת התעכב, אבל הפעולה נשמרה'});
       render();
     }
-  }, 400);
+  },400);
 }
 async function addEntry(){
   if(busy) return;
@@ -1036,18 +1192,17 @@ async function addEntry(){
   });
 
   addOrReplaceLocalEntry(entry);
-  document.getElementById('amount').value='';
-  document.getElementById('time').value=nowTime();
+  document.getElementById('amount').value = '';
+  document.getElementById('time').value = nowTime();
   render();
 
   try{
     setBusy(true);
     updateSyncStatus();
-
     const result = await apiSave(entry);
 
     if(result && result.ok){
-      saveSyncMeta({ lastSuccessAt: nowIso(), lastError: '' });
+      saveSyncMeta({lastSuccessAt:nowIso(),lastError:''});
       refreshInBackground();
       return;
     }
@@ -1063,7 +1218,7 @@ async function addEntry(){
   }
 }
 function findEntryById(id){
-  return loadState().entries.map(normalizeEntry).find(e=>e.id===id);
+  return loadState().entries.map(normalizeEntry).find(e=>e.id === id);
 }
 async function deleteEntry(id){
   if(busy) return;
@@ -1079,11 +1234,10 @@ async function deleteEntry(id){
   try{
     setBusy(true);
     updateSyncStatus();
-
     const result = await apiDelete(id);
 
     if(result && result.ok){
-      saveSyncMeta({ lastSuccessAt: nowIso(), lastError: '' });
+      saveSyncMeta({lastSuccessAt:nowIso(),lastError:''});
       refreshInBackground();
       return;
     }
@@ -1099,16 +1253,16 @@ async function deleteEntry(id){
   }
 }
 function editEntry(id){
-  const e=findEntryById(id);
+  const e = findEntryById(id);
   if(!e) return;
 
-  currentType=e.type;
-  document.querySelectorAll('#typeChips .chip').forEach(c=>c.classList.toggle('active',c.dataset.type===e.type));
-  document.getElementById('time').value=e.time||'';
-  document.getElementById('amount').value=e.amount||'';
+  currentType = e.type;
+  document.querySelectorAll('#typeChips .chip').forEach(c=>c.classList.toggle('active', c.dataset.type === e.type));
+  document.getElementById('time').value = e.time || '';
+  document.getElementById('amount').value = e.amount || '';
 
-  const amount=document.getElementById('amount');
-  amount.disabled=currentType!=='האכלה';
+  const amount = document.getElementById('amount');
+  amount.disabled = currentType !== 'האכלה';
 
   deleteEntry(id);
 }
@@ -1130,12 +1284,10 @@ async function clearDay(){
   try{
     setBusy(true);
     updateSyncStatus();
-
     for(const entry of entries){
       await apiDelete(entry.id);
     }
-
-    saveSyncMeta({ lastSuccessAt: nowIso(), lastError: '' });
+    saveSyncMeta({lastSuccessAt:nowIso(),lastError:''});
     refreshInBackground();
   }catch(err){
     setSoftMessage('מחיקת היום נשלחה, בודק מול השרת...');
@@ -1146,10 +1298,10 @@ async function clearDay(){
   }
 }
 function exportJson(){
-  const blob=new Blob([JSON.stringify(loadState(),null,2)],{type:'application/json'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download='baby-tracker-backup.json';
+  const blob = new Blob([JSON.stringify(loadState(),null,2)],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'baby-tracker-backup.json';
   a.click();
 }
 async function manualRefresh(){
@@ -1163,21 +1315,21 @@ async function manualRefresh(){
   try{
     setBusy(true);
     updateSyncStatus();
-    await loadFromServerWithRetry(3, 1200);
-    saveSyncMeta({ lastSuccessAt: nowIso(), lastError: '' });
+    await loadFromServerWithRetry(3,1200);
+    saveSyncMeta({lastSuccessAt:nowIso(),lastError:''});
   }catch(err){
-    saveSyncMeta({ ...loadSyncMeta(), lastError: 'הרענון מהשרת נכשל זמנית' });
+    saveSyncMeta({...loadSyncMeta(),lastError:'הרענון מהשרת נכשל זמנית'});
   }finally{
     setBusy(false);
     render();
   }
 }
 
-document.getElementById('logDate').value=getTodayStr();
+document.getElementById('logDate').value = getTodayStr();
+document.getElementById('time').value = nowTime();
+
 updateTopDate();
 updateSelectedDayBox();
-document.getElementById('time').value=nowTime();
-
 render();
 manualRefresh();
 
@@ -1186,7 +1338,7 @@ window.addEventListener('online',manualRefresh);
 window.addEventListener('focus',manualRefresh);
 
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('./sw.js?v=20').catch(()=>{});
+  navigator.serviceWorker.register('./sw.js?v=23').catch(()=>{});
 }
 </script>
 </body>
