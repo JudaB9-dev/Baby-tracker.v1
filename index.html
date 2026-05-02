@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#8fb8e8" />
   <title>מעקב תינוק</title>
-  <link rel="manifest" href="manifest.json?v=24" />
+  <link rel="manifest" href="manifest.json?v=25" />
   <link rel="apple-touch-icon" href="icon-192.png" />
   <style>
     :root{
@@ -58,7 +58,7 @@
     /* ===== Top header ===== */
     .app-top{
       display:grid;
-      grid-template-columns:124px minmax(0,1fr) 52px;
+      grid-template-columns:128px minmax(0,1fr) 52px;
       align-items:center;
       gap:10px;
       margin:6px 2px 14px;
@@ -67,7 +67,7 @@
 
     .sync-widget{
       justify-self:start;
-      width:124px;
+      width:128px;
       min-height:58px;
       border:1px solid #e8f0fb;
       background:rgba(255,255,255,.80);
@@ -75,18 +75,18 @@
       -webkit-backdrop-filter:blur(12px);
       border-radius:16px;
       box-shadow:var(--soft-shadow);
-      padding:7px 8px;
+      padding:7px 9px 7px 10px;
       display:grid;
-      grid-template-columns:22px minmax(0,1fr);
-      gap:7px;
+      grid-template-columns:24px minmax(0,1fr);
+      gap:8px;
       align-items:center;
       overflow:hidden;
       direction:ltr;
     }
 
     .refresh-icon-btn{
-      width:22px;
-      height:22px;
+      width:20px;
+      height:20px;
       border:0;
       border-radius:9px;
       background:transparent;
@@ -95,10 +95,10 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      font-size:19px;
+      font-size:18px;
       line-height:1;
       padding:0;
-      justify-self:center;
+      justify-self:end;
       transition:transform .15s ease, opacity .2s ease;
     }
 
@@ -111,22 +111,23 @@
       text-align:right;
     }
 
-    .sync-line{
-      display:flex;
+    .sync-status-row{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 10px;
       align-items:center;
-      justify-content:flex-end;
-      gap:4px;
-      min-width:0;
-      line-height:1.1;
-      white-space:nowrap;
+      column-gap:4px;
+      width:100%;
+      direction:rtl;
     }
 
-    #syncStatusText{
+    .sync-status-text{
       font-size:11.5px;
       font-weight:800;
       color:var(--text);
+      line-height:1.1;
+      white-space:nowrap;
+      text-align:right;
       letter-spacing:-0.02em;
-      flex:0 1 auto;
     }
 
     .sync-dot{
@@ -149,8 +150,7 @@
       font-size:10px;
       line-height:1.15;
       white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      text-align:right;
       letter-spacing:-0.01em;
     }
 
@@ -553,26 +553,26 @@
       }
 
       .app-top{
-        grid-template-columns:124px minmax(0,1fr) 52px;
+        grid-template-columns:128px minmax(0,1fr) 52px;
         gap:10px;
         margin:6px 2px 14px;
       }
 
       .sync-widget{
-        width:124px;
+        width:128px;
         min-height:58px;
-        padding:7px 8px;
-        grid-template-columns:22px minmax(0,1fr);
-        gap:7px;
+        padding:7px 9px 7px 10px;
+        grid-template-columns:24px minmax(0,1fr);
+        gap:8px;
       }
 
       .refresh-icon-btn{
-        width:22px;
-        height:22px;
-        font-size:19px;
+        width:20px;
+        height:20px;
+        font-size:18px;
       }
 
-      #syncStatusText{
+      .sync-status-text{
         font-size:11.5px;
       }
 
@@ -692,24 +692,24 @@
 
     @media (max-width:370px){
       .app-top{
-        grid-template-columns:118px minmax(0,1fr) 48px;
+        grid-template-columns:122px minmax(0,1fr) 48px;
         gap:8px;
       }
 
       .sync-widget{
-        width:118px;
-        grid-template-columns:20px minmax(0,1fr);
-        gap:6px;
-        padding:7px 7px;
+        width:122px;
+        grid-template-columns:22px minmax(0,1fr);
+        gap:7px;
+        padding:7px 8px 7px 9px;
       }
 
       .refresh-icon-btn{
-        width:20px;
-        height:20px;
-        font-size:18px;
+        width:19px;
+        height:19px;
+        font-size:17px;
       }
 
-      #syncStatusText{
+      .sync-status-text{
         font-size:11px;
       }
 
@@ -748,8 +748,8 @@
       </button>
 
       <div class="sync-copy">
-        <div class="sync-line">
-          <span id="syncStatusText">טוען...</span>
+        <div class="sync-status-row">
+          <span id="syncStatusText" class="sync-status-text">טוען...</span>
           <span id="syncDot" class="sync-dot warn"></span>
         </div>
         <div id="syncMeta" class="sync-updated">מכין נתונים</div>
