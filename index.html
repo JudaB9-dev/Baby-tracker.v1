@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#8fb8e8" />
   <title>מעקב תינוק</title>
-  <link rel="manifest" href="manifest.json?v=19" />
+  <link rel="manifest" href="manifest.json?v=20" />
   <link rel="apple-touch-icon" href="icon-192.png" />
   <style>
     :root{
@@ -14,20 +14,20 @@
       --card:#ffffffcc;
       --card-solid:#ffffff;
       --line:#dbe7f6;
-      --line-strong:#c7daf5;
       --primary:#8fb8e8;
       --primary-dark:#6f9fd9;
-      --primary-soft:#e7f1ff;
       --text:#1d2a3c;
       --muted:#728096;
-      --danger-bg:#ffe8e8;
       --danger-text:#8f2424;
       --ok:#e8f7ec;
       --ok-text:#1f6b36;
       --warn:#fff4df;
       --warn-text:#8a5a00;
+      --vit-off-bg:#f3f5f8;
+      --vit-off-text:#7f8a98;
+      --vit-on-bg:#e8f7ec;
+      --vit-on-text:#1f6b36;
       --radius:22px;
-      --radius-sm:14px;
       --shadow:0 10px 30px rgba(43,77,124,.10);
       --field-h:48px;
       --page-pad:14px;
@@ -257,7 +257,7 @@
       display:grid;
       gap:10px;
       width:100%;
-      grid-template-columns:repeat(4,1fr);
+      grid-template-columns:repeat(5,1fr);
     }
 
     .stat{
@@ -266,6 +266,10 @@
       padding:13px 8px;
       border-radius:18px;
       text-align:center;
+      min-height:94px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
     }
 
     .stat b{
@@ -281,6 +285,30 @@
       line-height:1.25;
       color:var(--muted);
       word-break:break-word;
+    }
+
+    .vitamin-stat{
+      transition:all .2s ease;
+    }
+
+    .vitamin-stat.off{
+      background:linear-gradient(180deg,var(--vit-off-bg) 0%, #edf1f5 100%);
+      border-color:#dde3ea;
+    }
+
+    .vitamin-stat.off b,
+    .vitamin-stat.off span{
+      color:var(--vit-off-text);
+    }
+
+    .vitamin-stat.on{
+      background:linear-gradient(180deg,var(--vit-on-bg) 0%, #dcf1e3 100%);
+      border-color:#c8e8d1;
+    }
+
+    .vitamin-stat.on b,
+    .vitamin-stat.on span{
+      color:var(--vit-on-text);
     }
 
     .muted{
@@ -426,7 +454,6 @@
     .bottom-tools{
       display:grid;
       gap:10px;
-      margin-top:4px;
     }
 
     .footer-note{
@@ -480,20 +507,21 @@
       }
 
       .stats{
-        grid-template-columns:repeat(4,1fr);
-        gap:8px;
+        grid-template-columns:repeat(5,1fr);
+        gap:6px;
       }
 
       .stat{
-        padding:10px 6px;
+        padding:10px 4px;
+        min-height:82px;
       }
 
       .stat b{
-        font-size:18px;
+        font-size:16px;
       }
 
       .stat span{
-        font-size:11px;
+        font-size:10px;
       }
 
       .day-nav{
@@ -583,6 +611,10 @@
         <div class="stat"><b id="feedMl">0</b><span>מ״ל סה״כ</span></div>
         <div class="stat"><b id="peeCount">0</b><span>פיפי</span></div>
         <div class="stat"><b id="poopCount">0</b><span>קקי</span></div>
+        <div id="vitaminStat" class="stat vitamin-stat off">
+          <b id="vitaminIcon">○</b>
+          <span>ויטמינים</span>
+        </div>
       </div>
     </div>
 
@@ -642,9 +674,9 @@
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycby5HlpD17IG1p217ot4kwuErP4BtVZPa92H9uNQWD3JnkYCBlHyRX0FR7c0eMA1mdVGfw/exec';
 const API_TOKEN = 'bt_7Fh29KqP4mX9Za81JrT6UvN2LsQ0';
-const STORAGE_KEY = 'baby-tracker-v19-state';
-const DEVICE_KEY = 'baby-tracker-v19-device';
-const SYNC_KEY = 'baby-tracker-v19-sync-meta';
+const STORAGE_KEY = 'baby-tracker-v20-state';
+const DEVICE_KEY = 'baby-tracker-v20-device';
+const SYNC_KEY = 'baby-tracker-v20-sync-meta';
 
 let currentType = 'האכלה';
 let busy = false;
@@ -838,6 +870,17 @@ function updateSyncStatus(){
   const last=meta.lastSuccessAt?new Date(meta.lastSuccessAt).toLocaleString('he-IL'):'עדיין לא בוצע';
   setStatus('מסונכרן','status-ok',`עדכון אחרון: ${last}`);
 }
+
+function updateVitaminSummary(entries){
+  const hasVitamins = entries.some(e => e.type === 'ויטמינים');
+  const vitaminStat = document.getElementById('vitaminStat');
+  const vitaminIcon = document.getElementById('vitaminIcon');
+
+  vitaminStat.classList.remove('on','off');
+  vitaminStat.classList.add(hasVitamins ? 'on' : 'off');
+  vitaminIcon.textContent = hasVitamins ? '✓' : '○';
+}
+
 function render(){
   updateTopDate();
   updateSelectedDayBox();
@@ -870,8 +913,10 @@ function render(){
   document.getElementById('feedMl').textContent=feedEntries.reduce((s,e)=>s+Number(e.amount||0),0);
   document.getElementById('peeCount').textContent=entries.filter(e=>e.type==='פיפי').length;
   document.getElementById('poopCount').textContent=entries.filter(e=>e.type==='קקי').length;
+  updateVitaminSummary(entries);
   updateSyncStatus();
 }
+
 function replaceAllEntries(entries){
   saveState({entries:entries.map(normalizeEntry).filter(e=>!e.deleted)});
 }
@@ -1141,7 +1186,7 @@ window.addEventListener('online',manualRefresh);
 window.addEventListener('focus',manualRefresh);
 
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('./sw.js?v=19').catch(()=>{});
+  navigator.serviceWorker.register('./sw.js?v=20').catch(()=>{});
 }
 </script>
 </body>
